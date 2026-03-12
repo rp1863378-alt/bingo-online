@@ -115,7 +115,7 @@
         .toggle.active::after{left:29px}
         .btn-control{padding:12px 20px;font-size:0.9rem;border-radius:12px;white-space:nowrap}
         
-        /* Botones de Cantar */
+        /* Botones de Cantar - NUEVOS */
         .claim-buttons{display:flex;gap:15px;margin-bottom:20px;justify-content:center}
         .claim-btn{padding:15px 30px;font-size:1.1rem;border-radius:15px;font-weight:800;cursor:pointer;transition:all 0.3s;border:none;position:relative;overflow:hidden}
         .claim-btn:disabled{opacity:0.5;cursor:not-allowed;transform:none!important;background:#636e72!important;box-shadow:none!important}
@@ -793,6 +793,124 @@
             z-index: 6999;
             backdrop-filter: blur(5px);
         }
+
+        /* DRAG AND DROP - NUEVO */
+        .admin-card.draggable {
+            cursor: move;
+            user-select: none;
+        }
+
+        .admin-card.draggable.dragging {
+            opacity: 0.5;
+            transform: scale(0.95);
+        }
+
+        .admin-card.drag-over {
+            border: 2px dashed var(--accent);
+            transform: scale(1.02);
+        }
+
+        .drag-handle {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: #fff;
+            width: 30px;
+            height: 30px;
+            border-radius: 8px;
+            cursor: grab;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: all 0.3s;
+        }
+
+        .drag-handle:hover {
+            background: rgba(255,255,255,0.4);
+        }
+
+        .drag-handle:active {
+            cursor: grabbing;
+        }
+
+        .admin-card {
+            position: relative;
+        }
+
+        /* Save Layout Button */
+        .save-layout-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 4000;
+            padding: 15px 25px;
+            background: linear-gradient(135deg, var(--success) 0%, #00d9a5 100%);
+            border: none;
+            border-radius: 50px;
+            color: #fff;
+            font-weight: 800;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(0, 184, 148, 0.4);
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .save-layout-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(0, 184, 148, 0.6);
+        }
+
+        /* Reset Layout Button */
+        .reset-layout-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 180px;
+            z-index: 4000;
+            padding: 15px 25px;
+            background: linear-gradient(135deg, #636e72 0%, #2d3436 100%);
+            border: none;
+            border-radius: 50px;
+            color: #fff;
+            font-weight: 800;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .reset-layout-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+        }
+
+        /* Card Number Input */
+        .card-number-input {
+            padding: 14px;
+            border: none;
+            border-radius: 12px;
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+            font-size: 0.95rem;
+            transition: 0.3s;
+            text-transform: uppercase;
+        }
+
+        .card-number-input:focus {
+            outline: none;
+            background: rgba(255,255,255,0.15);
+            box-shadow: 0 0 20px rgba(108,92,231,0.2);
+        }
+
+        .card-number-input::placeholder {
+            color: rgba(255,255,255,0.5);
+        }
     </style>
 </head>
 <body>
@@ -855,7 +973,7 @@
                         🎨 3 Estilos de Cartón Disponibles<br>
                         👥 Sala compartida con todos los jugadores
                     </div>
-                    <div style="margin-top:10px;opacity:0.5;font-size:0.8rem">v11.0 Firebase Live - Juego Responsable</div>
+                    <div style="margin-top:10px;opacity:0.5;font-size:0.8rem">v12.0 Firebase Live - Juego Responsable</div>
                 </div>
             </div>
         </div>
@@ -915,7 +1033,7 @@
             <button class="btn btn-warning btn-control" onclick="requestCoins()">💰 Pedir Fichas</button>
         </div>
 
-        <!-- Botones de Cantar -->
+        <!-- Botones de Cantar - CORREGIDOS -->
         <div class="claim-buttons" id="claimButtons">
             <button class="claim-btn claim-btn-line" id="claimLineBtn" onclick="claimLine()" disabled>
                 📏 CANTAR LÍNEA
@@ -979,9 +1097,10 @@
             <button class="btn btn-danger btn-control" onclick="logout()">Cerrar Sesión</button>
         </div>
 
-        <div class="admin-grid">
+        <div class="admin-grid" id="adminGrid">
             <!-- Premium Code Generator -->
-            <div class="admin-card code-generator" style="grid-column:1/-1">
+            <div class="admin-card code-generator draggable" draggable="true" data-card-id="codes" style="grid-column:1/-1">
+                <button class="drag-handle" title="Arrastrar para mover">⋮⋮</button>
                 <h3>🔑 Generador de Códigos Premium</h3>
                 <div style="display:flex;gap:15px;flex-wrap:wrap;align-items:center">
                     <button class="btn btn-success" onclick="generatePremiumCode()" style="flex:1;min-width:200px">
@@ -998,7 +1117,8 @@
             </div>
 
             <!-- Game Control -->
-            <div class="admin-card">
+            <div class="admin-card draggable" draggable="true" data-card-id="control">
+                <button class="drag-handle" title="Arrastrar para mover">⋮⋮</button>
                 <h3>🎮 Control del Juego</h3>
                 <div class="admin-row">
                     <button class="btn btn-success w-full" onclick="startGame()" id="btnStart">▶ Iniciar</button>
@@ -1024,7 +1144,8 @@
             </div>
 
             <!-- Prize Config -->
-            <div class="admin-card">
+            <div class="admin-card draggable" draggable="true" data-card-id="prize">
+                <button class="drag-handle" title="Arrastrar para mover">⋮⋮</button>
                 <h3>🏆 Configuración del Pozo</h3>
                 <select id="prizeTypeSelect" class="admin-select" onchange="updatePrizeType()">
                     <option value="fixed">💵 Pozo Fijo</option>
@@ -1047,7 +1168,8 @@
             </div>
 
             <!-- Winner Selection -->
-            <div class="admin-card" style="grid-column:1/-1;background:rgba(0,184,148,0.1);border:2px solid var(--success)">
+            <div class="admin-card draggable" draggable="true" data-card-id="winners" style="grid-column:1/-1;background:rgba(0,184,148,0.1);border:2px solid var(--success)">
+                <button class="drag-handle" title="Arrastrar para mover">⋮⋮</button>
                 <h3>🏅 Selección de Ganadores</h3>
                 
                 <!-- LÍNEA Section -->
@@ -1125,7 +1247,8 @@
             </div>
 
             <!-- Countdown -->
-            <div class="admin-card">
+            <div class="admin-card draggable" draggable="true" data-card-id="countdown">
+                <button class="drag-handle" title="Arrastrar para mover">⋮⋮</button>
                 <h3>⏱️ Cuenta Regresiva</h3>
                 <div class="admin-row">
                     <input type="number" id="countdownSeconds" class="admin-input" value="10" min="3" max="60" placeholder="Segundos">
@@ -1134,7 +1257,8 @@
             </div>
 
             <!-- Chat & Messages -->
-            <div class="admin-card">
+            <div class="admin-card draggable" draggable="true" data-card-id="chat">
+                <button class="drag-handle" title="Arrastrar para mover">⋮⋮</button>
                 <h3>📢 Comunicados</h3>
                 <div class="admin-row">
                     <select id="msgTarget" class="admin-select" style="max-width:150px;margin-bottom:0">
@@ -1153,14 +1277,17 @@
             </div>
 
             <!-- Player Management -->
-            <div class="admin-card">
+            <div class="admin-card draggable" draggable="true" data-card-id="players">
+                <button class="drag-handle" title="Arrastrar para mover">⋮⋮</button>
                 <h3>👥 Gestión de Jugadores</h3>
                 <div class="players-list" id="adminPlayersList">
                     <div class="text-center" style="padding:30px;opacity:0.6">No hay jugadores conectados</div>
                 </div>
                 <div class="admin-row mt-10">
-                    <input type="text" id="targetPlayer" class="admin-input" placeholder="Nombre jugador">
-                    <input type="number" id="coinAmount" class="admin-input" placeholder="Cantidad" style="max-width:120px" min="1">
+                    <select id="targetPlayer" class="admin-select" style="margin-bottom:0;flex:2">
+                        <option value="">Seleccionar jugador...</option>
+                    </select>
+                    <input type="number" id="coinAmount" class="admin-input" placeholder="Cantidad" style="max-width:120px;flex:1" min="1">
                     <button class="btn btn-success" style="padding:12px 20px" onclick="giveCoins()">💰</button>
                 </div>
                 <div style="margin-top:10px;font-size:0.8rem;opacity:0.7">
@@ -1170,14 +1297,16 @@
             </div>
 
             <!-- Manual Numbers -->
-            <div class="admin-card">
+            <div class="admin-card draggable" draggable="true" data-card-id="numbers">
+                <button class="drag-handle" title="Arrastrar para mover">⋮⋮</button>
                 <h3>🔢 Llamada Manual</h3>
                 <div class="number-grid" id="manualNumbers"></div>
                 <button class="btn btn-dark w-full mt-10" onclick="generateRandomNumber()">🎲 Número Aleatorio</button>
             </div>
 
             <!-- Statistics -->
-            <div class="admin-card">
+            <div class="admin-card draggable" draggable="true" data-card-id="stats">
+                <button class="drag-handle" title="Arrastrar para mover">⋮⋮</button>
                 <h3>📊 Estadísticas en Vivo</h3>
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-bottom:20px">
                     <div class="text-center" style="background:rgba(0,0,0,0.2);padding:20px;border-radius:15px">
@@ -1201,6 +1330,14 @@
             </div>
             <div id="consoleContent"></div>
         </div>
+
+        <!-- Botones de Guardar/Resetear Layout -->
+        <button class="save-layout-btn" onclick="saveLayout()" title="Guardar disposición">
+            💾 Guardar
+        </button>
+        <button class="reset-layout-btn" onclick="resetLayout()" title="Restaurar disposición por defecto">
+            🔄 Restaurar
+        </button>
     </div>
 
     <!-- Winner Modal - CORREGIDO CON BOTÓN DE CERRAR -->
@@ -1324,7 +1461,8 @@
             consoleLogs: [],
             chatInitialized: false,
             voiceInitialized: false,
-            processedMessages: new Set() // Para evitar duplicados
+            processedMessages: new Set(), // Para evitar duplicados
+            cardLayout: null // Para guardar el layout de tarjetas
         };
 
         let synth = window.speechSynthesis;
@@ -1681,6 +1819,9 @@
             
             // Anunciar entrada del admin
             speak('Modo administrador activado. Bienvenido al panel de control.', true);
+            
+            // Cargar layout guardado
+            loadLayout();
         }
 
         async function loginAsPremium(name, code) {
@@ -2383,7 +2524,8 @@
                 return;
             }
             
-            if (!App.calledNumbers.includes(number) && !App.settings.autoMark) {
+            // CORREGIDO: Verificar que el número haya sido cantado
+            if (!App.calledNumbers.includes(number)) {
                 card.hasError[row][col] = true;
                 renderCards();
                 setTimeout(() => {
@@ -2400,7 +2542,7 @@
             if (card.marked[row][col]) checkPlayerWinStatus();
         }
 
-        // ==================== VERIFICACIÓN DE VICTORIA DEL JUGADOR ====================
+        // ==================== VERIFICACIÓN DE VICTORIA DEL JUGADOR - CORREGIDA ====================
         function checkPlayerWinStatus() {
             if (App.myCards.length === 0) {
                 App.hasLine = false;
@@ -2440,10 +2582,17 @@
             
             if (!lineBtn || !bingoBtn) return;
             
+            // CORREGIDO: Solo habilitar si el juego está activo y no hay ganador aún
             const canClaimLine = App.hasLine && 
+                                App.gameState.active && 
+                                !App.gameState.paused &&
                                 App.gameState.claimedLines < CONFIG.MAX_LINE_WINNERS && 
                                 !App.gameState.noLineMode;
-            const canClaimBingo = App.hasBingo && !App.gameState.bingoClaimed;
+                                
+            const canClaimBingo = App.hasBingo && 
+                                 App.gameState.active && 
+                                 !App.gameState.paused &&
+                                 !App.gameState.bingoClaimed;
             
             lineBtn.disabled = !canClaimLine;
             bingoBtn.disabled = !canClaimBingo;
@@ -2732,6 +2881,115 @@
             if (noLineCheckbox) {
                 noLineCheckbox.checked = App.gameState.noLineMode || false;
             }
+            
+            // Inicializar drag and drop
+            initDragAndDrop();
+        }
+
+        // ==================== DRAG AND DROP - NUEVO ====================
+        function initDragAndDrop() {
+            const grid = $('adminGrid');
+            if (!grid) return;
+            
+            let draggedElement = null;
+            
+            grid.addEventListener('dragstart', (e) => {
+                if (e.target.classList.contains('draggable')) {
+                    draggedElement = e.target;
+                    e.target.classList.add('dragging');
+                    e.dataTransfer.effectAllowed = 'move';
+                    e.dataTransfer.setData('text/html', e.target.innerHTML);
+                }
+            });
+            
+            grid.addEventListener('dragend', (e) => {
+                if (e.target.classList.contains('draggable')) {
+                    e.target.classList.remove('dragging');
+                }
+            });
+            
+            grid.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                e.dataTransfer.dropEffect = 'move';
+                
+                const target = e.target.closest('.draggable');
+                if (target && target !== draggedElement) {
+                    target.classList.add('drag-over');
+                }
+            });
+            
+            grid.addEventListener('dragleave', (e) => {
+                const target = e.target.closest('.draggable');
+                if (target) {
+                    target.classList.remove('drag-over');
+                }
+            });
+            
+            grid.addEventListener('drop', (e) => {
+                e.preventDefault();
+                
+                const target = e.target.closest('.draggable');
+                if (target && target !== draggedElement) {
+                    target.classList.remove('drag-over');
+                    
+                    // Intercambiar posiciones
+                    const allCards = Array.from(grid.querySelectorAll('.draggable'));
+                    const draggedIndex = allCards.indexOf(draggedElement);
+                    const targetIndex = allCards.indexOf(target);
+                    
+                    if (draggedIndex < targetIndex) {
+                        target.after(draggedElement);
+                    } else {
+                        target.before(draggedElement);
+                    }
+                    
+                    showToast('📦 Tarjeta movida. Recuerda guardar el layout.', 'info');
+                }
+            });
+        }
+
+        function saveLayout() {
+            const grid = $('adminGrid');
+            if (!grid) return;
+            
+            const cards = grid.querySelectorAll('.draggable');
+            const layout = Array.from(cards).map(card => card.dataset.cardId);
+            
+            localStorage.setItem('bingoAdminLayout', JSON.stringify(layout));
+            showToast('💾 Layout guardado correctamente', 'success');
+            logToConsole('💾 Layout del panel guardado', 'info');
+        }
+
+        function loadLayout() {
+            const savedLayout = localStorage.getItem('bingoAdminLayout');
+            if (!savedLayout) return;
+            
+            try {
+                const layout = JSON.parse(savedLayout);
+                const grid = $('adminGrid');
+                if (!grid) return;
+                
+                const cards = Array.from(grid.querySelectorAll('.draggable'));
+                const cardMap = new Map(cards.map(card => [card.dataset.cardId, card]));
+                
+                // Reordenar según el layout guardado
+                layout.forEach(cardId => {
+                    const card = cardMap.get(cardId);
+                    if (card) {
+                        grid.appendChild(card);
+                    }
+                });
+                
+                logToConsole('📦 Layout del panel cargado', 'info');
+            } catch (e) {
+                console.error('Error cargando layout:', e);
+            }
+        }
+
+        function resetLayout() {
+            localStorage.removeItem('bingoAdminLayout');
+            showToast('🔄 Layout restaurado. Recarga la página para ver los cambios.', 'info');
+            logToConsole('🔄 Layout restaurado a valores por defecto', 'info');
         }
 
         function updatePrivateTargetSelect() {
@@ -2750,16 +3008,16 @@
         function updateWinnerSelects() {
             const lineSelect = $('lineWinnerSelect');
             const bingoSelect = $('bingoWinnerSelect');
-            
-            if (!lineSelect || !bingoSelect) return;
+            const targetSelect = $('targetPlayer'); // Para dar monedas
             
             const options = '<option value="">Seleccionar jugador...</option>' + 
                 Array.from(App.players.values()).map(p => 
                     `<option value="${p.name}">${p.name} (${p.coins?.toLocaleString('es-ES') || 0} 🪙)${p.isPremium ? ' 👑' : ''}</option>`
                 ).join('');
             
-            lineSelect.innerHTML = options;
-            bingoSelect.innerHTML = options;
+            if (lineSelect) lineSelect.innerHTML = options;
+            if (bingoSelect) bingoSelect.innerHTML = options;
+            if (targetSelect) targetSelect.innerHTML = options;
         }
 
         function updateAdminDisplay() {
@@ -3369,9 +3627,9 @@
                 text: finalText,
                 author: 'Admin',
                 isAdmin: true,
-                isPrivate,
+                isPrivate: !!targetPlayer,
                 isBroadcast,
-                targetPlayer: isPrivate ? privateTarget : null,
+                targetPlayer,
                 playerCoins: Infinity,
                 timestamp: Date.now()
             });
@@ -3382,27 +3640,49 @@
             showToast(isPrivate ? `Mensaje privado enviado a ${privateTarget}` : 'Mensaje enviado a todos');
         }
 
+        // CORREGIDO: Función para dar monedas
         async function giveCoins() {
-            const target = $('targetPlayer').value.trim();
-            const amount = parseInt($('coinAmount').value) || 0;
+            const targetSelect = $('targetPlayer');
+            const amountInput = $('coinAmount');
             
-            if (!target || amount <= 0) {
-                showToast('Datos inválidos', 'error');
+            const targetName = targetSelect.value;
+            const amount = parseInt(amountInput.value) || 0;
+            
+            if (!targetName) {
+                showToast('Selecciona un jugador', 'error');
                 return;
             }
             
-            const player = Array.from(App.players.values()).find(p => p.name === target);
-            if (player) {
-                const newAmount = (player.coins || 0) + amount;
+            if (amount <= 0) {
+                showToast('Ingresa una cantidad válida', 'error');
+                return;
+            }
+            
+            // Buscar el jugador en la lista de jugadores
+            const player = Array.from(App.players.values()).find(p => p.name === targetName);
+            
+            if (!player) {
+                showToast('Jugador no encontrado o desconectado', 'error');
+                return;
+            }
+            
+            const newAmount = (player.coins || 0) + amount;
+            
+            try {
                 await database.ref(`players/${player.id}/coins`).set(newAmount);
-                showToast(`💰 ${formatMoney(amount)} a ${target}`);
-                speak(`${target} ha recibido ${amount} fichas`);
-                logToConsole(`💰 ${target} recibió ${amount} fichas`, 'info');
-                $('targetPlayer').value = '';
-                $('coinAmount').value = '';
+                showToast(`💰 ${formatMoney(amount)} enviados a ${targetName}`, 'success');
+                speak(`${targetName} ha recibido ${amount} fichas`);
+                logToConsole(`💰 ${targetName} recibió ${amount} fichas`, 'info');
+                
+                // Limpiar inputs
+                targetSelect.value = '';
+                amountInput.value = '';
+                
+                // Actualizar la lista
                 updateAdminDisplay();
-            } else {
-                showToast('Jugador no encontrado', 'error');
+            } catch (error) {
+                console.error('Error al enviar monedas:', error);
+                showToast('Error al enviar monedas', 'error');
             }
         }
 
@@ -3576,6 +3856,8 @@
         window.clearConsole = clearConsole;
         window.closeAdminWinnerDisplay = closeAdminWinnerDisplay;
         window.closeGameOverNotification = closeGameOverNotification;
+        window.saveLayout = saveLayout;
+        window.resetLayout = resetLayout;
     </script>
 </body>
 </html>
