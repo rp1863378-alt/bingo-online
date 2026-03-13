@@ -96,7 +96,7 @@
         .premium-badge{background:linear-gradient(135deg,var(--secondary) 0%,var(--primary) 100%);padding:4px 12px;border-radius:20px;font-size:0.75rem;font-weight:800;box-shadow:0 0 15px rgba(0,206,201,0.4);animation:glowBadge 2s infinite}
         @keyframes glowBadge{0%,100%{box-shadow:0 0 5px rgba(0,206,201,0.4)}50%{box-shadow:0 0 20px rgba(0,206,201,0.8)}}
         
-        /* Prize - CON ANIMACIÓN */
+        /* Prize */
         .prize-section{background:linear-gradient(135deg,var(--danger) 0%,#c0392b 100%);padding:25px;border-radius:20px;text-align:center;margin-bottom:20px;box-shadow:var(--shadow);position:relative;overflow:hidden;animation:prizePulse 3s infinite}
         @keyframes prizePulse{0%,100%{transform:scale(1);box-shadow:0 8px 32px rgba(0,0,0,0.4)}50%{transform:scale(1.02);box-shadow:0 12px 40px rgba(231,76,60,0.6)}}
         .prize-section::before{content:'🏆';position:absolute;top:-20px;left:-20px;font-size:8rem;opacity:0.1;transform:rotate(-15deg);animation:trophyFloat 4s ease-in-out infinite}
@@ -115,7 +115,7 @@
         .toggle.active::after{left:29px}
         .btn-control{padding:12px 20px;font-size:0.9rem;border-radius:12px;white-space:nowrap}
         
-        /* Botones de Cantar - NUEVOS */
+        /* Botones de Cantar */
         .claim-buttons{display:flex;gap:15px;margin-bottom:20px;justify-content:center}
         .claim-btn{padding:15px 30px;font-size:1.1rem;border-radius:15px;font-weight:800;cursor:pointer;transition:all 0.3s;border:none;position:relative;overflow:hidden}
         .claim-btn:disabled{opacity:0.5;cursor:not-allowed;transform:none!important;background:#636e72!important;box-shadow:none!important}
@@ -192,7 +192,7 @@
         .card-gold .cell.error{background:var(--danger);animation:shake 0.5s}
         .card-gold .cell.error:hover{background:var(--danger)!important;transform:none!important}
         
-        /* Chat - CORREGIDO Y MEJORADO */
+        /* Chat */
         .chat-container{background:rgba(255,255,255,0.03);border-radius:20px;padding:20px;height:320px;display:flex;flex-direction:column;border:1px solid rgba(255,255,255,0.05);margin-top:20px}
         .chat-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px;padding-bottom:15px;border-bottom:2px solid rgba(255,255,255,0.1)}
         .chat-title{font-weight:800;font-size:1rem;display:flex;align-items:center;gap:10px}
@@ -204,7 +204,6 @@
         .message{margin-bottom:12px;padding:12px 16px;border-radius:15px;position:relative;max-width:85%;word-break:break-word;transition:all 0.3s}
         .message:hover{transform:translateX(5px)}
         
-        /* Animaciones especiales para mensajes del admin */
         .message.admin-message {
             animation: adminMessageSlide 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
             background: linear-gradient(135deg, rgba(0,206,201,0.3) 0%, rgba(108,92,231,0.3) 100%);
@@ -232,7 +231,6 @@
             75% { transform: scale(1.05); }
         }
         
-        /* Efecto de latido para todos los mensajes del admin */
         .message.admin-broadcast {
             animation: pulseBorder 2s infinite, slideInRight 0.5s ease;
             border: 2px solid var(--accent);
@@ -248,7 +246,6 @@
             to { transform: translateX(0); opacity: 1; }
         }
         
-        /* Efecto especial para mensajes propios del admin */
         .message.my-admin-message {
             background: linear-gradient(135deg, rgba(253,203,110,0.25) 0%, rgba(0,206,201,0.25) 100%);
             border: 2px solid var(--accent);
@@ -352,7 +349,7 @@
         .bingo-winner-section{background:rgba(253,203,110,0.1);border:2px solid var(--accent);border-radius:15px;padding:20px;margin-top:15px}
         .bingo-winner-section h4{color:var(--accent);margin-bottom:15px;font-size:1rem}
         
-        /* Modal - CORREGIDO CON BOTÓN DE CERRAR */
+        /* Modal */
         .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.95);z-index:9999;justify-content:center;align-items:center;padding:20px;backdrop-filter:blur(10px)}
         .modal-overlay.active{display:flex}
         .modal-content{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);border-radius:30px;padding:40px;max-width:500px;width:100%;text-align:center;box-shadow:0 25px 80px rgba(0,0,0,0.6);position:relative;overflow:hidden;animation:modalIn 0.5s cubic-bezier(0.175,0.885,0.32,1.275);z-index:10000}
@@ -375,7 +372,7 @@
         .countdown-text{font-size:1.5rem;margin-top:30px;text-transform:uppercase;letter-spacing:5px;opacity:0.8;font-weight:600}
         @keyframes countPulse{0%,100%{transform:scale(1);text-shadow:0 0 40px rgba(255,255,255,0.8)}50%{transform:scale(1.2);text-shadow:0 0 80px rgba(255,255,255,1),0 0 120px rgba(108,92,231,0.5)}}
         
-        /* Toast - CON ANIMACIÓN MEJORADA */
+        /* Toast */
         .toast-container{position:fixed;bottom:30px;right:30px;z-index:3000;display:flex;flex-direction:column;gap:12px;pointer-events:none;max-width:400px}
         .toast{background:var(--success);color:#fff;padding:16px 24px;border-radius:16px;font-weight:700;font-size:1rem;box-shadow:0 8px 30px rgba(0,0,0,0.4);animation:toastIn 0.5s cubic-bezier(0.68,-0.55,0.265,1.55);pointer-events:auto;display:flex;align-items:center;gap:12px;border-left:4px solid rgba(255,255,255,0.3);position:relative;overflow:hidden}
         .toast::before{content:'';position:absolute;top:0;left:0;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.2),transparent);animation:shimmer 2s infinite}
@@ -610,70 +607,57 @@
             margin-bottom: 5px;
         }
 
-        /* Console Log Display - CON BOTÓN X */
-        .console-log {
+        /* Game Over Notification */
+        .game-over-notification {
             position: fixed;
-            bottom: 80px;
-            right: 20px;
-            width: 350px;
-            max-height: 200px;
-            background: rgba(0,0,0,0.9);
-            border-radius: 15px;
-            padding: 15px;
-            z-index: 3500;
-            overflow-y: auto;
-            border: 2px solid var(--accent);
-            font-family: 'Courier New', monospace;
-            font-size: 0.85rem;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, var(--danger) 0%, #c0392b 100%);
+            padding: 40px;
+            border-radius: 30px;
+            box-shadow: 0 25px 80px rgba(0,0,0,0.6);
+            z-index: 7000;
+            text-align: center;
+            min-width: 400px;
+            max-width: 90%;
+            animation: gameOverPop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 3px solid var(--accent);
         }
 
-        .console-log-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid rgba(255,255,255,0.2);
+        @keyframes gameOverPop {
+            0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
         }
 
-        .console-log-close {
-            background: var(--danger);
+        .game-over-notification h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
             color: #fff;
-            border: none;
-            border-radius: 50%;
-            width: 24px;
-            height: 24px;
-            cursor: pointer;
-            font-size: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s;
+            text-shadow: 0 0 20px rgba(0,0,0,0.3);
         }
 
-        .console-log-close:hover {
-            background: #c0392b;
-            transform: scale(1.1);
+        .game-over-notification p {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            color: #fff;
         }
 
-        .console-log-entry {
-            margin-bottom: 8px;
-            padding: 5px;
-            border-radius: 5px;
-            background: rgba(255,255,255,0.05);
+        .game-over-notification .btn {
+            margin-top: 20px;
+            padding: 15px 40px;
+            font-size: 1.2rem;
         }
 
-        .console-log-entry.winner {
-            background: rgba(0, 184, 148, 0.3);
-            border-left: 3px solid var(--success);
+        .game-over-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.9);
+            z-index: 6999;
+            backdrop-filter: blur(5px);
         }
 
-        .console-log-entry.error {
-            background: rgba(231, 76, 60, 0.3);
-            border-left: 3px solid var(--danger);
-        }
-
-        /* Admin Winner Display - NUEVO */
+        /* Admin Winner Display */
         .admin-winner-display {
             position: fixed;
             top: 50%;
@@ -744,172 +728,177 @@
             backdrop-filter: blur(5px);
         }
 
-        /* Game Over Notification */
-        .game-over-notification {
+        /* Winner Banner - NUEVO */
+        .winner-banner {
             position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: linear-gradient(135deg, var(--danger) 0%, #c0392b 100%);
-            padding: 40px;
-            border-radius: 30px;
-            box-shadow: 0 25px 80px rgba(0,0,0,0.6);
-            z-index: 7000;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, var(--success) 0%, var(--secondary) 100%);
+            padding: 20px;
             text-align: center;
-            min-width: 400px;
-            max-width: 90%;
-            animation: gameOverPop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            border: 3px solid var(--accent);
+            z-index: 8000;
+            animation: bannerSlideDown 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border-bottom: 4px solid var(--accent);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
         }
 
-        @keyframes gameOverPop {
-            0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
-            100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        @keyframes bannerSlideDown {
+            0% { transform: translateY(-100%); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
         }
 
-        .game-over-notification h2 {
-            font-size: 2.5rem;
-            margin-bottom: 20px;
+        .winner-banner-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .winner-banner h2 {
+            font-size: 2rem;
+            font-weight: 900;
             color: #fff;
             text-shadow: 0 0 20px rgba(0,0,0,0.3);
+            animation: titlePulse 1.5s infinite;
         }
 
-        .game-over-notification p {
+        @keyframes titlePulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .winner-banner .winner-details {
+            font-size: 1.5rem;
+            color: var(--accent);
+            font-weight: 800;
+            text-shadow: 0 0 20px rgba(253,203,110,0.5);
+        }
+
+        .winner-banner .card-info {
             font-size: 1.2rem;
-            margin-bottom: 15px;
             color: #fff;
+            background: rgba(0,0,0,0.3);
+            padding: 10px 30px;
+            border-radius: 25px;
+            animation: infoPulse 2s infinite;
         }
 
-        .game-over-notification .btn {
-            margin-top: 20px;
-            padding: 15px 40px;
-            font-size: 1.2rem;
+        @keyframes infoPulse {
+            0%, 100% { box-shadow: 0 0 10px rgba(0,0,0,0.3); }
+            50% { box-shadow: 0 0 30px rgba(253,203,110,0.5); }
         }
 
-        .game-over-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.9);
-            z-index: 6999;
-            backdrop-filter: blur(5px);
-        }
-
-        /* DRAG AND DROP - NUEVO */
-        .admin-card.draggable {
-            cursor: move;
-            user-select: none;
-        }
-
-        .admin-card.draggable.dragging {
-            opacity: 0.5;
-            transform: scale(0.95);
-        }
-
-        .admin-card.drag-over {
-            border: 2px dashed var(--accent);
-            transform: scale(1.02);
-        }
-
-        .drag-handle {
+        .winner-banner-close {
             position: absolute;
             top: 10px;
-            right: 10px;
+            right: 20px;
             background: rgba(255,255,255,0.2);
             border: none;
             color: #fff;
-            width: 30px;
-            height: 30px;
-            border-radius: 8px;
-            cursor: grab;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.5rem;
             transition: all 0.3s;
         }
 
-        .drag-handle:hover {
+        .winner-banner-close:hover {
             background: rgba(255,255,255,0.4);
+            transform: scale(1.1);
         }
 
-        .drag-handle:active {
-            cursor: grabbing;
+        /* Admin Broadcast Input - NUEVO */
+        .broadcast-section {
+            background: linear-gradient(135deg, rgba(253,203,110,0.2) 0%, rgba(0,206,201,0.2) 100%);
+            border: 2px solid var(--accent);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 20px;
+            animation: glowBorder 3s infinite;
         }
 
-        .admin-card {
-            position: relative;
-        }
-
-        /* Save Layout Button */
-        .save-layout-btn {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 4000;
-            padding: 15px 25px;
-            background: linear-gradient(135deg, var(--success) 0%, #00d9a5 100%);
-            border: none;
-            border-radius: 50px;
-            color: #fff;
-            font-weight: 800;
-            cursor: pointer;
-            box-shadow: 0 4px 20px rgba(0, 184, 148, 0.4);
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .save-layout-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 30px rgba(0, 184, 148, 0.6);
-        }
-
-        /* Reset Layout Button */
-        .reset-layout-btn {
-            position: fixed;
-            bottom: 20px;
-            right: 180px;
-            z-index: 4000;
-            padding: 15px 25px;
-            background: linear-gradient(135deg, #636e72 0%, #2d3436 100%);
-            border: none;
-            border-radius: 50px;
-            color: #fff;
-            font-weight: 800;
-            cursor: pointer;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .reset-layout-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 30px rgba(0,0,0,0.6);
-        }
-
-        /* Card Number Input */
-        .card-number-input {
-            padding: 14px;
-            border: none;
-            border-radius: 12px;
-            background: rgba(255,255,255,0.1);
-            color: #fff;
-            font-size: 0.95rem;
-            transition: 0.3s;
+        .broadcast-section h3 {
+            color: var(--accent);
+            margin-bottom: 15px;
+            font-size: 1.2rem;
             text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
-        .card-number-input:focus {
+        .broadcast-input-group {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .broadcast-input {
+            flex: 1;
+            min-width: 250px;
+            padding: 16px 20px;
+            border: none;
+            border-radius: 15px;
+            background: rgba(0,0,0,0.3);
+            color: #fff;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .broadcast-input:focus {
             outline: none;
-            background: rgba(255,255,255,0.15);
-            box-shadow: 0 0 20px rgba(108,92,231,0.2);
+            border-color: var(--accent);
+            box-shadow: 0 0 30px rgba(253,203,110,0.3);
         }
 
-        .card-number-input::placeholder {
+        .broadcast-input::placeholder {
             color: rgba(255,255,255,0.5);
+        }
+
+        .broadcast-btn {
+            padding: 16px 30px;
+            font-size: 1.1rem;
+            border-radius: 15px;
+        }
+
+        /* Game Active Indicator */
+        .game-active-indicator {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: linear-gradient(135deg, var(--danger) 0%, #c0392b 100%);
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-weight: 800;
+            z-index: 4500;
+            animation: pulseIndicator 1.5s infinite;
+            border: 2px solid var(--accent);
+            display: none;
+        }
+
+        .game-active-indicator.active {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        @keyframes pulseIndicator {
+            0%, 100% { box-shadow: 0 0 10px rgba(231, 76, 60, 0.5); }
+            50% { box-shadow: 0 0 30px rgba(231, 76, 60, 0.8), 0 0 50px rgba(253,203,110,0.3); }
+        }
+
+        .game-active-indicator .dot {
+            width: 12px;
+            height: 12px;
+            background: #fff;
+            border-radius: 50%;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
         }
     </style>
 </head>
@@ -919,6 +908,12 @@
     <div class="connection-status" id="connStatus">
         <div class="conn-dot" id="connDot"></div>
         <span id="connText">Conectando...</span>
+    </div>
+
+    <!-- Game Active Indicator -->
+    <div class="game-active-indicator" id="gameActiveIndicator">
+        <div class="dot"></div>
+        <span>🎮 JUEGO EN CURSO - NO SE PUEDEN COMPRAR CARTONES</span>
     </div>
 
     <!-- Login Screen -->
@@ -973,7 +968,7 @@
                         🎨 3 Estilos de Cartón Disponibles<br>
                         👥 Sala compartida con todos los jugadores
                     </div>
-                    <div style="margin-top:10px;opacity:0.5;font-size:0.8rem">v12.0 Firebase Live - Juego Responsable</div>
+                    <div style="margin-top:10px;opacity:0.5;font-size:0.8rem">v13.0 Firebase Live - Juego Responsable</div>
                 </div>
             </div>
         </div>
@@ -1029,11 +1024,11 @@
                     <option value="gold">👑 Gold VIP</option>
                 </select>
             </div>
-            <button class="btn btn-success btn-control" onclick="buyCard()">🎫 Comprar Cartón</button>
+            <button class="btn btn-success btn-control" onclick="buyCard()" id="buyCardBtn">🎫 Comprar Cartón</button>
             <button class="btn btn-warning btn-control" onclick="requestCoins()">💰 Pedir Fichas</button>
         </div>
 
-        <!-- Botones de Cantar - CORREGIDOS -->
+        <!-- Botones de Cantar -->
         <div class="claim-buttons" id="claimButtons">
             <button class="claim-btn claim-btn-line" id="claimLineBtn" onclick="claimLine()" disabled>
                 📏 CANTAR LÍNEA
@@ -1054,11 +1049,11 @@
                 <div style="font-size:4rem;margin-bottom:15px">🎫</div>
                 <div style="font-size:1.2rem;font-weight:700;margin-bottom:10px">No tienes cartones</div>
                 <div style="font-size:1rem">Compra tu primer cartón para comenzar a jugar</div>
-                <button class="btn btn-success mt-20" onclick="buyCard()" style="max-width:250px">Comprar Cartón (100 🪙)</button>
+                <button class="btn btn-success mt-20" onclick="buyCard()" style="max-width:250px" id="buyFirstCardBtn">Comprar Cartón (100 🪙)</button>
             </div>
         </div>
 
-        <!-- CHAT CONTAINER - CORREGIDO -->
+        <!-- CHAT CONTAINER -->
         <div class="chat-container" id="chatContainer">
             <div class="chat-header">
                 <div class="chat-title">💬 Chat en Vivo <span id="onlineCountBadge" style="background:var(--success);padding:2px 8px;border-radius:10px;font-size:0.75rem;margin-left:5px">0</span></div>
@@ -1097,10 +1092,18 @@
             <button class="btn btn-danger btn-control" onclick="logout()">Cerrar Sesión</button>
         </div>
 
+        <!-- BROADCAST SECTION - NUEVO -->
+        <div class="broadcast-section">
+            <h3>📢 Mensaje para Todos (Aparece en pantalla)</h3>
+            <div class="broadcast-input-group">
+                <input type="text" id="broadcastMessage" class="broadcast-input" placeholder="Escribe un mensaje importante para todos los jugadores..." maxlength="200">
+                <button class="btn btn-primary broadcast-btn" onclick="sendBroadcastMessage()">📢 ENVIAR A TODOS</button>
+            </div>
+        </div>
+
         <div class="admin-grid" id="adminGrid">
             <!-- Premium Code Generator -->
-            <div class="admin-card code-generator draggable" draggable="true" data-card-id="codes" style="grid-column:1/-1">
-                <button class="drag-handle" title="Arrastrar para mover">⋮⋮</button>
+            <div class="admin-card code-generator" style="grid-column:1/-1">
                 <h3>🔑 Generador de Códigos Premium</h3>
                 <div style="display:flex;gap:15px;flex-wrap:wrap;align-items:center">
                     <button class="btn btn-success" onclick="generatePremiumCode()" style="flex:1;min-width:200px">
@@ -1117,8 +1120,7 @@
             </div>
 
             <!-- Game Control -->
-            <div class="admin-card draggable" draggable="true" data-card-id="control">
-                <button class="drag-handle" title="Arrastrar para mover">⋮⋮</button>
+            <div class="admin-card">
                 <h3>🎮 Control del Juego</h3>
                 <div class="admin-row">
                     <button class="btn btn-success w-full" onclick="startGame()" id="btnStart">▶ Iniciar</button>
@@ -1144,8 +1146,7 @@
             </div>
 
             <!-- Prize Config -->
-            <div class="admin-card draggable" draggable="true" data-card-id="prize">
-                <button class="drag-handle" title="Arrastrar para mover">⋮⋮</button>
+            <div class="admin-card">
                 <h3>🏆 Configuración del Pozo</h3>
                 <select id="prizeTypeSelect" class="admin-select" onchange="updatePrizeType()">
                     <option value="fixed">💵 Pozo Fijo</option>
@@ -1168,8 +1169,7 @@
             </div>
 
             <!-- Winner Selection -->
-            <div class="admin-card draggable" draggable="true" data-card-id="winners" style="grid-column:1/-1;background:rgba(0,184,148,0.1);border:2px solid var(--success)">
-                <button class="drag-handle" title="Arrastrar para mover">⋮⋮</button>
+            <div class="admin-card" style="grid-column:1/-1;background:rgba(0,184,148,0.1);border:2px solid var(--success)">
                 <h3>🏅 Selección de Ganadores</h3>
                 
                 <!-- LÍNEA Section -->
@@ -1179,7 +1179,7 @@
                         <select id="lineWinnerSelect" class="admin-select" style="flex:1;min-width:200px;margin-bottom:0">
                             <option value="">Seleccionar jugador...</option>
                         </select>
-                        <input type="text" id="lineCardNumber" class="card-number-input" placeholder="Número de cartón (4 dígitos)" maxlength="4" style="flex:1;min-width:150px">
+                        <input type="text" id="lineCardNumber" class="admin-input" placeholder="Número de cartón (4 dígitos)" maxlength="4" style="flex:1;min-width:150px;text-transform:uppercase">
                     </div>
                     <div style="display:flex;gap:10px;margin-bottom:15px">
                         <button class="btn btn-success" onclick="forceLineWinner()" style="flex:1">🏆 Otorgar Línea</button>
@@ -1200,7 +1200,7 @@
                         <select id="bingoWinnerSelect" class="admin-select" style="flex:1;min-width:200px;margin-bottom:0">
                             <option value="">Seleccionar jugador...</option>
                         </select>
-                        <input type="text" id="bingoCardNumber" class="card-number-input" placeholder="Número de cartón (4 dígitos)" maxlength="4" style="flex:1;min-width:150px">
+                        <input type="text" id="bingoCardNumber" class="admin-input" placeholder="Número de cartón (4 dígitos)" maxlength="4" style="flex:1;min-width:150px;text-transform:uppercase">
                     </div>
                     <div style="display:flex;gap:10px;margin-bottom:15px">
                         <button class="btn btn-warning" onclick="forceBingoWinner()" style="flex:1">🏆 Otorgar Bingo</button>
@@ -1247,8 +1247,7 @@
             </div>
 
             <!-- Countdown -->
-            <div class="admin-card draggable" draggable="true" data-card-id="countdown">
-                <button class="drag-handle" title="Arrastrar para mover">⋮⋮</button>
+            <div class="admin-card">
                 <h3>⏱️ Cuenta Regresiva</h3>
                 <div class="admin-row">
                     <input type="number" id="countdownSeconds" class="admin-input" value="10" min="3" max="60" placeholder="Segundos">
@@ -1257,8 +1256,7 @@
             </div>
 
             <!-- Chat & Messages -->
-            <div class="admin-card draggable" draggable="true" data-card-id="chat">
-                <button class="drag-handle" title="Arrastrar para mover">⋮⋮</button>
+            <div class="admin-card">
                 <h3>📢 Comunicados</h3>
                 <div class="admin-row">
                     <select id="msgTarget" class="admin-select" style="max-width:150px;margin-bottom:0">
@@ -1277,8 +1275,7 @@
             </div>
 
             <!-- Player Management -->
-            <div class="admin-card draggable" draggable="true" data-card-id="players">
-                <button class="drag-handle" title="Arrastrar para mover">⋮⋮</button>
+            <div class="admin-card">
                 <h3>👥 Gestión de Jugadores</h3>
                 <div class="players-list" id="adminPlayersList">
                     <div class="text-center" style="padding:30px;opacity:0.6">No hay jugadores conectados</div>
@@ -1297,16 +1294,14 @@
             </div>
 
             <!-- Manual Numbers -->
-            <div class="admin-card draggable" draggable="true" data-card-id="numbers">
-                <button class="drag-handle" title="Arrastrar para mover">⋮⋮</button>
+            <div class="admin-card">
                 <h3>🔢 Llamada Manual</h3>
                 <div class="number-grid" id="manualNumbers"></div>
                 <button class="btn btn-dark w-full mt-10" onclick="generateRandomNumber()">🎲 Número Aleatorio</button>
             </div>
 
             <!-- Statistics -->
-            <div class="admin-card draggable" draggable="true" data-card-id="stats">
-                <button class="drag-handle" title="Arrastrar para mover">⋮⋮</button>
+            <div class="admin-card">
                 <h3>📊 Estadísticas en Vivo</h3>
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-bottom:20px">
                     <div class="text-center" style="background:rgba(0,0,0,0.2);padding:20px;border-radius:15px">
@@ -1321,26 +1316,9 @@
                 <button class="btn btn-primary w-full" onclick="showCalledNumbers()">📋 Ver Números Cantados</button>
             </div>
         </div>
-
-        <!-- Console Log para Admin - CON BOTÓN X -->
-        <div class="console-log" id="adminConsole">
-            <div class="console-log-header">
-                <div style="font-weight:700;color:var(--accent)">📋 Consola de Eventos</div>
-                <button class="console-log-close" onclick="clearConsole()" title="Borrar consola">×</button>
-            </div>
-            <div id="consoleContent"></div>
-        </div>
-
-        <!-- Botones de Guardar/Resetear Layout -->
-        <button class="save-layout-btn" onclick="saveLayout()" title="Guardar disposición">
-            💾 Guardar
-        </button>
-        <button class="reset-layout-btn" onclick="resetLayout()" title="Restaurar disposición por defecto">
-            🔄 Restaurar
-        </button>
     </div>
 
-    <!-- Winner Modal - CORREGIDO CON BOTÓN DE CERRAR -->
+    <!-- Winner Modal -->
     <div id="winnerModal" class="modal-overlay" onclick="if(event.target === this) closeWinnerModal()">
         <div class="modal-content">
             <button class="modal-close" onclick="closeWinnerModal()">×</button>
@@ -1353,7 +1331,7 @@
         </div>
     </div>
 
-    <!-- Admin Winner Display - NUEVO -->
+    <!-- Admin Winner Display -->
     <div id="adminWinnerOverlay" class="admin-winner-overlay hidden" onclick="if(event.target === this) closeAdminWinnerDisplay()"></div>
     <div id="adminWinnerDisplay" class="admin-winner-display hidden">
         <h2 id="adminWinnerTitle">🏆 ¡GANADOR!</h2>
@@ -1365,13 +1343,23 @@
         <button class="btn btn-primary" onclick="closeAdminWinnerDisplay()">✅ OK - Continuar Juego</button>
     </div>
 
-    <!-- Game Over Notification - NUEVO -->
+    <!-- Game Over Notification -->
     <div id="gameOverOverlay" class="game-over-overlay hidden" onclick="if(event.target === this) closeGameOverNotification()"></div>
     <div id="gameOverNotification" class="game-over-notification hidden">
         <h2>🎮 PARTIDA TERMINADA</h2>
         <p>La partida ha finalizado. Todos los cartones han sido eliminados.</p>
         <p style="font-size:1.5rem;color:var(--accent);font-weight:800">¡Compren nuevos cartones!</p>
         <button class="btn btn-primary" onclick="closeGameOverNotification()">Entendido</button>
+    </div>
+
+    <!-- Winner Banner - NUEVO -->
+    <div id="winnerBanner" class="winner-banner hidden">
+        <button class="winner-banner-close" onclick="closeWinnerBanner()">×</button>
+        <div class="winner-banner-content">
+            <h2 id="winnerBannerTitle">🏆 ¡GANADOR!</h2>
+            <div class="winner-details" id="winnerBannerDetails">Jugador</div>
+            <div class="card-info" id="winnerBannerCard">Cartón: ----</div>
+        </div>
     </div>
 
     <!-- Countdown Overlay -->
@@ -1458,11 +1446,8 @@
             lastProcessedChatTimestamp: 0,
             hasLine: false,
             hasBingo: false,
-            consoleLogs: [],
-            chatInitialized: false,
-            voiceInitialized: false,
-            processedMessages: new Set(), // Para evitar duplicados
-            cardLayout: null // Para guardar el layout de tarjetas
+            processedMessages: new Set(),
+            cardLayout: null
         };
 
         let synth = window.speechSynthesis;
@@ -1474,7 +1459,6 @@
             }
             if (!App.voiceInitialized) {
                 App.voiceInitialized = true;
-                // Cargar voces disponibles
                 if (synth) {
                     synth.getVoices();
                 }
@@ -1484,7 +1468,6 @@
         function speak(text, priority = false) {
             if (!App.settings.voice || !synth) return;
             
-            // Inicializar audio en primera interacción
             if (!App.voiceInitialized) {
                 initAudio();
             }
@@ -1608,33 +1591,6 @@
             if (amount === Infinity || amount === 'Infinity') return '∞';
             return '$' + amount.toLocaleString('es-ES');
         };
-
-        // ==================== CONSOLA DE ADMIN ====================
-        function logToConsole(message, type = 'info') {
-            const timestamp = new Date().toLocaleTimeString('es-ES');
-            const logEntry = { message, type, timestamp };
-            App.consoleLogs.push(logEntry);
-            if (App.consoleLogs.length > 50) App.consoleLogs.shift();
-            updateConsoleDisplay();
-            console.log(`[${timestamp}] ${message}`);
-        }
-
-        function updateConsoleDisplay() {
-            const consoleContent = $('consoleContent');
-            if (!consoleContent) return;
-            consoleContent.innerHTML = App.consoleLogs.map(log => `
-                <div class="console-log-entry ${log.type}">
-                    <span style="opacity:0.6;font-size:0.75rem">[${log.timestamp}]</span> ${log.message}
-                </div>
-            `).join('');
-            consoleContent.scrollTop = consoleContent.scrollHeight;
-        }
-
-        function clearConsole() {
-            App.consoleLogs = [];
-            updateConsoleDisplay();
-            showToast('🗑 Consola borrada', 'info');
-        }
 
         // ==================== SISTEMA DE LOGIN ====================
         function setLoginMode(mode) {
@@ -1817,11 +1773,7 @@
             
             startOfflineCleanup();
             
-            // Anunciar entrada del admin
             speak('Modo administrador activado. Bienvenido al panel de control.', true);
-            
-            // Cargar layout guardado
-            loadLayout();
         }
 
         async function loginAsPremium(name, code) {
@@ -1945,7 +1897,6 @@
                 
                 if (cleaned > 0) {
                     await database.ref().update(updates);
-                    logToConsole(`🧹 ${cleaned} jugadores marcados como offline`, 'info');
                 }
             }, 10000);
         }
@@ -1982,7 +1933,7 @@
 
         // ==================== FIREBASE: LISTENERS ====================
         function setupFirebaseListeners() {
-            // Escuchar jugadores - CORREGIDO
+            // Escuchar jugadores
             database.ref('players').on('value', (snapshot) => {
                 const players = snapshot.val() || {};
                 App.players.clear();
@@ -2006,9 +1957,13 @@
                     const oldLineWinners = App.gameState.lineWinners?.length || 0;
                     const oldBingoWinner = App.gameState.bingoWinner;
                     const oldNoLineMode = App.gameState.noLineMode;
+                    const oldActive = App.gameState.active;
                     
                     App.gameState = { ...App.gameState, ...state };
                     updateGameDisplay();
+                    
+                    // Actualizar indicador de juego activo
+                    updateGameActiveIndicator();
                     
                     if (state.noLineMode !== oldNoLineMode) updateNoLineModeDisplay();
                     
@@ -2016,21 +1971,21 @@
                     if (state.lineWinners && state.lineWinners.length > oldLineWinners) {
                         const newWinner = state.lineWinners[state.lineWinners.length - 1];
                         showWinnerModal(newWinner);
+                        showWinnerBanner(newWinner);
                         if (App.isAdmin) {
                             showAdminWinnerDisplay(newWinner);
                         }
                         speak(`¡Línea! ${newWinner.player} ha ganado ${newWinner.prize}`, true);
-                        logToConsole(`🏆 LÍNEA: ${newWinner.player} - Cartón ${newWinner.cardId} - ${newWinner.prize}`, 'winner');
                         pauseGame();
                     }
                     
                     if (state.bingoWinner && !oldBingoWinner) {
                         showWinnerModal(state.bingoWinner);
+                        showWinnerBanner(state.bingoWinner);
                         if (App.isAdmin) {
                             showAdminWinnerDisplay(state.bingoWinner);
                         }
                         speak(`¡Bingo! ${state.bingoWinner.player} ha ganado ${state.bingoWinner.prize}`, true);
-                        logToConsole(`🏆 BINGO: ${state.bingoWinner.player} - Cartón ${state.bingoWinner.cardId} - ${state.bingoWinner.prize}`, 'winner');
                         pauseGame();
                     }
                     
@@ -2054,11 +2009,9 @@
                 }
             });
 
-            // CHAT - CORREGIDO: Usar child_added con prevKey para evitar duplicados
+            // CHAT - CORREGIDO
             if (!App.chatInitialized) {
                 App.chatInitialized = true;
-                
-                // Limpiar mensajes procesados al iniciar
                 App.processedMessages.clear();
                 
                 database.ref('chat').limitToLast(50).on('child_added', (snapshot) => {
@@ -2067,10 +2020,8 @@
                     
                     if (!msg || App.processedMessages.has(msgKey)) return;
                     
-                    // Marcar como procesado
                     App.processedMessages.add(msgKey);
                     
-                    // Limpiar mensajes antiguos del Set (mantener últimos 100)
                     if (App.processedMessages.size > 100) {
                         const iterator = App.processedMessages.values();
                         App.processedMessages.delete(iterator.next().value);
@@ -2087,7 +2038,6 @@
                         msg.targetPlayer
                     );
                     
-                    // Anunciar mensajes importantes
                     if (msg.isBroadcast && msg.isAdmin && !App.isAdmin) {
                         speak(`Mensaje del administrador: ${msg.text}`);
                     }
@@ -2147,12 +2097,11 @@
                     if (request && request.timestamp > Date.now() - 60000) {
                         showToast(`💰 ${request.player} solicita más fichas`, 'info', 5000);
                         speak(`Atención administrador: ${request.player} solicita más fichas`);
-                        logToConsole(`💰 Solicitud de fichas: ${request.player}`, 'info');
                     }
                 });
             }
 
-            // Escuchar reset de juego - CORREGIDO
+            // Escuchar reset de juego
             database.ref('gameReset').on('value', (snapshot) => {
                 const reset = snapshot.val();
                 if (reset && reset.timestamp > Date.now() - 5000) {
@@ -2166,6 +2115,19 @@
                 App.gameState.noLineMode = noLineMode || false;
                 updateNoLineModeDisplay();
             });
+
+            // Escuchar mensajes broadcast - NUEVO
+            database.ref('broadcast').on('value', (snapshot) => {
+                const broadcast = snapshot.val();
+                if (broadcast && broadcast.timestamp > Date.now() - 10000) {
+                    showWinnerBanner({
+                        type: 'broadcast',
+                        player: 'ADMIN',
+                        cardId: 'MENSAJE',
+                        prize: broadcast.message
+                    }, true);
+                }
+            });
         }
 
         function updateOnlineCountBadge() {
@@ -2175,23 +2137,50 @@
             }
         }
 
+        function updateGameActiveIndicator() {
+            const indicator = $('gameActiveIndicator');
+            if (!indicator) return;
+            
+            if (App.gameState.active && !App.gameState.paused) {
+                indicator.classList.add('active');
+                // Deshabilitar botones de compra
+                const buyBtn = $('buyCardBtn');
+                const buyFirstBtn = $('buyFirstCardBtn');
+                if (buyBtn) {
+                    buyBtn.disabled = true;
+                    buyBtn.textContent = '🚫 JUEGO EN CURSO';
+                }
+                if (buyFirstBtn) {
+                    buyFirstBtn.disabled = true;
+                    buyFirstBtn.textContent = '🚫 JUEGO EN CURSO';
+                }
+            } else {
+                indicator.classList.remove('active');
+                // Habilitar botones de compra
+                const buyBtn = $('buyCardBtn');
+                const buyFirstBtn = $('buyFirstCardBtn');
+                if (buyBtn) {
+                    buyBtn.disabled = false;
+                    buyBtn.textContent = '🎫 Comprar Cartón';
+                }
+                if (buyFirstBtn) {
+                    buyFirstBtn.disabled = false;
+                    buyFirstBtn.textContent = 'Comprar Cartón (100 🪙)';
+                }
+            }
+        }
+
         function handleGameReset() {
-            // Limpiar cartones locales
             App.myCards = [];
             App.hasLine = false;
             App.hasBingo = false;
             
-            // Actualizar UI
             renderCards();
             updateClaimButtons();
             
-            // Mostrar notificación de fin de partida
             showGameOverNotification();
             
-            // Anunciar con voz
             speak('¡Partida terminada! El juego ha sido reiniciado. Todos los cartones han sido eliminados. Por favor, compren nuevos cartones para continuar jugando.', true);
-            
-            logToConsole('🔄 Partida terminada - Todos los cartones eliminados', 'info');
         }
 
         function showGameOverNotification() {
@@ -2323,7 +2312,6 @@
             });
             
             speak(`¡Línea automática! ${playerName} ha ganado ${prizeAmount} pesos con el cartón ${cardId}`, true);
-            logToConsole(`🤖 AUTO LÍNEA: ${playerName} - ${cardId} - ${formatMoney(prizeAmount)}`, 'winner');
             pauseGame();
         }
 
@@ -2355,7 +2343,6 @@
             });
             
             speak(`¡Bingo automático! ${playerName} ha ganado ${prizeAmount} pesos con el cartón ${cardId}. ¡Felicitaciones!`, true);
-            logToConsole(`🤖 AUTO BINGO: ${playerName} - ${cardId} - ${formatMoney(prizeAmount)}`, 'winner');
             pauseGame();
         }
 
@@ -2366,8 +2353,6 @@
             updateCoinsDisplay();
             updatePlayerCount();
             updateOnlineCountBadge();
-            
-            // Inicializar chat
             renderChat();
             
             if (App.calledNumbers.length > 0) updateGameDisplay();
@@ -2420,6 +2405,13 @@
         }
 
         function buyCard() {
+            // CORREGIDO: Verificar si el juego está activo
+            if (App.gameState.active && !App.gameState.paused) {
+                showToast('🚫 No puedes comprar cartones mientras el juego está en curso', 'error');
+                speak('No se pueden comprar cartones durante el juego');
+                return;
+            }
+            
             if (App.myCards.length >= CONFIG.MAX_CARDS) {
                 showToast(`Máximo ${CONFIG.MAX_CARDS} cartones permitidos`, 'error');
                 return;
@@ -2442,7 +2434,6 @@
             renderCards();
             showToast(`🎫 Cartón #${App.myCards.length} comprado - ID: ${newCard.id}`);
             
-            // Anunciar compra con voz
             speak(`Cartón ${newCard.id} comprado. ¡Buena suerte!`);
             
             if (!App.isAdmin) {
@@ -2478,7 +2469,7 @@
                         <div style="font-size:4rem;margin-bottom:15px">🎫</div>
                         <div style="font-size:1.2rem;font-weight:700;margin-bottom:10px">No tienes cartones</div>
                         <div style="font-size:1rem">Compra tu primer cartón para comenzar a jugar</div>
-                        <button class="btn btn-success mt-20" onclick="buyCard()" style="max-width:250px">Comprar Cartón (100 🪙)</button>
+                        <button class="btn btn-success mt-20" onclick="buyCard()" style="max-width:250px" id="buyFirstCardBtn">Comprar Cartón (100 🪙)</button>
                     </div>`;
                 return;
             }
@@ -2524,7 +2515,6 @@
                 return;
             }
             
-            // CORREGIDO: Verificar que el número haya sido cantado
             if (!App.calledNumbers.includes(number)) {
                 card.hasError[row][col] = true;
                 renderCards();
@@ -2542,7 +2532,7 @@
             if (card.marked[row][col]) checkPlayerWinStatus();
         }
 
-        // ==================== VERIFICACIÓN DE VICTORIA DEL JUGADOR - CORREGIDA ====================
+        // ==================== VERIFICACIÓN DE VICTORIA ====================
         function checkPlayerWinStatus() {
             if (App.myCards.length === 0) {
                 App.hasLine = false;
@@ -2555,21 +2545,17 @@
             App.hasBingo = false;
             
             for (const card of App.myCards) {
-                // Verificar líneas horizontales
                 for (let i = 0; i < 5; i++) {
                     if (card.marked[i].every(m => m)) App.hasLine = true;
                 }
                 
-                // Verificar líneas verticales
                 for (let i = 0; i < 5; i++) {
                     if (card.marked.every(r => r[i])) App.hasLine = true;
                 }
                 
-                // Verificar diagonales
                 if ([0,1,2,3,4].every(i => card.marked[i][i])) App.hasLine = true;
                 if ([0,1,2,3,4].every(i => card.marked[i][4-i])) App.hasLine = true;
                 
-                // Verificar bingo completo
                 if (card.marked.every(r => r.every(m => m))) App.hasBingo = true;
             }
             
@@ -2582,7 +2568,6 @@
             
             if (!lineBtn || !bingoBtn) return;
             
-            // CORREGIDO: Solo habilitar si el juego está activo y no hay ganador aún
             const canClaimLine = App.hasLine && 
                                 App.gameState.active && 
                                 !App.gameState.paused &&
@@ -2711,7 +2696,7 @@
             showToast('💰 Solicitud enviada al administrador');
         }
 
-        // ==================== CHAT - CORREGIDO ====================
+        // ==================== CHAT ====================
         function switchChatTab(tab) {
             App.chatMode = tab;
             document.querySelectorAll('.chat-tab').forEach(t => t.classList.remove('active'));
@@ -2881,115 +2866,6 @@
             if (noLineCheckbox) {
                 noLineCheckbox.checked = App.gameState.noLineMode || false;
             }
-            
-            // Inicializar drag and drop
-            initDragAndDrop();
-        }
-
-        // ==================== DRAG AND DROP - NUEVO ====================
-        function initDragAndDrop() {
-            const grid = $('adminGrid');
-            if (!grid) return;
-            
-            let draggedElement = null;
-            
-            grid.addEventListener('dragstart', (e) => {
-                if (e.target.classList.contains('draggable')) {
-                    draggedElement = e.target;
-                    e.target.classList.add('dragging');
-                    e.dataTransfer.effectAllowed = 'move';
-                    e.dataTransfer.setData('text/html', e.target.innerHTML);
-                }
-            });
-            
-            grid.addEventListener('dragend', (e) => {
-                if (e.target.classList.contains('draggable')) {
-                    e.target.classList.remove('dragging');
-                }
-            });
-            
-            grid.addEventListener('dragover', (e) => {
-                e.preventDefault();
-                e.dataTransfer.dropEffect = 'move';
-                
-                const target = e.target.closest('.draggable');
-                if (target && target !== draggedElement) {
-                    target.classList.add('drag-over');
-                }
-            });
-            
-            grid.addEventListener('dragleave', (e) => {
-                const target = e.target.closest('.draggable');
-                if (target) {
-                    target.classList.remove('drag-over');
-                }
-            });
-            
-            grid.addEventListener('drop', (e) => {
-                e.preventDefault();
-                
-                const target = e.target.closest('.draggable');
-                if (target && target !== draggedElement) {
-                    target.classList.remove('drag-over');
-                    
-                    // Intercambiar posiciones
-                    const allCards = Array.from(grid.querySelectorAll('.draggable'));
-                    const draggedIndex = allCards.indexOf(draggedElement);
-                    const targetIndex = allCards.indexOf(target);
-                    
-                    if (draggedIndex < targetIndex) {
-                        target.after(draggedElement);
-                    } else {
-                        target.before(draggedElement);
-                    }
-                    
-                    showToast('📦 Tarjeta movida. Recuerda guardar el layout.', 'info');
-                }
-            });
-        }
-
-        function saveLayout() {
-            const grid = $('adminGrid');
-            if (!grid) return;
-            
-            const cards = grid.querySelectorAll('.draggable');
-            const layout = Array.from(cards).map(card => card.dataset.cardId);
-            
-            localStorage.setItem('bingoAdminLayout', JSON.stringify(layout));
-            showToast('💾 Layout guardado correctamente', 'success');
-            logToConsole('💾 Layout del panel guardado', 'info');
-        }
-
-        function loadLayout() {
-            const savedLayout = localStorage.getItem('bingoAdminLayout');
-            if (!savedLayout) return;
-            
-            try {
-                const layout = JSON.parse(savedLayout);
-                const grid = $('adminGrid');
-                if (!grid) return;
-                
-                const cards = Array.from(grid.querySelectorAll('.draggable'));
-                const cardMap = new Map(cards.map(card => [card.dataset.cardId, card]));
-                
-                // Reordenar según el layout guardado
-                layout.forEach(cardId => {
-                    const card = cardMap.get(cardId);
-                    if (card) {
-                        grid.appendChild(card);
-                    }
-                });
-                
-                logToConsole('📦 Layout del panel cargado', 'info');
-            } catch (e) {
-                console.error('Error cargando layout:', e);
-            }
-        }
-
-        function resetLayout() {
-            localStorage.removeItem('bingoAdminLayout');
-            showToast('🔄 Layout restaurado. Recarga la página para ver los cambios.', 'info');
-            logToConsole('🔄 Layout restaurado a valores por defecto', 'info');
         }
 
         function updatePrivateTargetSelect() {
@@ -3008,7 +2884,7 @@
         function updateWinnerSelects() {
             const lineSelect = $('lineWinnerSelect');
             const bingoSelect = $('bingoWinnerSelect');
-            const targetSelect = $('targetPlayer'); // Para dar monedas
+            const targetSelect = $('targetPlayer');
             
             const options = '<option value="">Seleccionar jugador...</option>' + 
                 Array.from(App.players.values()).map(p => 
@@ -3288,7 +3164,6 @@
             
             showWinnerModal(winnerData);
             speak(`¡Línea! ${player} ha ganado ${prizeAmount} pesos con el cartón ${cardId}`, true);
-            logToConsole(`🏆 LÍNEA MANUAL: ${player} - ${cardId} - ${formatMoney(prizeAmount)}`, 'winner');
             
             pauseGame();
             
@@ -3341,7 +3216,6 @@
             
             showWinnerModal(winnerData);
             speak(`¡Bingo! ${player} ha ganado ${prizeAmount} pesos con el cartón ${cardId}. ¡Felicitaciones!`, true);
-            logToConsole(`🏆 BINGO MANUAL: ${player} - ${cardId} - ${formatMoney(prizeAmount)}`, 'winner');
             
             pauseGame();
             
@@ -3349,7 +3223,6 @@
             $('bingoCardNumber').value = '';
         }
 
-        // NUEVO: Mostrar ganador en pantalla del admin
         function showAdminWinnerDisplay(winner) {
             const overlay = $('adminWinnerOverlay');
             const display = $('adminWinnerDisplay');
@@ -3364,7 +3237,6 @@
             overlay.classList.remove('hidden');
             display.classList.remove('hidden');
             
-            // Anunciar con voz
             const typeText = winner.type === 'line' ? 'línea' : 'bingo';
             speak(`¡Atención! Tenemos ganador de ${typeText}. ${winner.player} ha ganado ${winner.prize} con el cartón ${winner.cardId}. Presiona OK para continuar.`, true);
         }
@@ -3376,10 +3248,68 @@
             if (overlay) overlay.classList.add('hidden');
             if (display) display.classList.add('hidden');
             
-            // Reanudar juego si estaba pausado
             if (App.gameState.paused) {
                 startGame();
             }
+        }
+
+        // NUEVO: Mostrar banner de ganador
+        function showWinnerBanner(winner, isBroadcast = false) {
+            const banner = $('winnerBanner');
+            if (!banner) return;
+            
+            const title = $('winnerBannerTitle');
+            const details = $('winnerBannerDetails');
+            const card = $('winnerBannerCard');
+            
+            if (isBroadcast) {
+                title.textContent = '📢 MENSAJE DEL ADMIN';
+                details.textContent = winner.prize;
+                card.textContent = 'MENSAJE IMPORTANTE';
+                banner.style.background = 'linear-gradient(135deg, var(--accent) 0%, var(--secondary) 100%)';
+            } else {
+                title.textContent = winner.type === 'line' ? '📏 ¡LÍNEA!' : '🎱 ¡BINGO!';
+                details.textContent = `${winner.player} - ${winner.prize}`;
+                card.textContent = `Cartón: ${winner.cardId}`;
+                banner.style.background = winner.type === 'line' 
+                    ? 'linear-gradient(135deg, var(--success) 0%, var(--secondary) 100%)'
+                    : 'linear-gradient(135deg, var(--accent) 0%, #f39c12 100%)';
+            }
+            
+            banner.classList.remove('hidden');
+            
+            // Auto-cerrar después de 10 segundos
+            setTimeout(() => {
+                closeWinnerBanner();
+            }, 10000);
+        }
+
+        function closeWinnerBanner() {
+            const banner = $('winnerBanner');
+            if (banner) {
+                banner.classList.add('hidden');
+            }
+        }
+
+        // NUEVO: Enviar mensaje broadcast
+        async function sendBroadcastMessage() {
+            const input = $('broadcastMessage');
+            const text = input.value.trim();
+            
+            if (!text) {
+                showToast('Escribe un mensaje para enviar', 'error');
+                return;
+            }
+            
+            await database.ref('broadcast').set({
+                message: text,
+                timestamp: Date.now()
+            });
+            
+            showToast('📢 Mensaje enviado a todos los jugadores', 'success');
+            speak(`Mensaje broadcast enviado: ${text}`);
+            
+            input.value = '';
         }
 
         function simulateLineLogic() {
@@ -3452,6 +3382,7 @@
             App.gameState.claimedLines = 0;
             App.gameState.bingoClaimed = false;
             
+            // CORREGIDO: Establecer paused en false al iniciar
             await database.ref('gameState').update({
                 active: true,
                 paused: false,
@@ -3465,7 +3396,6 @@
             if ($('btnStart')) $('btnStart').disabled = true;
             showToast('🎮 Juego iniciado');
             speak('¡El juego ha comenzado! ¡Buena suerte a todos!');
-            logToConsole('🎮 Juego iniciado', 'info');
         }
 
         async function pauseGame() {
@@ -3479,21 +3409,18 @@
             showToast('⏸ Juego pausado', 'info');
             speak('Juego pausado');
             await database.ref('gameState/paused').set(true);
-            logToConsole('⏸ Juego pausado', 'info');
         }
 
         async function resetGame() {
             pauseGame();
             
-            // Limpiar todos los datos del juego
             await database.ref('calledNumbers').remove();
             await database.ref('gameState/currentNumber').set(null);
             await database.ref('potentialWinners').remove();
             await database.ref('winners').remove();
             await database.ref('currentWinner').remove();
-            await database.ref('chat').remove(); // Borrar mensajes
+            await database.ref('chat').remove();
             
-            // Limpiar cartones de todos los jugadores
             const playersSnapshot = await database.ref('players').once('value');
             const players = playersSnapshot.val() || {};
             
@@ -3502,7 +3429,6 @@
                 updates[`players/${playerId}/cards`] = 0;
             });
             
-            // También limpiar cartones de admins
             const adminsSnapshot = await database.ref('admins').once('value');
             const admins = adminsSnapshot.val() || {};
             Object.keys(admins).forEach(adminId => {
@@ -3511,24 +3437,20 @@
             
             await database.ref().update(updates);
             
-            // Notificar reset
             await database.ref('gameReset').set({
                 timestamp: Date.now(),
                 message: 'Juego reiniciado. Compra nuevos cartones.'
             });
             
-            // Limpiar localmente
             App.myCards = [];
             App.hasLine = false;
             App.hasBingo = false;
-            App.chat = []; // Limpiar chat local
-            App.processedMessages.clear(); // Limpiar mensajes procesados
-            App.consoleLogs = []; // Limpiar consola
+            App.chat = [];
+            App.processedMessages.clear();
             
             renderCards();
             updateClaimButtons();
             renderChat();
-            updateConsoleDisplay();
             
             App.calledNumbers = [];
             App.gameState.currentNumber = null;
@@ -3546,12 +3468,10 @@
             updateGameDisplay();
             updateWinnerDisplays();
             
-            // Mostrar notificación de fin de partida
             showGameOverNotification();
             
             showToast('🔄 Juego reiniciado. Todos los cartones eliminados y chat borrado.');
             speak('¡Partida terminada! El juego ha sido reiniciado. Todos los cartones han sido eliminados y el chat ha sido borrado. Por favor, compren nuevos cartones para continuar jugando.', true);
-            logToConsole('🔄 Partida terminada - Cartones eliminados, chat borrado', 'info');
         }
 
         async function generateRandomNumber() {
@@ -3594,7 +3514,6 @@
             
             updateGameDisplay();
             updateAdminDisplay();
-            logToConsole(`🔢 Número cantado: ${num}`, 'info');
         }
 
         async function startCountdown() {
@@ -3616,31 +3535,36 @@
             
             if (!text) return;
             
+            // CORREGIDO: Definir targetPlayer correctamente
+            let targetPlayer = null;
+            if (target === 'private' && privateTarget) {
+                targetPlayer = privateTarget;
+            }
+            
             const isPrivate = target === 'private';
             const finalText = isPrivate ? text : `📢 ${text}`;
             const isBroadcast = !isPrivate;
             
-            addChatMessage(finalText, 'Tú', true, false, isPrivate, Infinity, isBroadcast, isPrivate ? privateTarget : null);
+            addChatMessage(finalText, 'Tú', true, false, isPrivate, Infinity, isBroadcast, targetPlayer);
             $('adminMessage').value = '';
             
             await database.ref('chat').push({
                 text: finalText,
                 author: 'Admin',
                 isAdmin: true,
-                isPrivate: !!targetPlayer,
-                isBroadcast,
-                targetPlayer,
+                isPrivate: isPrivate,
+                isBroadcast: isBroadcast,
+                targetPlayer: targetPlayer,
                 playerCoins: Infinity,
                 timestamp: Date.now()
             });
             
-            if (isPrivate && privateTarget) speak(`Mensaje privado enviado a ${privateTarget}`);
+            if (isPrivate && targetPlayer) speak(`Mensaje privado enviado a ${targetPlayer}`);
             else speak(`Mensaje para todos: ${text}`);
             
-            showToast(isPrivate ? `Mensaje privado enviado a ${privateTarget}` : 'Mensaje enviado a todos');
+            showToast(isPrivate ? `Mensaje privado enviado a ${targetPlayer}` : 'Mensaje enviado a todos');
         }
 
-        // CORREGIDO: Función para dar monedas
         async function giveCoins() {
             const targetSelect = $('targetPlayer');
             const amountInput = $('coinAmount');
@@ -3658,7 +3582,6 @@
                 return;
             }
             
-            // Buscar el jugador en la lista de jugadores
             const player = Array.from(App.players.values()).find(p => p.name === targetName);
             
             if (!player) {
@@ -3672,13 +3595,10 @@
                 await database.ref(`players/${player.id}/coins`).set(newAmount);
                 showToast(`💰 ${formatMoney(amount)} enviados a ${targetName}`, 'success');
                 speak(`${targetName} ha recibido ${amount} fichas`);
-                logToConsole(`💰 ${targetName} recibió ${amount} fichas`, 'info');
                 
-                // Limpiar inputs
                 targetSelect.value = '';
                 amountInput.value = '';
                 
-                // Actualizar la lista
                 updateAdminDisplay();
             } catch (error) {
                 console.error('Error al enviar monedas:', error);
@@ -3785,6 +3705,7 @@
                     closeWelcomeMessage();
                     closeAdminWinnerDisplay();
                     closeGameOverNotification();
+                    closeWinnerBanner();
                 }
             });
             
@@ -3804,7 +3725,6 @@
                 }
             });
             
-            // Inicializar audio en primera interacción del usuario
             document.addEventListener('click', () => {
                 if (!App.voiceInitialized) {
                     initAudio();
@@ -3853,11 +3773,10 @@
         window.closeWelcomeMessage = closeWelcomeMessage;
         window.refreshPlayerList = refreshPlayerList;
         window.toggleNoLineMode = toggleNoLineMode;
-        window.clearConsole = clearConsole;
         window.closeAdminWinnerDisplay = closeAdminWinnerDisplay;
         window.closeGameOverNotification = closeGameOverNotification;
-        window.saveLayout = saveLayout;
-        window.resetLayout = resetLayout;
+        window.closeWinnerBanner = closeWinnerBanner;
+        window.sendBroadcastMessage = sendBroadcastMessage;
     </script>
 </body>
 </html>
