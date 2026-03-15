@@ -18,8 +18,16 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:linear
 .screen{display:none;min-height:100vh;padding:15px;animation:fadeIn 0.5s ease}
 .screen.active{display:block}
 @keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+/* RELOJ PEQUEÑO - FECHA Y HORA */
 .clock-display{position:fixed;top:10px;left:10px;background:rgba(0,0,0,0.4);padding:6px 12px;border-radius:15px;font-size:0.7rem;font-weight:600;z-index:1000;backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;gap:6px;white-space:nowrap}
 .clock-display span{color:var(--accent)}
+
+/* ADVERTENCIA JUEGO RESPONSABLE */
+.responsible-gaming-warning{position:fixed;bottom:10px;left:10px;background:rgba(231,76,60,0.9);padding:10px 20px;border-radius:15px;font-size:0.75rem;font-weight:600;z-index:999;backdrop-filter:blur(10px);border:2px solid var(--danger);display:none;animation:pulseWarning 3s infinite}
+@keyframes pulseWarning{0%,100%{opacity:0.8}50%{opacity:1}}
+.responsible-gaming-warning.active{display:block}
+
 .login{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);padding:20px;position:relative}
 .login::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");opacity:0.3}
 .logo{font-size:2.8rem;font-weight:900;text-align:center;margin-bottom:10px;text-shadow:0 4px 15px rgba(0,0,0,0.3);position:relative;letter-spacing:-2px}
@@ -51,6 +59,8 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:linear
 .toggle-option{flex:1;text-align:center;padding:12px;border-radius:10px;cursor:pointer;transition:all 0.3s;font-weight:700;font-size:0.95rem;opacity:0.6;border:2px solid transparent}
 .toggle-option:hover{opacity:0.8}
 .toggle-option.active{background:rgba(255,255,255,0.2);opacity:1;border-color:var(--accent)}
+
+/* HEADER MEJORADO */
 .header{background:linear-gradient(135deg,rgba(102,126,234,0.3) 0%,rgba(118,75,162,0.3) 100%);padding:20px;border-radius:20px;margin-bottom:20px;display:flex;justify-content:space-between;align-items:center;box-shadow:var(--shadow);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.05);position:sticky;top:15px;z-index:100;animation:slideDown 0.5s ease}
 @keyframes slideDown{from{transform:translateY(-100%);opacity:0}to{transform:translateY(0);opacity:1}}
 .player-info{display:flex;align-items:center;gap:15px}
@@ -77,6 +87,8 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:linear
 @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
 .coins::before{content:"🪙";font-size:1.4rem;animation:spinCoin 2s linear infinite}
 @keyframes spinCoin{0%{transform:rotateY(0deg)}100%{transform:rotateY(360deg)}}
+
+/* POZO CORREGIDO Y MEJORADO */
 .prize-section{background:linear-gradient(135deg,var(--danger) 0%,#c0392b 100%);padding:25px;border-radius:20px;text-align:center;margin-bottom:20px;box-shadow:var(--shadow);position:relative;overflow:hidden;animation:prizePulse 3s infinite}
 @keyframes prizePulse{0%,100%{transform:scale(1);box-shadow:0 8px 32px rgba(0,0,0,0.4)}50%{transform:scale(1.02);box-shadow:0 12px 40px rgba(231,76,60,0.6)}}
 .prize-section::before{content:'🏆';position:absolute;top:-20px;left:-20px;font-size:8rem;opacity:0.1;transform:rotate(-15deg);animation:trophyFloat 4s ease-in-out infinite}
@@ -86,6 +98,9 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:linear
 .prize-label{font-size:1rem;opacity:0.9;margin-top:8px;text-transform:uppercase;letter-spacing:3px;font-weight:600}
 .prize-breakdown{display:flex;justify-content:center;gap:20px;margin-top:15px;font-size:0.9rem;flex-wrap:wrap}
 .prize-breakdown span{background:rgba(0,0,0,0.3);padding:8px 15px;border-radius:15px}
+.prize-text-display{background:rgba(253,203,110,0.2);border:2px solid var(--accent);padding:15px;border-radius:15px;margin-top:15px;font-size:1.2rem;font-weight:800;color:var(--accent);animation:prizeTextPulse 2s infinite}
+@keyframes prizeTextPulse{0%,100%{box-shadow:0 0 20px rgba(253,203,110,0.3)}50%{box-shadow:0 0 40px rgba(253,203,110,0.6)}}
+
 .controls{background:rgba(255,255,255,0.03);border-radius:20px;padding:20px;margin-bottom:20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:20px;border:1px solid rgba(255,255,255,0.05)}
 .control-group{display:flex;flex-direction:column;align-items:center;gap:10px}
 .control-label{font-size:0.8rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;opacity:0.8}
@@ -158,6 +173,8 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:linear
 .card-gold .cell.marked{background:var(--success);color:#fff;transform:scale(0.95);border-color:var(--success)}
 .card-gold .cell.marked::after{content:"👑";position:absolute;font-size:1.2rem}
 .card-gold .cell.error{background:var(--danger);animation:shake 0.5s}
+
+/* CHAT MEJORADO */
 .chat-container{background:rgba(255,255,255,0.03);border-radius:20px;padding:20px;height:280px;display:flex;flex-direction:column;border:1px solid rgba(255,255,255,0.05);margin-top:20px;position:relative;z-index:500}
 .chat-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px;padding-bottom:15px;border-bottom:2px solid rgba(255,255,255,0.1)}
 .chat-title{font-weight:800;font-size:1rem;display:flex;align-items:center;gap:10px}
@@ -176,11 +193,14 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:linear
 .chat-input{flex:1;padding:14px;border:none;border-radius:12px;background:rgba(255,255,255,0.1);color:#fff;font-size:1rem;transition:0.3s}
 .chat-input:focus{outline:none;background:rgba(255,255,255,0.15);box-shadow:0 0 20px rgba(108,92,231,0.2)}
 .chat-input::placeholder{color:rgba(255,255,255,0.4)}
+
+/* ADMIN PANEL MEJORADO - DRAGGABLE */
 .admin-grid{display:grid;grid-template-columns:1fr;gap:20px}
 @media(min-width:768px){.admin-grid{grid-template-columns:repeat(2,1fr)}}
 .admin-card{background:rgba(255,255,255,0.03);border-radius:20px;padding:25px;border:1px solid rgba(255,255,255,0.05);transition:all 0.3s;position:relative}
 .admin-card:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(0,0,0,0.2)}
-.admin-card h3{margin-bottom:20px;color:var(--accent);font-size:1.1rem;display:flex;align-items:center;gap:12px;text-transform:uppercase;letter-spacing:1px;font-weight:800}
+.admin-card.dragging{opacity:0.5;transform:scale(1.02);border:2px dashed var(--accent)}
+.admin-card h3{margin-bottom:20px;color:var(--accent);font-size:1.1rem;display:flex;align-items:center;gap:12px;text-transform:uppercase;letter-spacing:1px;font-weight:800;cursor:move}
 .admin-card.minimized{min-height:50px;overflow:hidden}
 .admin-card.minimized h3{margin-bottom:0;cursor:pointer}
 .admin-card.minimized .card-content{display:none}
@@ -202,6 +222,7 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:linear
 .player-item{display:flex;justify-content:space-between;align-items:center;padding:12px;border-bottom:1px solid rgba(255,255,255,0.05);transition:0.2s}
 .player-item:hover{background:rgba(255,255,255,0.05)}
 .player-item:last-child{border-bottom:none}
+.player-item.offline{opacity:0.5;background:rgba(231,76,60,0.1)}
 .player-name-admin{font-weight:700;display:flex;align-items:center;gap:8px}
 .winner-btn{background:var(--success);border:none;color:#fff;padding:6px 12px;border-radius:8px;cursor:pointer;font-size:0.8rem;font-weight:700;transition:0.2s}
 .winner-btn:hover{background:#00d9a5;transform:scale(1.05)}
@@ -224,6 +245,8 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:linear
 .prize-mode-option:hover{background:rgba(255,255,255,0.1)}
 .prize-mode-option.active{background:rgba(108,92,231,0.3);border:2px solid var(--primary)}
 .prize-mode-option input[type="radio"]{width:20px;height:20px}
+
+/* MODAL Y BANNERS */
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.95);z-index:9999;justify-content:center;align-items:center;padding:20px;backdrop-filter:blur(10px)}
 .modal-overlay.active{display:flex}
 .modal-content{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);border-radius:30px;padding:40px;max-width:600px;width:100%;text-align:center;box-shadow:0 25px 80px rgba(0,0,0,0.6);position:relative;overflow:hidden;animation:modalIn 0.5s cubic-bezier(0.175,0.885,0.32,1.275);z-index:10000}
@@ -240,6 +263,8 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:linear
 .winner-card-display .cell{aspect-ratio:1;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.1);border-radius:8px;font-weight:800;font-size:1rem}
 .winner-card-display .cell.marked{background:var(--success);color:#fff}
 .winner-card-display .cell.free{background:var(--primary);color:#fff;font-size:0.7rem}
+
+/* WINNER BANNER MEJORADO */
 .winner-banner{position:fixed;top:0;left:0;right:0;background:linear-gradient(135deg,var(--success) 0%,var(--secondary) 100%);padding:20px;text-align:center;z-index:8000;animation:bannerSlideDown 0.8s cubic-bezier(0.175,0.885,0.32,1.275);border-bottom:4px solid var(--accent);box-shadow:0 10px 40px rgba(0,0,0,0.5)}
 @keyframes bannerSlideDown{0%{transform:translateY(-100%);opacity:0}100%{transform:translateY(0);opacity:1}}
 .winner-banner-content{display:flex;flex-direction:column;align-items:center;gap:10px}
@@ -249,22 +274,29 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:linear
 .winner-banner .prize-info{font-size:1.1rem;color:#fff}
 .winner-banner-close{position:absolute;top:10px;right:20px;background:rgba(255,255,255,0.2);border:none;color:#fff;width:40px;height:40px;border-radius:50%;cursor:pointer;font-size:1.5rem;transition:all 0.3s}
 .winner-banner-close:hover{background:rgba(255,255,255,0.4);transform:scale(1.1)}
+
+/* CONNECTION STATUS */
 .connection-status{position:fixed;top:10px;right:10px;display:flex;align-items:center;gap:10px;background:rgba(0,0,0,0.5);padding:10px 20px;border-radius:30px;font-size:0.85rem;font-weight:600;z-index:500;backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.1)}
 .conn-dot{width:10px;height:10px;border-radius:50%;background:var(--success);box-shadow:0 0 10px var(--success)}
 .conn-dot.offline{background:var(--danger);box-shadow:0 0 10px var(--danger)}
 .conn-dot.connecting{background:var(--accent)}
+
+/* GAME INDICATORS */
 .game-active-indicator{position:fixed;top:50px;left:10px;background:linear-gradient(135deg,var(--danger) 0%,#c0392b 100%);padding:12px 24px;border-radius:30px;font-weight:800;z-index:4500;border:2px solid var(--accent);display:none}
 .game-active-indicator.active{display:flex;align-items:center;gap:10px}
 .game-active-indicator .dot{width:12px;height:12px;background:#fff;border-radius:50%;animation:blink 1s infinite}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
 .game-paused-indicator{position:fixed;top:50px;left:10px;background:linear-gradient(135deg,var(--accent) 0%,#f39c12 100%);padding:12px 24px;border-radius:30px;font-weight:800;z-index:4500;border:2px solid var(--dark);display:none;color:var(--dark)}
 .game-paused-indicator.active{display:flex;align-items:center;gap:10px}
+
+/* TOAST */
 .toast-container{position:fixed;bottom:30px;right:30px;z-index:3000;display:flex;flex-direction:column;gap:12px;pointer-events:none;max-width:400px}
 .toast{background:var(--success);color:#fff;padding:16px 24px;border-radius:16px;font-weight:700;font-size:1rem;box-shadow:0 8px 30px rgba(0,0,0,0.4);animation:toastIn 0.5s;pointer-events:auto;display:flex;align-items:center;gap:12px}
 .toast.error{background:var(--danger)}
 .toast.info{background:var(--primary)}
 @keyframes toastIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
-/* ANUNCIO GLOBAL CON EFECTO LATIDO */
+
+/* ANUNCIO GLOBAL */
 .global-announcement{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:linear-gradient(135deg,var(--primary) 0%,var(--secondary) 100%);padding:40px 60px;border-radius:30px;z-index:9000;display:none;box-shadow:0 0 100px rgba(108,92,231,0.8);border:4px solid var(--accent);animation:announcementPulse 2s infinite}
 @keyframes announcementPulse{0%,100%{transform:translate(-50%,-50%) scale(1);box-shadow:0 0 100px rgba(108,92,231,0.8)}50%{transform:translate(-50%,-50%) scale(1.05);box-shadow:0 0 150px rgba(108,92,231,1)}}
 .global-announcement.active{display:block}
@@ -272,23 +304,32 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:linear
 .global-announcement p{font-size:1.5rem;color:#fff;opacity:0.9}
 .global-announcement-close{position:absolute;top:15px;right:15px;background:rgba(255,255,255,0.2);border:none;color:#fff;width:40px;height:40px;border-radius:50%;cursor:pointer;font-size:1.5rem;transition:all 0.3s}
 .global-announcement-close:hover{background:rgba(255,255,255,0.4);transform:scale(1.1)}
-/* CUENTA REGRESIVA ANIMADA */
+
+/* CUENTA REGRESIVA */
 .countdown-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.95);z-index:9500;display:none;justify-content:center;align-items:center}
 .countdown-overlay.active{display:flex}
 .countdown-content{text-align:center}
 .countdown-number{font-size:15rem;font-weight:900;color:#fff;text-shadow:0 0 60px rgba(255,255,255,0.9);animation:countdownBeat 1s infinite}
 @keyframes countdownBeat{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.1);opacity:0.8}}
 .countdown-text{font-size:2rem;margin-top:30px;text-transform:uppercase;letter-spacing:5px;color:#fff;opacity:0.9}
-/* BOTON FLOTANTE MOVIDO Y FUNCIONAL */
-.refresh-btn{position:fixed;bottom:20px;right:20px;z-index:4000;padding:12px 20px;border-radius:30px;background:var(--secondary);color:#fff;border:none;font-weight:700;cursor:pointer;box-shadow:0 4px 20px rgba(0,206,201,0.4);transition:all 0.3s;display:flex;align-items:center;gap:8px}
+
+/* BOTON REFRESH MOVIDO - AHORA EN LA PARTE SUPERIOR DERECHA */
+.refresh-btn{position:fixed;top:70px;right:10px;z-index:4000;padding:10px 15px;border-radius:25px;background:var(--secondary);color:#fff;border:none;font-weight:700;cursor:pointer;box-shadow:0 4px 20px rgba(0,206,201,0.4);transition:all 0.3s;display:flex;align-items:center;gap:6px;font-size:0.8rem}
 .refresh-btn:hover{transform:translateY(-3px);box-shadow:0 8px 30px rgba(0,206,201,0.6)}
 .refresh-btn:active{transform:scale(0.95)}
+
+/* DRAG HANDLE PARA ADMIN CARDS */
+.drag-handle{position:absolute;top:15px;left:15px;background:rgba(255,255,255,0.1);border:none;color:#fff;width:25px;height:25px;border-radius:50%;cursor:grab;font-size:0.8rem;transition:all 0.3s;display:flex;align-items:center;justify-content:center}
+.drag-handle:hover{background:rgba(255,255,255,0.2)}
+.drag-handle:active{cursor:grabbing}
+
 .hidden{display:none!important}
 .text-center{text-align:center}
 .mt-10{margin-top:10px}
 .mt-20{margin-top:20px}
 .w-full{width:100%}
 .card-content{padding:0}
+
 @media(max-width:768px){
 .logo{font-size:2.2rem}
 .header{flex-direction:column;gap:15px;text-align:center}
@@ -301,6 +342,8 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:linear
 .countdown-number{font-size:10rem}
 .global-announcement h2{font-size:1.8rem}
 .global-announcement p{font-size:1.2rem}
+.refresh-btn{top:60px;right:10px;padding:8px 12px;font-size:0.7rem}
+.responsible-gaming-warning{bottom:5px;left:5px;padding:8px 15px;font-size:0.65rem}
 }
 </style>
 </head>
@@ -309,33 +352,44 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:linear
 <div class="clock-display" id="clockDisplay">
 📅 <span id="currentDate">--/--</span> | 🕐 <span id="currentTime">--:--</span>
 </div>
+
+<!-- ADVERTENCIA JUEGO RESPONSABLE -->
+<div class="responsible-gaming-warning" id="responsibleGamingWarning">
+⚠️ El juego compulsivo hace mal a la salud. Juega responsablemente.
+</div>
+
 <!-- Connection Status -->
 <div class="connection-status" id="connStatus">
 <div class="conn-dot" id="connDot"></div>
 <span id="connText">Conectando...</span>
 </div>
+
 <!-- Game Active Indicator -->
 <div class="game-active-indicator" id="gameActiveIndicator">
 <div class="dot"></div>
 <span>🎮 JUEGO EN CURSO</span>
 </div>
+
 <!-- Game Paused Indicator -->
 <div class="game-paused-indicator" id="gamePausedIndicator">
 <div class="dot"></div>
 <span>⏸ JUEGO PAUSADO - HAY GANADOR</span>
 </div>
+
 <!-- Admin Notification -->
 <div class="admin-notification" id="adminNotification">
 <span>🔔</span>
 <span id="adminNotificationText">Nueva solicitud</span>
 <span class="count" id="adminNotificationCount">1</span>
 </div>
+
 <!-- ANUNCIO GLOBAL CON EFECTO LATIDO -->
 <div class="global-announcement" id="globalAnnouncement">
 <button class="global-announcement-close" onclick="closeGlobalAnnouncement()">×</button>
 <h2 id="announcementTitle">📢 ANUNCIO</h2>
 <p id="announcementText">Mensaje del administrador</p>
 </div>
+
 <!-- CUENTA REGRESIVA ANIMADA -->
 <div class="countdown-overlay" id="countdownOverlay">
 <div class="countdown-content">
@@ -343,6 +397,7 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:linear
 <div class="countdown-text">El juego comienza en...</div>
 </div>
 </div>
+
 <!-- Login Screen -->
 <div id="loginScreen" class="screen active">
 <div class="login">
@@ -376,6 +431,7 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:linear
 </div>
 </div>
 </div>
+
 <!-- Player Game Screen -->
 <div id="gameScreen" class="screen">
 <div class="header">
@@ -396,6 +452,8 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:linear
 </div>
 <div class="coins" id="playerCoins">0</div>
 </div>
+
+<!-- POZO CORREGIDO -->
 <div class="prize-section">
 <div class="prize-amount" id="prizeAmount">$0</div>
 <div class="prize-label" id="prizeType">POZO EN JUEGO</div>
@@ -404,8 +462,9 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:linear
 <span style="color:var(--accent)">Bingo: <span id="bingoPrize">$0</span></span>
 <span style="color:var(--danger)">Restante: <span id="remainingPrize">$0</span></span>
 </div>
-<div style="margin-top:15px;font-size:0.9rem;opacity:0.8" id="customPrizeDisplay"></div>
+<div id="customPrizeDisplay" class="prize-text-display" style="display:none"></div>
 </div>
+
 <div class="controls">
 <div class="control-group">
 <div class="control-label">Auto-Marcar</div>
@@ -430,15 +489,18 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:linear
 <button class="btn btn-success btn-control" onclick="buyCard()" id="buyCardBtn">🎫 Comprar Cartón</button>
 <button class="btn btn-warning btn-control" onclick="requestCoins()">💰 Pedir Fichas</button>
 </div>
+
 <div class="claim-buttons" id="claimButtons">
 <button class="claim-btn claim-btn-line" id="claimLineBtn" onclick="claimLine()" disabled>📏 CANTAR LÍNEA</button>
 <button class="claim-btn claim-btn-bingo" id="claimBingoBtn" onclick="claimBingo()" disabled>🎱 CANTAR BINGO</button>
 </div>
+
 <div class="style-selector" id="styleSelector">
 <button class="style-btn active" onclick="selectStyle('classic')">🎨 Clásico</button>
 <button class="style-btn" onclick="selectStyle('neon')">⚡ Neón</button>
 <button class="style-btn" onclick="selectStyle('gold')">👑 Gold VIP</button>
 </div>
+
 <div class="cards-container" id="cardsContainer">
 <div class="text-center" style="padding:60px 20px;opacity:0.6">
 <div style="font-size:4rem;margin-bottom:15px">🎫</div>
@@ -447,6 +509,7 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:linear
 <button class="btn btn-success mt-20" onclick="buyCard()" style="max-width:250px" id="buyFirstCardBtn">Comprar Cartón (100 🪙)</button>
 </div>
 </div>
+
 <div class="chat-container" id="chatContainer">
 <div class="chat-header">
 <div class="chat-title">💬 Chat</div>
@@ -458,6 +521,7 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:linear
 </div>
 </div>
 </div>
+
 <!-- Admin Screen -->
 <div id="adminScreen" class="screen">
 <div class="header">
@@ -477,7 +541,8 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:linear
 </div>
 <button class="btn btn-danger btn-xs" onclick="logout()" style="width:auto;padding:8px 15px">Salir</button>
 </div>
-<!-- POZO VISIBLE PARA ADMIN -->
+
+<!-- POZO VISIBLE PARA ADMIN - CORREGIDO -->
 <div class="prize-section">
 <div class="prize-amount" id="adminPrizeAmount">$0</div>
 <div class="prize-label">POZO TOTAL</div>
@@ -489,10 +554,13 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:linear
 Líneas: <span id="adminLinesClaimed" style="color:var(--danger)">0/3</span> |
 Bingo: <span id="adminBingoClaimed" style="color:var(--danger)">No</span>
 </div>
-<div style="margin-top:15px;font-size:0.9rem" id="adminCustomPrizeDisplay"></div>
+<div id="adminCustomPrizeDisplay" class="prize-text-display" style="display:none;margin-top:15px"></div>
 </div>
+
 <div class="admin-grid" id="adminGrid">
-<div class="admin-card" id="adminCard1">
+<!-- Control del Juego -->
+<div class="admin-card" id="adminCard1" draggable="true">
+<button class="drag-handle" title="Arrastrar">⋮⋮</button>
 <button class="minimize-btn" onclick="toggleAdminCard('adminCard1')">−</button>
 <h3>🎮 Control del Juego</h3>
 <div class="card-content">
@@ -511,8 +579,10 @@ Bingo: <span id="adminBingoClaimed" style="color:var(--danger)">No</span>
 </div>
 </div>
 </div>
-<!-- CONFIGURACION DE POZO -->
-<div class="admin-card" id="adminCard2">
+
+<!-- Configuración de Pozo - CORREGIDO -->
+<div class="admin-card" id="adminCard2" draggable="true">
+<button class="drag-handle" title="Arrastrar">⋮⋮</button>
 <button class="minimize-btn" onclick="toggleAdminCard('adminCard2')">−</button>
 <h3>💰 Configuración de Pozo</h3>
 <div class="card-content">
@@ -530,17 +600,23 @@ Bingo: <span id="adminBingoClaimed" style="color:var(--danger)">No</span>
 <input type="radio" name="prizeMode" id="mode-progressive" value="progressive">
 <label for="mode-progressive">🚀 Progresivo (+$500 por número)</label>
 </div>
+<div class="prize-mode-option" onclick="selectPrizeMode('text')">
+<input type="radio" name="prizeMode" id="mode-text" value="text">
+<label for="mode-text">📝 Texto (TV, Celular, etc.)</label>
+</div>
 </div>
 <div class="admin-row mt-10">
 <input type="number" id="manualPrizeAmount" class="admin-input" placeholder="Monto del pozo ($)" min="100">
 <button class="btn btn-primary" style="padding:12px 20px" onclick="setManualPrize()">💵 Establecer</button>
 </div>
-<!-- TOPE DEL POZO -->
+<div class="admin-row mt-10">
+<input type="text" id="textPrizeAmount" class="admin-input" placeholder="Ej: TV 50', iPhone 15, etc.">
+<button class="btn btn-primary" style="padding:12px 20px" onclick="setTextPrize()">📝 Establecer Texto</button>
+</div>
 <div class="admin-row mt-10">
 <input type="number" id="prizeCapAmount" class="admin-input" placeholder="Tope máximo ($)" min="1000" value="10000">
 <button class="btn btn-info" style="padding:12px 20px" onclick="setPrizeCap()">🔒 Establecer Tope</button>
 </div>
-<!-- PREMIO PERSONALIZADO -->
 <div class="admin-row mt-10">
 <input type="text" id="customPrizeText" class="admin-input" placeholder="Ej: TV 50', Celular, etc.">
 <button class="btn btn-warning" style="padding:12px 20px" onclick="setCustomPrize()">🎁 Establecer Premio</button>
@@ -553,8 +629,10 @@ Bingo: <span id="adminBingoClaimed" style="color:var(--danger)">No</span>
 </div>
 </div>
 </div>
-<!-- CARTON GANADOR EN ADMIN -->
-<div class="admin-card" id="adminCard3">
+
+<!-- Cartón Ganador - AHORA PERSISTENTE -->
+<div class="admin-card" id="adminCard3" draggable="true">
+<button class="drag-handle" title="Arrastrar">⋮⋮</button>
 <button class="minimize-btn" onclick="toggleAdminCard('adminCard3')">−</button>
 <h3>🏆 Cartón Ganador Actual</h3>
 <div class="card-content">
@@ -564,8 +642,10 @@ Bingo: <span id="adminBingoClaimed" style="color:var(--danger)">No</span>
 <button class="btn btn-danger w-full" onclick="clearWinnerCard()">🗑 Borrar Cartón Ganador</button>
 </div>
 </div>
-<!-- GANADORES PERSISTENTES -->
-<div class="admin-card" id="adminCard4">
+
+<!-- Ganadores Persistentes -->
+<div class="admin-card" id="adminCard4" draggable="true">
+<button class="drag-handle" title="Arrastrar">⋮⋮</button>
 <button class="minimize-btn" onclick="toggleAdminCard('adminCard4')">−</button>
 <h3>🏆 Ganadores Persistentes</h3>
 <div class="card-content">
@@ -574,8 +654,10 @@ Bingo: <span id="adminBingoClaimed" style="color:var(--danger)">No</span>
 </div>
 </div>
 </div>
-<!-- GANADORES ACTUALES -->
-<div class="admin-card" id="adminCard5">
+
+<!-- Ganadores Actuales -->
+<div class="admin-card" id="adminCard5" draggable="true">
+<button class="drag-handle" title="Arrastrar">⋮⋮</button>
 <button class="minimize-btn" onclick="toggleAdminCard('adminCard5')">−</button>
 <h3>🏆 Ganadores Actuales</h3>
 <div class="card-content">
@@ -598,24 +680,28 @@ Bingo: <span id="adminBingoClaimed" style="color:var(--danger)">No</span>
 <div id="lineWinnersDisplay"></div>
 <div id="bingoWinnerDisplay" style="margin-top:10px"></div>
 </div>
-<!-- BOTON CONFIRMAR GANADOR -->
 <div class="mt-10">
 <button class="btn btn-success w-full" onclick="confirmWinner()">✅ Confirmar Ganador y Continuar</button>
 </div>
 </div>
 </div>
-<!-- JUGADORES CONECTADOS -->
-<div class="admin-card" id="adminCard6">
+
+<!-- Jugadores Conectados - CORREGIDO -->
+<div class="admin-card" id="adminCard6" draggable="true">
+<button class="drag-handle" title="Arrastrar">⋮⋮</button>
 <button class="minimize-btn" onclick="toggleAdminCard('adminCard6')">−</button>
 <h3>👥 Jugadores Conectados</h3>
 <div class="card-content">
 <div class="players-list" id="adminPlayersList">
 <div class="text-center" style="padding:30px;opacity:0.6">No hay jugadores</div>
 </div>
+<button class="btn btn-info w-full mt-10" onclick="refreshPlayerList()">🔄 Actualizar Lista</button>
 </div>
 </div>
-<!-- SOLICITUDES DE MONEDAS -->
-<div class="admin-card" id="adminCard7">
+
+<!-- Solicitudes de Monedas -->
+<div class="admin-card" id="adminCard7" draggable="true">
+<button class="drag-handle" title="Arrastrar">⋮⋮</button>
 <button class="minimize-btn" onclick="toggleAdminCard('adminCard7')">−</button>
 <h3>💰 Solicitudes de Monedas</h3>
 <div class="card-content">
@@ -631,8 +717,10 @@ Bingo: <span id="adminBingoClaimed" style="color:var(--danger)">No</span>
 </div>
 </div>
 </div>
-<!-- CHAT ADMIN -->
-<div class="admin-card" id="adminCard8">
+
+<!-- Chat Admin -->
+<div class="admin-card" id="adminCard8" draggable="true">
+<button class="drag-handle" title="Arrastrar">⋮⋮</button>
 <button class="minimize-btn" onclick="toggleAdminCard('adminCard8')">−</button>
 <h3>💬 Chat Admin</h3>
 <div class="card-content">
@@ -640,7 +728,6 @@ Bingo: <span id="adminBingoClaimed" style="color:var(--danger)">No</span>
 <input type="text" id="adminMessage" class="admin-input" placeholder="Mensaje para todos..." maxlength="150">
 <button class="btn btn-primary" style="padding:12px 20px" onclick="sendAdminMessage()">📨</button>
 </div>
-<!-- ANUNCIO GLOBAL -->
 <div class="admin-row mt-10">
 <input type="text" id="globalAnnouncementText" class="admin-input" placeholder="Anuncio para todos..." maxlength="200">
 <button class="btn btn-warning" style="padding:12px 20px" onclick="sendGlobalAnnouncement()">📢</button>
@@ -648,8 +735,10 @@ Bingo: <span id="adminBingoClaimed" style="color:var(--danger)">No</span>
 <button class="btn btn-danger w-full mt-10" onclick="clearAllChats()">🗑 Borrar Todo el Chat</button>
 </div>
 </div>
-<!-- LLAMADA MANUAL -->
-<div class="admin-card" id="adminCard9">
+
+<!-- Llamada Manual -->
+<div class="admin-card" id="adminCard9" draggable="true">
+<button class="drag-handle" title="Arrastrar">⋮⋮</button>
 <button class="minimize-btn" onclick="toggleAdminCard('adminCard9')">−</button>
 <h3>🔢 Llamada Manual</h3>
 <div class="card-content">
@@ -657,8 +746,10 @@ Bingo: <span id="adminBingoClaimed" style="color:var(--danger)">No</span>
 <button class="btn btn-dark w-full mt-10" onclick="generateRandomNumber()">🎲 Número Aleatorio</button>
 </div>
 </div>
-<!-- ESTADISTICAS -->
-<div class="admin-card" id="adminCard10">
+
+<!-- Estadísticas -->
+<div class="admin-card" id="adminCard10" draggable="true">
+<button class="drag-handle" title="Arrastrar">⋮⋮</button>
 <button class="minimize-btn" onclick="toggleAdminCard('adminCard10')">−</button>
 <h3>📊 Estadísticas</h3>
 <div class="card-content">
@@ -676,6 +767,7 @@ Bingo: <span id="adminBingoClaimed" style="color:var(--danger)">No</span>
 </div>
 </div>
 </div>
+
 <!-- Winner Modal -->
 <div id="winnerModal" class="modal-overlay" onclick="if(event.target === this) closeWinnerModal()">
 <div class="modal-content">
@@ -690,6 +782,7 @@ Bingo: <span id="adminBingoClaimed" style="color:var(--danger)">No</span>
 <button class="btn btn-primary modal-btn" onclick="closeWinnerModal()">Continuar</button>
 </div>
 </div>
+
 <!-- Winner Banner -->
 <div id="winnerBanner" class="winner-banner hidden">
 <button class="winner-banner-close" onclick="closeWinnerBanner()">×</button>
@@ -701,10 +794,13 @@ Bingo: <span id="adminBingoClaimed" style="color:var(--danger)">No</span>
 <div class="prize-info" id="winnerBannerRemaining">Restante en pozo: $0</div>
 </div>
 </div>
+
 <!-- Toast Container -->
 <div class="toast-container" id="toastContainer"></div>
-<!-- BOTON FLOTANTE MOVIDO Y FUNCIONAL -->
+
+<!-- BOTON REFRESH MOVIDO - AHORA ARRIBA A LA DERECHA -->
 <button class="refresh-btn" onclick="refreshPlayerList()" title="Refrescar">🔄 Actualizar</button>
+
 <script>
 // ==================== CONFIGURACIÓN FIREBASE ====================
 const firebaseConfig = {
@@ -718,6 +814,7 @@ appId: "1:84908881447:web:87feaa81d333a0dc000002"
 };
 firebase.initializeApp(firebaseConfig);
 const database = firebase.database();
+
 // ==================== CONFIGURACIÓN ====================
 const CONFIG = {
 ADMIN_CODE: 'fmz141236601077',
@@ -732,6 +829,7 @@ INCREMENTAL_AMOUNT: 100,
 PROGRESSIVE_AMOUNT: 500,
 DEFAULT_PRIZE_CAP: 10000
 };
+
 // ==================== ESTADO GLOBAL ====================
 const App = {
 user: null,
@@ -744,7 +842,7 @@ active: false,
 paused: false,
 currentNumber: null,
 speed: 3000,
-prize: { type: 'fixed', amount: 1000, baseAmount: 1000, cap: 10000, customPrize: '' },
+prize: { type: 'fixed', amount: 1000, baseAmount: 1000, cap: 10000, customPrize: '', textPrize: '' },
 lineWinners: [],
 bingoWinner: null,
 claimedLines: 0,
@@ -768,9 +866,12 @@ persistentWinners: [],
 prizeMode: 'fixed',
 lastNotificationCheck: 0,
 playerJoinTime: new Map(),
-pendingWinner: null
+pendingWinner: null,
+lastPlayerStatusCheck: 0
 };
+
 let synth = window.speechSynthesis;
+
 // ==================== RELOJ EN TIEMPO REAL ====================
 function startClock() {
 function updateClock() {
@@ -785,6 +886,7 @@ if (timeEl) timeEl.textContent = time;
 updateClock();
 App.timers.clock = setInterval(updateClock, 1000);
 }
+
 // ==================== SISTEMA DE VOZ ====================
 function initAudio() {
 if (!App.audioContext) {
@@ -792,6 +894,7 @@ App.audioContext = new (window.AudioContext || window.webkitAudioContext)();
 }
 if (synth) synth.getVoices();
 }
+
 function speak(text, priority = false) {
 if (!App.settings.voice || !synth) return;
 if (priority) {
@@ -802,6 +905,7 @@ App.isSpeaking = false;
 App.speechQueue.push(text);
 processSpeechQueue();
 }
+
 function processSpeechQueue() {
 if (App.isSpeaking || App.speechQueue.length === 0) return;
 App.isSpeaking = true;
@@ -818,6 +922,7 @@ setTimeout(() => processSpeechQueue(), 50);
 };
 synth.speak(utterance);
 }
+
 // ==================== UTILIDADES ====================
 const $ = id => document.getElementById(id);
 const showToast = (msg, type='success', duration=3000) => {
@@ -843,6 +948,7 @@ const div = document.createElement('div');
 div.textContent = text;
 return div.innerHTML;
 };
+
 // ==================== LOGIN AUTO-GUARDADO ====================
 function saveLoginData(name, isAdmin) {
 localStorage.setItem('bingoProLogin', JSON.stringify({
@@ -852,6 +958,7 @@ timestamp: Date.now(),
 uniqueId: generateId()
 }));
 }
+
 function loadLoginData() {
 const saved = localStorage.getItem('bingoProLogin');
 if (saved) {
@@ -868,9 +975,11 @@ return data;
 }
 return null;
 }
+
 function clearLoginData() {
 localStorage.removeItem('bingoProLogin');
 }
+
 // ==================== LOGIN ====================
 function setLoginMode(mode) {
 document.querySelectorAll('.toggle-option').forEach(el => el.classList.remove('active'));
@@ -887,6 +996,7 @@ loginInfo.innerHTML = '🌐 Juego Online en Tiempo Real<br>🎨 3 Estilos de Car
 $('loginText').textContent = '🚀 Entrar a la Sala';
 }
 }
+
 async function login() {
 initAudio();
 const name = $('playerName').value.trim();
@@ -902,6 +1012,7 @@ await loginAsAdmin(name);
 await loginAsNormal(name);
 }
 }
+
 async function loginAsAdmin(name) {
 App.user = { id: 'admin-' + generateId(), name: name, coins: Infinity, isAdmin: true };
 App.isAdmin = true;
@@ -914,12 +1025,19 @@ updateConnectionStatus('online');
 await database.ref(`admins/${App.user.id}`).set({ ...App.user, online: true, lastSeen: Date.now() });
 speak('Modo administrador activado', true);
 }
+
 async function loginAsNormal(name) {
 App.user = { id: generateId(), name: name, coins: CONFIG.INITIAL_COINS, isAdmin: false };
 App.isAdmin = false;
 App.playerJoinTime.set(App.user.id, Date.now());
 saveLoginData(name, false);
-await database.ref(`players/${App.user.id}`).set({ ...App.user, online: true, lastSeen: Date.now(), joinTime: Date.now() });
+await database.ref(`players/${App.user.id}`).set({ 
+...App.user, 
+online: true, 
+lastSeen: Date.now(), 
+joinTime: Date.now(),
+lastActive: Date.now()
+});
 $('loginScreen').classList.remove('active');
 $('gameScreen').classList.add('active');
 initPlayerPanel();
@@ -927,7 +1045,10 @@ setupFirebaseListeners();
 updateConnectionStatus('online');
 await database.ref('chat').push({ text: `🎉 ¡Bienvenido ${name}!`, author: 'Sistema', isSystem: true, timestamp: Date.now() });
 await database.ref('announcements').push({ text: `${name} se ha unido al juego`, type: 'welcome', timestamp: Date.now() });
+// Mostrar advertencia de juego responsable
+$('responsibleGamingWarning').classList.add('active');
 }
+
 async function logout() {
 clearLoginData();
 if (App.user) {
@@ -936,6 +1057,7 @@ await database.ref(path).update({ online: false, lastSeen: Date.now() });
 }
 location.reload();
 }
+
 function updateConnectionStatus(status) {
 const dot = $('connDot');
 const text = $('connText');
@@ -945,14 +1067,17 @@ if (status === 'online') { dot.classList.add('online'); text.textContent = 'En V
 else if (status === 'connecting') { dot.classList.add('connecting'); text.textContent = 'Conectando...'; }
 else { dot.classList.add('offline'); text.textContent = 'Desconectado'; }
 }
+
 // ==================== FIREBASE LISTENERS ====================
 function setupFirebaseListeners() {
-// Jugadores
+// Jugadores - CORREGIDO PARA MOSTRAR SOLO ONLINE
 database.ref('players').on('value', (snapshot) => {
 const players = snapshot.val() || {};
 App.players.clear();
+const now = Date.now();
 Object.entries(players).forEach(([id, player]) => {
-if (player.online) {
+// Solo mostrar jugadores online y activos (última actividad < 5 minutos)
+if (player.online && (!player.lastActive || now - player.lastActive < 300000)) {
 App.players.set(id, player);
 if (!App.playerJoinTime.has(id) && player.joinTime) {
 App.playerJoinTime.set(id, player.joinTime);
@@ -971,8 +1096,11 @@ if (myPlayer && myPlayer.coins !== undefined && myPlayer.coins !== App.user.coin
 App.user.coins = myPlayer.coins;
 updateCoinsDisplay();
 }
+// Actualizar última actividad
+database.ref(`players/${App.user.id}/lastActive`).set(now);
 }
 });
+
 // Estado del juego
 database.ref('gameState').on('value', (snapshot) => {
 const state = snapshot.val();
@@ -1001,6 +1129,7 @@ handleGameReset();
 }
 }
 });
+
 // Números cantados - CORREGIDO PARA VOZ A TODOS
 database.ref('calledNumbers').on('value', (snapshot) => {
 const numbers = snapshot.val();
@@ -1024,6 +1153,7 @@ updateProgressivePrize(newNumbers.length);
 }
 }
 });
+
 // Chat - CORREGIDO
 database.ref('chat').limitToLast(100).on('child_added', (snapshot) => {
 const msg = snapshot.val();
@@ -1039,6 +1169,7 @@ if (App.isAdmin && !msg.isAdmin && !msg.isSystem) {
 showAdminNotification('Nuevo mensaje de chat');
 }
 });
+
 // Anuncios Globales
 database.ref('announcements').limitToLast(1).on('child_added', (snapshot) => {
 const announcement = snapshot.val();
@@ -1046,6 +1177,7 @@ if (announcement && announcement.timestamp > Date.now() - 30000) {
 showGlobalAnnouncement(announcement.text, announcement.type || 'info');
 }
 });
+
 // Ganadores
 database.ref('winners/line').on('value', (snapshot) => {
 const winners = snapshot.val() || {};
@@ -1057,6 +1189,7 @@ updatePersistentWinnersDisplay();
 updateAdminWinnerCardDisplay();
 }
 });
+
 database.ref('winners/bingo').on('value', (snapshot) => {
 const winner = snapshot.val();
 App.gameState.bingoWinner = winner;
@@ -1067,6 +1200,7 @@ updatePersistentWinnersDisplay();
 updateAdminWinnerCardDisplay();
 }
 });
+
 // Ganadores persistentes
 database.ref('persistentWinners').on('value', (snapshot) => {
 const winners = snapshot.val() || {};
@@ -1075,6 +1209,7 @@ if (App.isAdmin) {
 updatePersistentWinnersDisplay();
 }
 });
+
 // Solicitudes de monedas
 if (App.isAdmin) {
 database.ref('coinRequests').on('value', (snapshot) => {
@@ -1088,6 +1223,7 @@ showAdminNotification(`${newRequests.length} solicitud(es) de monedas`);
 App.lastNotificationCheck = Date.now();
 });
 }
+
 // Configuración de pozo
 database.ref('prizeConfig').on('value', (snapshot) => {
 const config = snapshot.val();
@@ -1096,11 +1232,13 @@ App.prizeMode = config.mode || 'fixed';
 App.gameState.prize.baseAmount = config.baseAmount || 1000;
 App.gameState.prize.cap = config.cap || CONFIG.DEFAULT_PRIZE_CAP;
 App.gameState.prize.customPrize = config.customPrize || '';
+App.gameState.prize.textPrize = config.textPrize || '';
 App.gameState.linePrizesEnabled = config.linePrizesEnabled !== false;
 updatePrizeModeUI();
 updatePrizeDisplay();
 }
 });
+
 // Listener para reinicio de juego
 database.ref('gameReset').on('value', (snapshot) => {
 const reset = snapshot.val();
@@ -1109,6 +1247,7 @@ handleGameReset();
 }
 });
 }
+
 // ==================== NOTIFICACIONES ADMIN ====================
 function showAdminNotification(text) {
 const notification = $('adminNotification');
@@ -1124,7 +1263,9 @@ notificationCount.textContent = '1';
 }, 5000);
 }
 }
+
 function checkAdminNotifications() {}
+
 // ==================== REINICIO DE JUEGO ====================
 function handleGameReset() {
 App.myCards = [];
@@ -1136,6 +1277,7 @@ updateClaimButtons();
 showToast('🔄 Juego reiniciado - Compra nuevos cartones', 'info');
 speak('Juego reiniciado. Compra nuevos cartones para jugar.', true);
 }
+
 function updateGameActiveIndicator() {
 const indicator = $('gameActiveIndicator');
 if (!indicator) return;
@@ -1153,6 +1295,7 @@ if (buyBtn) { buyBtn.disabled = false; buyBtn.textContent = '🎫 Comprar Cartó
 if (buyFirstBtn) { buyFirstBtn.disabled = false; buyFirstBtn.textContent = 'Comprar Cartón (100 🪙)'; }
 }
 }
+
 function updateGamePausedIndicator() {
 const indicator = $('gamePausedIndicator');
 if (!indicator) return;
@@ -1162,6 +1305,7 @@ indicator.classList.add('active');
 indicator.classList.remove('active');
 }
 }
+
 // ==================== PANEL JUGADOR ====================
 function initPlayerPanel() {
 $('displayName').textContent = App.user.name;
@@ -1182,20 +1326,24 @@ $('voiceToggle').classList.toggle('active', App.settings.voice);
 } catch(e) {}
 }
 }
+
 function savePlayerSettings() {
 localStorage.setItem('bingoProSettings', JSON.stringify(App.settings));
 }
+
 function updatePlayerCount() {
 const count = App.players.size;
 const text = `Online: ${count}`;
 if ($('playerCount')) $('playerCount').textContent = text;
 if ($('adminPlayerCount')) $('adminPlayerCount').textContent = text;
 }
+
 function updateCoinsDisplay() {
 if ($('playerCoins')) {
 $('playerCoins').textContent = App.isAdmin ? '∞' : App.user.coins.toLocaleString('es-ES');
 }
 }
+
 // ==================== AUTO-CANTO ====================
 function toggleAutoClaim() {
 App.settings.autoClaim = !App.settings.autoClaim;
@@ -1203,6 +1351,7 @@ $('autoClaimToggle').classList.toggle('active', App.settings.autoClaim);
 savePlayerSettings();
 showToast(App.settings.autoClaim ? 'Auto-canto activado' : 'Auto-canto desactivado', 'info');
 }
+
 function checkAutoClaim() {
 if (!App.settings.autoClaim || !App.gameState.active || App.gameState.paused) return;
 if (App.hasLine && App.gameState.linePrizesEnabled && App.gameState.claimedLines < CONFIG.MAX_LINE_WINNERS) {
@@ -1212,6 +1361,7 @@ if (App.hasBingo && !App.gameState.bingoClaimed) {
 claimBingo();
 }
 }
+
 // ==================== CARTONES ====================
 function generateCard() {
 const card = [];
@@ -1236,6 +1386,7 @@ style: App.settings.cardStyle,
 hasError: Array(5).fill().map(() => Array(5).fill(false))
 };
 }
+
 function buyCard() {
 if (App.gameState.active && !App.gameState.paused) {
 showToast('🚫 No puedes comprar durante el juego', 'error');
@@ -1264,6 +1415,7 @@ database.ref(`players/${App.user.id}/cards`).set(App.myCards.length);
 }
 checkPlayerWinStatus();
 }
+
 function selectStyle(style) {
 App.settings.cardStyle = style;
 document.querySelectorAll('.style-btn').forEach(btn => btn.classList.remove('active'));
@@ -1271,12 +1423,14 @@ event.target.classList.add('active');
 App.myCards.forEach(card => card.style = style);
 renderCards();
 }
+
 function changeCardStyle() {
 const style = $('cardStyle').value;
 App.settings.cardStyle = style;
 App.myCards.forEach(card => card.style = style);
 renderCards();
 }
+
 function renderCards() {
 const container = $('cardsContainer');
 if (!container) return;
@@ -1301,6 +1455,7 @@ return `<div class="${cls}" onclick="markNumber(${idx}, ${row}, ${col}, '${num}'
 }).join('')}</div></div>`;
 }).join('');
 }
+
 function markNumber(cardIdx, row, col, num) {
 if (num === 'FREE') return;
 const card = App.myCards[cardIdx];
@@ -1318,6 +1473,7 @@ if (card.marked[row][col]) {
 checkPlayerWinStatus();
 }
 }
+
 // ==================== VERIFICACIÓN DE VICTORIA ====================
 function checkPlayerWinStatus() {
 if (App.myCards.length === 0) {
@@ -1341,6 +1497,7 @@ if (card.marked.every(r => r.every(m => m))) App.hasBingo = true;
 }
 updateClaimButtons();
 }
+
 function updateClaimButtons() {
 const lineBtn = $('claimLineBtn');
 const bingoBtn = $('claimBingoBtn');
@@ -1354,6 +1511,7 @@ else lineBtn.classList.remove('pulse');
 if (canClaimBingo) bingoBtn.classList.add('pulse');
 else bingoBtn.classList.remove('pulse');
 }
+
 // ==================== RECLAMAR PREMIO ====================
 async function claimLine() {
 if (!App.hasLine || App.gameState.claimedLines >= CONFIG.MAX_LINE_WINNERS || !App.gameState.linePrizesEnabled) return;
@@ -1378,6 +1536,7 @@ showToast('📏 ¡Línea cantada! Esperando confirmación...', 'success', 5000);
 speak('Línea cantada. Esperando confirmación.');
 $('claimLineBtn').disabled = true;
 }
+
 async function claimBingo() {
 if (!App.hasBingo || App.gameState.bingoClaimed) return;
 let winningCard = null;
@@ -1398,6 +1557,7 @@ showToast('🎱 ¡Bingo cantado! Esperando confirmación...', 'success', 5000);
 speak('Bingo cantado. Esperando confirmación.');
 $('claimBingoBtn').disabled = true;
 }
+
 // ==================== MOSTRAR GANADOR A TODOS ====================
 function showWinnerToAll(winner) {
 showWinnerModal(winner);
@@ -1406,6 +1566,7 @@ if (App.isAdmin) {
 updateAdminWinnerCardDisplay(winner);
 }
 }
+
 function showWinnerModal(winner) {
 const modal = $('winnerModal');
 if (!modal || !winner) return;
@@ -1423,6 +1584,7 @@ $('winnerRemainingDisplay').textContent = `Restante en pozo: ${formatMoney(remai
 renderWinnerCardVisual(winner);
 modal.classList.add('active');
 }
+
 function renderWinnerCardVisual(winner) {
 const container = $('winnerCardVisual');
 if (!container) return;
@@ -1448,10 +1610,12 @@ html += '</div>';
 html += `<div style="text-align:center;margin-top:15px;font-weight:700;color:var(--accent)">Cartón: ${winner.cardId}</div>`;
 container.innerHTML = html;
 }
+
 function closeWinnerModal() {
 const modal = $('winnerModal');
 if (modal) modal.classList.remove('active');
 }
+
 function showWinnerBanner(winner) {
 const banner = $('winnerBanner');
 if (!banner || !winner) return;
@@ -1463,12 +1627,14 @@ const totalPrize = App.gameState.prize.amount || App.gameState.prize.baseAmount 
 const remaining = totalPrize - (winner.prizeValue || 0);
 $('winnerBannerRemaining').textContent = `Restante en pozo: ${formatMoney(remaining)}`;
 banner.classList.remove('hidden');
-setTimeout(() => { closeWinnerBanner(); }, 15000);
+// No cerrar automáticamente - dejar hasta que admin lo borre
 }
+
 function closeWinnerBanner() {
 const banner = $('winnerBanner');
 if (banner) banner.classList.add('hidden');
 }
+
 // ==================== AUTO-MARCADO ====================
 function toggleAutoMark() {
 App.settings.autoMark = !App.settings.autoMark;
@@ -1477,12 +1643,14 @@ savePlayerSettings();
 showToast(App.settings.autoMark ? 'Auto-marcado activado' : 'Auto-marcado desactivado', 'info');
 if (App.settings.autoMark) autoMarkNumbers();
 }
+
 function toggleVoice() {
 App.settings.voice = !App.settings.voice;
 $('voiceToggle').classList.toggle('active', App.settings.voice);
 savePlayerSettings();
 showToast(App.settings.voice ? 'Voz activada' : 'Voz desactivada', 'info');
 }
+
 function autoMarkNumbers() {
 App.myCards.forEach((card, idx) => {
 let changed = false;
@@ -1498,6 +1666,7 @@ if (changed) renderCards();
 });
 checkPlayerWinStatus();
 }
+
 // ==================== SOLICITUD DE MONEDAS ====================
 function requestCoins() {
 database.ref('coinRequests').push({
@@ -1507,6 +1676,7 @@ timestamp: Date.now()
 });
 showToast('💰 Solicitud enviada al administrador');
 }
+
 // ==================== CHAT ====================
 function addChatMessage(text, author, isAdmin=false, isSystem=false) {
 const msg = {
@@ -1522,6 +1692,7 @@ App.chat.push(msg);
 if (App.chat.length > 100) App.chat.shift();
 renderChat();
 }
+
 function renderChat() {
 const container = $('chatMessages');
 if (!container) return;
@@ -1538,6 +1709,7 @@ return `<div class="${messageClass}"><div class="message-header"><span class="me
 }).join('');
 container.scrollTop = container.scrollHeight;
 }
+
 async function sendMessage() {
 const input = $('chatInput');
 const text = input.value.trim();
@@ -1552,7 +1724,12 @@ isAdmin: App.isAdmin,
 isSystem: false,
 timestamp: Date.now()
 });
+// Actualizar actividad del jugador
+if (!App.isAdmin) {
+database.ref(`players/${App.user.id}/lastActive`).set(Date.now());
 }
+}
+
 async function clearAllChats() {
 await database.ref('chat').remove();
 App.chat = [];
@@ -1560,6 +1737,7 @@ App.processedMessages.clear();
 renderChat();
 showToast('Chat limpiado');
 }
+
 // ==================== ANUNCIO GLOBAL ====================
 async function sendGlobalAnnouncement() {
 const text = $('globalAnnouncementText').value.trim();
@@ -1573,6 +1751,7 @@ author: 'Admin'
 $('globalAnnouncementText').value = '';
 showToast('Anuncio enviado a todos', 'success');
 }
+
 function showGlobalAnnouncement(text, type = 'info') {
 const announcement = $('globalAnnouncement');
 const title = $('announcementTitle');
@@ -1586,10 +1765,12 @@ announcement.classList.remove('active');
 }, 8000);
 }
 }
+
 function closeGlobalAnnouncement() {
 const announcement = $('globalAnnouncement');
 if (announcement) announcement.classList.remove('active');
 }
+
 // ==================== CUENTA REGRESIVA ====================
 async function startCountdown(seconds = 10) {
 const overlay = $('countdownOverlay');
@@ -1605,6 +1786,7 @@ await new Promise(resolve => setTimeout(resolve, 1000));
 }
 overlay.classList.remove('active');
 }
+
 // ==================== PANEL ADMIN ====================
 function initAdminPanel() {
 const grid = $('manualNumbers');
@@ -1622,13 +1804,55 @@ updateCoinRequestsDisplay();
 updatePersistentWinnersDisplay();
 updatePrizeModeUI();
 updateAdminWinnerCardDisplay();
+initDraggableCards();
 }
+
+// ==================== DRAGGABLE ADMIN CARDS ====================
+function initDraggableCards() {
+const cards = document.querySelectorAll('.admin-card[draggable="true"]');
+let draggedCard = null;
+
+cards.forEach(card => {
+card.addEventListener('dragstart', (e) => {
+draggedCard = card;
+card.classList.add('dragging');
+e.dataTransfer.effectAllowed = 'move';
+});
+
+card.addEventListener('dragend', () => {
+card.classList.remove('dragging');
+draggedCard = null;
+});
+
+card.addEventListener('dragover', (e) => {
+e.preventDefault();
+e.dataTransfer.dropEffect = 'move';
+});
+
+card.addEventListener('drop', (e) => {
+e.preventDefault();
+if (draggedCard && draggedCard !== card) {
+const grid = document.getElementById('adminGrid');
+const cardsArray = Array.from(grid.children);
+const draggedIndex = cardsArray.indexOf(draggedCard);
+const dropIndex = cardsArray.indexOf(card);
+if (draggedIndex < dropIndex) {
+grid.insertBefore(draggedCard, card.nextSibling);
+} else {
+grid.insertBefore(draggedCard, card);
+}
+}
+});
+});
+}
+
 function toggleAdminCard(cardId) {
 const card = $(cardId);
 if (card) {
 card.classList.toggle('minimized');
 }
 }
+
 function updateAdminDisplay() {
 const list = $('adminPlayersList');
 if (!list) return;
@@ -1647,6 +1871,7 @@ if ($('statsNumbers')) $('statsNumbers').textContent = App.stats.numbersCalled;
 if ($('statsCards')) $('statsCards').textContent = App.stats.cardsSold;
 updateWinnerSelects();
 }
+
 function updateWinnerSelects() {
 const lineSelect = $('lineWinnerSelect');
 const bingoSelect = $('bingoWinnerSelect');
@@ -1656,11 +1881,13 @@ if (lineSelect) lineSelect.innerHTML = options;
 if (bingoSelect) bingoSelect.innerHTML = options;
 if (targetSelect) targetSelect.innerHTML = options;
 }
+
 function preselectWinner(playerName) {
 $('lineWinnerSelect').value = playerName;
 $('bingoWinnerSelect').value = playerName;
 showToast(`Jugador ${playerName} preseleccionado`, 'info');
 }
+
 function updateWinnerDisplays() {
 const lineDisplay = $('lineWinnersDisplay');
 if (lineDisplay) {
@@ -1680,10 +1907,12 @@ bingoStatus.innerHTML = `<div style="display:flex;justify-content:space-between;
 }
 updatePrizeDisplay();
 }
-// ==================== CARTON GANADOR EN ADMIN ====================
+
+// ==================== CARTON GANADOR EN ADMIN - PERSISTENTE ====================
 function updateAdminWinnerCardDisplay(winner = null) {
 const container = $('adminWinnerCardDisplay');
 if (!container) return;
+// Mantener el ganador hasta que se borre manualmente
 const currentWinner = winner || App.gameState.bingoWinner || (App.gameState.lineWinners.length > 0 ? App.gameState.lineWinners[App.gameState.lineWinners.length - 1] : null);
 if (!currentWinner) {
 container.innerHTML = '<div style="opacity:0.6;text-align:center">No hay ganador registrado</div>';
@@ -1709,13 +1938,23 @@ html += `<div class="${cls}">${isFree ? 'FREE' : num}</div>`;
 html += '</div>';
 container.innerHTML = html;
 }
+
 function clearWinnerCard() {
 const container = $('adminWinnerCardDisplay');
 if (container) {
 container.innerHTML = '<div style="opacity:0.6;text-align:center">No hay ganador registrado</div>';
 }
+// Limpiar ganadores de la base de datos
+database.ref('winners/line').remove();
+database.ref('winners/bingo').remove();
+App.gameState.lineWinners = [];
+App.gameState.bingoWinner = null;
+App.gameState.bingoClaimed = false;
+App.gameState.claimedLines = 0;
+closeWinnerBanner();
 showToast('Cartón ganador borrado', 'info');
 }
+
 // ==================== GANADORES PERSISTENTES ====================
 function updatePersistentWinnersDisplay() {
 const container = $('persistentWinnersList');
@@ -1736,11 +1975,13 @@ return `<div class="winner-persistent-item ${w.type}">
 </div>`;
 }).join('');
 }
+
 async function deletePersistentWinner(key) {
 await database.ref(`persistentWinners/${key}`).remove();
 showToast('Ganador eliminado', 'info');
 }
-// ==================== CONFIGURACIÓN DE POZO ====================
+
+// ==================== CONFIGURACIÓN DE POZO - CORREGIDO ====================
 function selectPrizeMode(mode) {
 App.prizeMode = mode;
 document.querySelectorAll('.prize-mode-option').forEach(el => el.classList.remove('active'));
@@ -1749,6 +1990,7 @@ document.getElementById(`mode-${mode}`).checked = true;
 database.ref('prizeConfig/mode').set(mode);
 showToast(`Modo de pozo: ${mode}`, 'info');
 }
+
 function updatePrizeModeUI() {
 document.querySelectorAll('.prize-mode-option').forEach(el => el.classList.remove('active'));
 const activeOption = document.querySelector(`.prize-mode-option[onclick*="${App.prizeMode}"]`);
@@ -1759,12 +2001,14 @@ if (lineToggle) {
 lineToggle.classList.toggle('active', App.gameState.linePrizesEnabled);
 }
 }
+
 function toggleLinePrizes() {
 App.gameState.linePrizesEnabled = !App.gameState.linePrizesEnabled;
 $('linePrizeToggle').classList.toggle('active', App.gameState.linePrizesEnabled);
 database.ref('prizeConfig/linePrizesEnabled').set(App.gameState.linePrizesEnabled);
 showToast(App.gameState.linePrizesEnabled ? 'Premios de línea activados' : 'Premios de línea desactivados', 'info');
 }
+
 async function setManualPrize() {
 const amount = parseInt($('manualPrizeAmount').value);
 if (!amount || amount < 100) {
@@ -1779,6 +2023,20 @@ await database.ref('gameState/prize/baseAmount').set(amount);
 showToast(`Pozo establecido: ${formatMoney(amount)}`, 'success');
 $('manualPrizeAmount').value = '';
 }
+
+async function setTextPrize() {
+const text = $('textPrizeAmount').value.trim();
+if (!text) {
+showToast('Ingresa un texto válido', 'error');
+return;
+}
+App.gameState.prize.textPrize = text;
+await database.ref('prizeConfig/textPrize').set(text);
+showToast(`Premio de texto establecido: ${text}`, 'success');
+$('textPrizeAmount').value = '';
+updatePrizeDisplay();
+}
+
 async function setPrizeCap() {
 const cap = parseInt($('prizeCapAmount').value);
 if (!cap || cap < 1000) {
@@ -1789,6 +2047,7 @@ App.gameState.prize.cap = cap;
 await database.ref('prizeConfig/cap').set(cap);
 showToast(`Tope del pozo establecido: ${formatMoney(cap)}`, 'success');
 }
+
 async function setCustomPrize() {
 const text = $('customPrizeText').value.trim();
 if (!text) {
@@ -1801,6 +2060,7 @@ showToast(`Premio personalizado: ${text}`, 'success');
 $('customPrizeText').value = '';
 updatePrizeDisplay();
 }
+
 function updateProgressivePrize(numbersCalled) {
 if (!App.gameState.active || App.gameState.paused) return;
 let newAmount = App.gameState.prize.baseAmount;
@@ -1819,6 +2079,7 @@ database.ref('gameState/prize/amount').set(newAmount);
 updatePrizeDisplay();
 }
 }
+
 function updatePrizeDisplay() {
 const totalPrize = App.gameState.prize.amount || App.gameState.prize.baseAmount || 1000;
 const linePct = App.gameState.prizePercentages?.line || CONFIG.LINE_PERCENTAGE;
@@ -1827,6 +2088,7 @@ const lineAmount = Math.floor(totalPrize * linePct / 100);
 const bingoAmount = Math.floor(totalPrize * bingoPct / 100);
 const claimedLines = App.gameState.claimedLines || 0;
 const linePrizePerWinner = App.gameState.linePrizesEnabled ? Math.floor(lineAmount / CONFIG.MAX_LINE_WINNERS) : 0;
+
 if ($('prizeAmount')) $('prizeAmount').textContent = formatMoney(totalPrize);
 if ($('adminPrizeAmount')) $('adminPrizeAmount').textContent = formatMoney(totalPrize);
 if ($('linePrize')) $('linePrize').textContent = App.gameState.linePrizesEnabled ? formatMoney(linePrizePerWinner) : 'DESACTIVADO';
@@ -1837,14 +2099,28 @@ const remaining = totalPrize - (claimedLines * linePrizePerWinner) - (App.gameSt
 if ($('remainingPrize')) $('remainingPrize').textContent = formatMoney(remaining);
 if ($('adminLinesClaimed')) $('adminLinesClaimed').textContent = `${claimedLines}/${CONFIG.MAX_LINE_WINNERS}`;
 if ($('adminBingoClaimed')) $('adminBingoClaimed').textContent = App.gameState.bingoClaimed ? 'Sí' : 'No';
+
 // MOSTRAR PREMIO PERSONALIZADO
-if ($('customPrizeDisplay') && App.gameState.prize.customPrize) {
-$('customPrizeDisplay').textContent = `🎁 Premio Especial: ${App.gameState.prize.customPrize}`;
+const customPrizeDisplay = $('customPrizeDisplay');
+const adminCustomPrizeDisplay = $('adminCustomPrizeDisplay');
+if (customPrizeDisplay) {
+if (App.gameState.prize.customPrize || App.gameState.prize.textPrize) {
+customPrizeDisplay.textContent = `🎁 Premio Especial: ${App.gameState.prize.textPrize || App.gameState.prize.customPrize}`;
+customPrizeDisplay.style.display = 'block';
+} else {
+customPrizeDisplay.style.display = 'none';
 }
-if ($('adminCustomPrizeDisplay') && App.gameState.prize.customPrize) {
-$('adminCustomPrizeDisplay').textContent = `🎁 Premio Especial: ${App.gameState.prize.customPrize}`;
+}
+if (adminCustomPrizeDisplay) {
+if (App.gameState.prize.customPrize || App.gameState.prize.textPrize) {
+adminCustomPrizeDisplay.textContent = `🎁 Premio Especial: ${App.gameState.prize.textPrize || App.gameState.prize.customPrize}`;
+adminCustomPrizeDisplay.style.display = 'block';
+} else {
+adminCustomPrizeDisplay.style.display = 'none';
 }
 }
+}
+
 function updateCoinRequestsDisplay() {
 const container = $('coinRequestsList');
 if (!container) return;
@@ -1862,11 +2138,13 @@ const time = new Date(r.timestamp).toLocaleTimeString('es-ES', { hour: '2-digit'
 return `<div class="coin-request-item"><div class="info"><div class="name">💰 ${r.player}</div><div class="time">${time}</div></div><button class="give-coins-btn" onclick="quickGiveCoins('${r.player}')">Dar 1000</button></div>`;
 }).join('');
 }
+
 function quickGiveCoins(playerName) {
 $('targetPlayer').value = playerName;
 $('coinAmount').value = 1000;
 giveCoins();
 }
+
 async function giveCoins() {
 const targetSelect = $('targetPlayer');
 const amountInput = $('coinAmount');
@@ -1886,6 +2164,7 @@ amountInput.value = '';
 showToast('Error al enviar monedas', 'error');
 }
 }
+
 async function forceLineWinner() {
 const player = $('lineWinnerSelect').value;
 const cardId = $('lineCardNumber').value.trim().toUpperCase();
@@ -1907,6 +2186,7 @@ $('lineWinnerSelect').value = '';
 $('lineCardNumber').value = '';
 updateAdminWinnerCardDisplay(winnerData);
 }
+
 async function forceBingoWinner() {
 const player = $('bingoWinnerSelect').value;
 const cardId = $('bingoCardNumber').value.trim().toUpperCase();
@@ -1926,30 +2206,29 @@ $('bingoWinnerSelect').value = '';
 $('bingoCardNumber').value = '';
 updateAdminWinnerCardDisplay(winnerData);
 }
-// ==================== CONFIRMAR GANADOR ====================
+
+// ==================== CONFIRMAR GANADOR - CORREGIDO ====================
 async function confirmWinner() {
-if (App.gameState.bingoWinner) {
-await database.ref('winners/bingo').remove();
-App.gameState.bingoWinner = null;
-App.gameState.bingoClaimed = false;
-showToast('✅ Ganador de bingo confirmado', 'success');
-}
-if (App.gameState.lineWinners.length > 0) {
-await database.ref('winners/line').remove();
-App.gameState.lineWinners = [];
-App.gameState.claimedLines = 0;
-showToast('✅ Ganadores de línea confirmados', 'success');
-}
+// NO limpiar ganadores automáticamente - mantener hasta que admin borre
+// Solo reanudar el juego
 await database.ref('gameState/paused').set(false);
+App.gameState.paused = false;
+showToast('✅ Juego continuado', 'success');
 updateWinnerDisplays();
-updateAdminWinnerCardDisplay();
 speak('Juego continuado', true);
+// Reanudar intervalo de números
+if (App.gameState.active && !App.gameState.paused) {
+if (App.timers.game) clearInterval(App.timers.game);
+App.timers.game = setInterval(() => { if (!App.gameState.paused) generateRandomNumber(); }, App.gameState.speed);
 }
-// ==================== CONTROL DE JUEGO ====================
+}
+
+// ==================== CONTROL DE JUEGO - CORREGIDO ====================
 function updateSpeed(val) {
 App.gameState.speed = val * 1000;
 if ($('speedValue')) $('speedValue').textContent = val + (val == 1 ? ' segundo' : ' segundos');
 }
+
 async function startGame() {
 await startCountdown(10);
 await database.ref('winners').remove();
@@ -1966,6 +2245,7 @@ if ($('btnResume')) $('btnResume').disabled = true;
 showToast('🎮 Juego iniciado');
 speak('¡El juego ha comenzado!');
 }
+
 async function pauseGame() {
 App.gameState.paused = true;
 if (App.timers.game) { clearInterval(App.timers.game); App.timers.game = null; }
@@ -1975,6 +2255,7 @@ if ($('btnResume')) $('btnResume').disabled = false;
 showToast('⏸ Juego pausado', 'info');
 await database.ref('gameState/paused').set(true);
 }
+
 async function resumeGame() {
 App.gameState.paused = false;
 if ($('btnStart')) $('btnStart').disabled = true;
@@ -1985,6 +2266,7 @@ await database.ref('gameState/paused').set(false);
 if (App.timers.game) clearInterval(App.timers.game);
 App.timers.game = setInterval(() => { if (!App.gameState.paused) generateRandomNumber(); }, App.gameState.speed);
 }
+
 async function resetGame() {
 pauseGame();
 await database.ref('calledNumbers').remove();
@@ -2027,12 +2309,14 @@ updateAdminWinnerCardDisplay();
 showToast('🔄 Juego reiniciado completamente');
 speak('Juego reiniciado. Compra nuevos cartones.', true);
 }
+
 async function generateRandomNumber() {
 if (App.calledNumbers.length >= 90) { showToast('Todos los números salieron', 'error'); pauseGame(); return; }
 let num;
 do { num = Math.floor(Math.random() * 90) + 1; } while (App.calledNumbers.includes(num));
 await callNumber(num);
 }
+
 async function callNumber(num) {
 await database.ref('calledNumbers').push(num);
 await database.ref('gameState/currentNumber').set(num);
@@ -2050,6 +2334,7 @@ if (App.settings.voice) {
 speak(`Número ${num}`, false);
 }
 }
+
 async function sendAdminMessage() {
 const text = $('adminMessage').value.trim();
 if (!text) return;
@@ -2059,11 +2344,13 @@ await database.ref('chat').push({ text: `📢 ${text}`, author: 'Admin', isAdmin
 speak(`Mensaje del admin: ${text}`);
 showToast('Mensaje enviado');
 }
+
 function showCalledNumbers() {
 if (App.calledNumbers.length === 0) { showToast('No hay números', 'info'); return; }
 alert(`Números cantados (${App.calledNumbers.length}/90):
 ${App.calledNumbers.join(', ')}`);
 }
+
 // ==================== DISPLAYS ====================
 function updateGameDisplay() {
 const num = App.gameState.currentNumber;
@@ -2082,17 +2369,23 @@ lastContainer.innerHTML = lastFive.map((n, idx) => `<div class="last-number ${id
 updatePrizeDisplay();
 updatePlayerCount();
 }
+
 async function refreshPlayerList() {
 const playersSnapshot = await database.ref('players').once('value');
 const players = playersSnapshot.val() || {};
 App.players.clear();
+const now = Date.now();
 Object.entries(players).forEach(([id, player]) => {
-if (player.online) App.players.set(id, player);
+// Solo mostrar jugadores online y activos
+if (player.online && (!player.lastActive || now - player.lastActive < 300000)) {
+App.players.set(id, player);
+}
 });
 updatePlayerCount();
 if (App.isAdmin) updateAdminDisplay();
 showToast('✅ Lista actualizada', 'success');
 }
+
 // ==================== INIT ====================
 window.addEventListener('load', () => {
 startClock();
@@ -2114,6 +2407,7 @@ await database.ref(path).update({ online: false, lastSeen: Date.now() });
 });
 document.addEventListener('click', () => { if (!App.audioContext) initAudio(); }, { once: true });
 });
+
 // Exponer funciones
 window.setLoginMode = setLoginMode;
 window.login = login;
@@ -2138,6 +2432,7 @@ window.updateSpeed = updateSpeed;
 window.selectPrizeMode = selectPrizeMode;
 window.toggleLinePrizes = toggleLinePrizes;
 window.setManualPrize = setManualPrize;
+window.setTextPrize = setTextPrize;
 window.setPrizeCap = setPrizeCap;
 window.setCustomPrize = setCustomPrize;
 window.forceLineWinner = forceLineWinner;
