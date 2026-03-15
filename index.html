@@ -1,118 +1,252 @@
 <!DOCTYPE html>
+
 <html lang="es">
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#6c5ce7">
+
 <title>Bingo Pro Live - Sala Online</title>
+
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+
 <style>
-/* ==================== BASE OPTIMIZADA ==================== */
+
+/* ==================== BASE ==================== */
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+
 :root{
---primary:#6c5ce7;--secondary:#00cec9;--accent:#fdcb6e;--danger:#e74c3c;--success:#00b894;
---dark:#1a1a2e;--darker:#16213e;--card-bg:#fff;
---shadow:0 4px 16px rgba(0,0,0,0.3);--glow:0 0 15px rgba(108,92,231,0.4)
+--primary:#6c5ce7;
+--secondary:#00cec9;
+--accent:#fdcb6e;
+--danger:#e74c3c;
+--success:#00b894;
+
+--dark:#1a1a2e;
+--darker:#16213e;
+--card-bg:#fff;
+
+--shadow:0 4px 16px rgba(0,0,0,0.3);
+--glow:0 0 15px rgba(108,92,231,0.4)
 }
-body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:linear-gradient(135deg,var(--dark) 0%,var(--darker) 100%);color:#fff;min-height:100vh;overflow-x:hidden;overflow-y:auto}
-.screen{display:none;min-height:100vh;padding:12px;animation:fadeIn 0.3s ease}
+
+body{
+font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
+background:linear-gradient(135deg,var(--dark) 0%,var(--darker) 100%);
+color:#fff;
+min-height:100vh;
+overflow-x:hidden;
+overflow-y:auto
+}
+
+.screen{display:none;min-height:100vh;padding:12px}
 .screen.active{display:block}
-@keyframes fadeIn{from{opacity:0}to{opacity:1}}
 
-/* ==================== RELOJ MOBILE-FIRST ==================== */
-.clock-display{position:fixed;top:8px;left:8px;background:rgba(0,0,0,0.5);padding:5px 10px;border-radius:12px;font-size:0.65rem;font-weight:600;z-index:1000;backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;gap:5px;white-space:nowrap;max-width:calc(100% - 100px)}
-.clock-display span{color:var(--accent)}
-
-/* ==================== ADVERTENCIA JUEGO RESPONSABLE ==================== */
-.responsible-gaming-modal{position:fixed;inset:0;background:rgba(0,0,0,0.95);z-index:9999;display:none;justify-content:center;align-items:center;padding:20px}
-.responsible-gaming-modal.active{display:flex}
-.responsible-gaming-content{background:linear-gradient(135deg,var(--danger) 0%,#c0392b 100%);padding:30px;border-radius:20px;max-width:400px;width:100%;text-align:center;box-shadow:0 10px 40px rgba(231,76,60,0.5);animation:modalIn 0.4s ease}
-@keyframes modalIn{from{transform:scale(0.9);opacity:0}to{transform:scale(1);opacity:1}}
-.responsible-gaming-content h2{font-size:1.5rem;margin-bottom:15px;color:#fff}
-.responsible-gaming-content p{font-size:1rem;margin-bottom:20px;opacity:0.9;line-height:1.5}
-.responsible-gaming-content button{background:#fff;color:var(--danger);padding:12px 30px;border:none;border-radius:10px;font-weight:800;cursor:pointer;font-size:0.95rem}
-
-/* ==================== CONNECTION STATUS ==================== */
-.connection-status{position:fixed;top:8px;right:8px;display:flex;align-items:center;gap:8px;background:rgba(0,0,0,0.5);padding:6px 12px;border-radius:20px;font-size:0.7rem;font-weight:600;z-index:1000;backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.1)}
-.conn-dot{width:8px;height:8px;border-radius:50%;background:var(--success);box-shadow:0 0 8px var(--success)}
-.conn-dot.offline{background:var(--danger);box-shadow:0 0 8px var(--danger)}
-.conn-dot.connecting{background:var(--accent)}
-
-/* ==================== GAME INDICATORS ==================== */
-.game-active-indicator{position:fixed;top:50px;left:8px;background:linear-gradient(135deg,var(--danger) 0%,#c0392b 100%);padding:8px 16px;border-radius:20px;font-weight:700;z-index:950;border:2px solid var(--accent);display:none;font-size:0.75rem}
-.game-active-indicator.active{display:flex;align-items:center;gap:8px}
-.game-active-indicator .dot{width:10px;height:10px;background:#fff;border-radius:50%;animation:blink 1s infinite}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
-.game-paused-indicator{position:fixed;top:50px;left:8px;background:linear-gradient(135deg,var(--accent) 0%,#f39c12 100%);padding:8px 16px;border-radius:20px;font-weight:700;z-index:950;border:2px solid var(--dark);display:none;color:var(--dark);font-size:0.75rem}
-.game-paused-indicator.active{display:flex;align-items:center;gap:8px}
-
-/* ==================== LOGIN ==================== */
-.login{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);padding:15px;position:relative}
-.logo{font-size:2.2rem;font-weight:900;text-align:center;margin-bottom:8px;text-shadow:0 3px 10px rgba(0,0,0,0.3);position:relative;letter-spacing:-1px}
-.logo span{color:var(--accent);display:inline-block}
-.subtitle{text-align:center;margin-bottom:30px;opacity:0.9;font-size:1rem;position:relative;font-weight:300}
-.box{background:rgba(255,255,255,0.1);backdrop-filter:blur(15px);border-radius:20px;padding:25px;width:100%;max-width:400px;box-shadow:var(--shadow);border:1px solid rgba(255,255,255,0.1);position:relative}
-.input-group{margin-bottom:20px}
-.input-group label{display:block;margin-bottom:8px;font-size:0.8rem;font-weight:600;text-transform:uppercase;letter-spacing:1px;opacity:0.9}
-.input{width:100%;padding:14px 16px;border:none;border-radius:12px;background:rgba(255,255,255,0.15);color:#fff;font-size:1rem;transition:all 0.2s;border:2px solid transparent}
-.input:focus{outline:none;background:rgba(255,255,255,0.25);border-color:var(--accent)}
-.input::placeholder{color:rgba(255,255,255,0.5)}
-.btn{width:100%;padding:15px;border:none;border-radius:12px;font-weight:800;cursor:pointer;transition:all 0.2s;text-transform:uppercase;letter-spacing:1px;font-size:0.95rem;position:relative;overflow:hidden}
-.btn:active{transform:scale(0.98)}
-.btn-primary{background:linear-gradient(135deg,var(--accent) 0%,#f39c12 100%);color:var(--dark);box-shadow:0 3px 15px rgba(253,203,110,0.3)}
-.btn-primary:hover{box-shadow:0 5px 20px rgba(253,203,110,0.5)}
-.btn-success{background:var(--success);color:#fff}
-.btn-danger{background:var(--danger);color:#fff}
-.btn-warning{background:var(--accent);color:var(--dark)}
-.btn-info{background:var(--secondary);color:#fff}
-.btn-dark{background:rgba(0,0,0,0.3);color:#fff;border:1px solid rgba(255,255,255,0.1)}
-.btn:disabled{opacity:0.5;cursor:not-allowed;transform:none!important}
-.btn-sm{padding:8px 12px;font-size:0.8rem}
-.btn-xs{padding:6px 10px;font-size:0.7rem}
-.info-text{text-align:center;margin-top:20px;font-size:0.85rem;opacity:0.7;line-height:1.5}
-.toggle-container{display:flex;justify-content:center;gap:15px;margin-bottom:20px;background:rgba(0,0,0,0.2);padding:12px;border-radius:12px}
-.toggle-option{flex:1;text-align:center;padding:10px;border-radius:8px;cursor:pointer;transition:all 0.2s;font-weight:700;font-size:0.85rem;opacity:0.6;border:2px solid transparent}
-.toggle-option:hover{opacity:0.8}
-.toggle-option.active{background:rgba(255,255,255,0.2);opacity:1;border-color:var(--accent)}
 
 /* ==================== HEADER ==================== */
-.header{background:linear-gradient(135deg,rgba(102,126,234,0.3) 0%,rgba(118,75,162,0.3) 100%);padding:15px;border-radius:16px;margin-bottom:15px;display:flex;justify-content:space-between;align-items:center;box-shadow:var(--shadow);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.05);position:sticky;top:55px;z-index:100}
-.player-info{display:flex;align-items:center;gap:12px}
-.avatar{width:45px;height:45px;border-radius:50%;background:linear-gradient(135deg,var(--accent) 0%,#f39c12 100%);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:1.3rem;color:var(--dark);box-shadow:0 3px 12px rgba(0,0,0,0.3)}
-.avatar.admin{background:linear-gradient(135deg,gold 0%,#ff6b6b 100%)}
-.player-details{line-height:1.3}
-.player-name{font-weight:800;font-size:1.1rem;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
-.player-status{font-size:0.75rem;opacity:0.8;display:flex;align-items:center;gap:5px}
-.online-dot{width:8px;height:8px;border-radius:50%;background:var(--success);box-shadow:0 0 8px var(--success)}
-.number-section{text-align:center;flex:1}
-.current-number{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,var(--secondary) 0%,var(--success) 100%);display:flex;align-items:center;justify-content:center;font-size:2.5rem;font-weight:900;margin:0 auto 8px;box-shadow:0 0 30px rgba(0,206,201,0.5);position:relative}
-.current-number.new{animation:numberFlash 0.8s ease}
-@keyframes numberFlash{0%,100%{box-shadow:0 0 30px rgba(0,206,201,0.5)}50%{box-shadow:0 0 50px rgba(0,206,201,0.8)}}
-.number-label{font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;opacity:0.9}
-.last-numbers{display:flex;gap:6px;justify-content:center;margin-top:10px;flex-wrap:wrap}
-.last-number{width:35px;height:35px;border-radius:50%;background:rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;font-size:0.9rem;font-weight:800;border:1px solid rgba(255,255,255,0.1)}
-.last-number.recent{background:var(--accent);color:var(--dark);border-color:var(--accent)}
-.coins{background:rgba(0,0,0,0.3);padding:10px 18px;border-radius:25px;font-weight:800;color:var(--accent);display:flex;align-items:center;gap:6px;font-size:1.1rem;border:1px solid rgba(253,203,110,0.2)}
-.coins::before{content:"🪙";font-size:1.2rem}
+.header{
+background:linear-gradient(135deg,rgba(102,126,234,0.3) 0%,rgba(118,75,162,0.3) 100%);
+padding:15px;
+border-radius:16px;
+margin-bottom:15px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+box-shadow:var(--shadow);
+backdrop-filter:blur(8px);
+-webkit-backdrop-filter:blur(8px);
+border:1px solid rgba(255,255,255,0.05);
+position:sticky;
+top:55px;
+z-index:100
+}
+
+.player-info{
+display:flex;
+align-items:center;
+gap:12px
+}
+
+.avatar{
+width:45px;
+height:45px;
+border-radius:50%;
+background:linear-gradient(135deg,var(--accent) 0%,#f39c12 100%);
+display:flex;
+align-items:center;
+justify-content:center;
+font-weight:900;
+font-size:1.3rem;
+color:var(--dark)
+}
+
+.player-name{
+font-weight:800;
+font-size:1.1rem
+}
+
+.coins{
+background:rgba(0,0,0,0.3);
+padding:10px 18px;
+border-radius:25px;
+font-weight:800;
+color:var(--accent);
+display:flex;
+align-items:center;
+gap:6px;
+font-size:1.1rem
+}
+
+.coins::before{
+content:"🪙"
+}
+
+
+/* ==================== NUMERO ACTUAL ==================== */
+.current-number{
+width:80px;
+height:80px;
+border-radius:50%;
+background:linear-gradient(135deg,var(--secondary) 0%,var(--success) 100%);
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:2.5rem;
+font-weight:900;
+margin:0 auto 8px
+}
+
+.number-label{
+font-size:0.75rem;
+font-weight:700;
+text-transform:uppercase;
+letter-spacing:1px;
+opacity:0.9
+}
+
 
 /* ==================== POZO ==================== */
-.prize-section{background:linear-gradient(135deg,var(--danger) 0%,#c0392b 100%);padding:20px;border-radius:16px;text-align:center;margin-bottom:15px;box-shadow:var(--shadow);position:relative;overflow:hidden}
-.prize-amount{font-size:2rem;font-weight:900;text-shadow:0 3px 10px rgba(0,0,0,0.3)}
-.prize-label{font-size:0.9rem;opacity:0.9;margin-top:6px;text-transform:uppercase;letter-spacing:2px;font-weight:600}
-.prize-breakdown{display:flex;justify-content:center;gap:15px;margin-top:12px;font-size:0.8rem;flex-wrap:wrap}
-.prize-breakdown span{background:rgba(0,0,0,0.3);padding:6px 12px;border-radius:12px}
-.prize-text-display{background:rgba(253,203,110,0.2);border:2px solid var(--accent);padding:12px;border-radius:12px;margin-top:12px;font-size:1rem;font-weight:800;color:var(--accent);display:none}
+.prize-section{
+background:linear-gradient(135deg,var(--danger) 0%,#c0392b 100%);
+padding:20px;
+border-radius:16px;
+text-align:center;
+margin-bottom:15px;
+box-shadow:var(--shadow)
+}
+
+.prize-amount{
+font-size:2rem;
+font-weight:900
+}
+
+.prize-label{
+font-size:0.9rem;
+opacity:0.9;
+margin-top:6px;
+text-transform:uppercase;
+letter-spacing:2px;
+font-weight:600
+}
+
+.prize-breakdown{
+display:flex;
+justify-content:center;
+gap:15px;
+margin-top:12px;
+font-size:0.8rem;
+flex-wrap:wrap
+}
+
+.prize-breakdown span{
+background:rgba(0,0,0,0.3);
+padding:6px 12px;
+border-radius:12px
+}
+
+.prize-text-display{
+background:rgba(253,203,110,0.2);
+border:2px solid var(--accent);
+padding:12px;
+border-radius:12px;
+margin-top:12px;
+font-size:1rem;
+font-weight:800;
+color:var(--accent);
+display:none
+}
 
 /* ==================== CONTROLES ==================== */
-.controls{background:rgba(255,255,255,0.03);border-radius:16px;padding:15px;margin-bottom:15px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:15px;border:1px solid rgba(255,255,255,0.05)}
-.control-group{display:flex;flex-direction:column;align-items:center;gap:8px}
-.control-label{font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;opacity:0.8}
-.toggle{position:relative;width:50px;height:28px;background:rgba(255,255,255,0.1);border-radius:14px;cursor:pointer;transition:0.2s;border:2px solid transparent}
-.toggle.active{background:var(--success);border-color:var(--success)}
-.toggle::after{content:'';position:absolute;width:22px;height:22px;background:#fff;border-radius:50%;top:1px;left:1px;transition:0.2s}
-.toggle.active::after{left:23px}
-.btn-control{padding:10px 16px;font-size:0.8rem;border-radius:10px;white-space:nowrap}
+/* ==================== CONTROLES ==================== */
+ .controls{
+background:rgba(255,255,255,0.03);
+border-radius:16px;
+padding:15px;
+margin-bottom:15px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+flex-wrap:wrap;
+gap:15px;
+border:1px solid rgba(255,255,255,0.05)
+}
+
+.control-group{
+display:flex;
+flex-direction:column;
+align-items:center;
+gap:8px
+}
+
+.control-label{
+font-size:0.7rem;
+font-weight:700;
+text-transform:uppercase;
+letter-spacing:1px;
+opacity:0.8
+}
+
+.toggle{
+position:relative;
+width:50px;
+height:28px;
+background:rgba(255,255,255,0.1);
+border-radius:14px;
+cursor:pointer;
+transition:0.2s;
+border:2px solid transparent
+}
+
+.toggle.active{
+background:var(--success);
+border-color:var(--success)
+}
+
+.toggle::after{
+content:'';
+position:absolute;
+width:22px;
+height:22px;
+background:#fff;
+border-radius:50%;
+top:1px;
+left:1px;
+transition:0.2s
+}
+
+.toggle.active::after{
+left:23px
+}
+
+.btn-control{
+padding:10px 16px;
+font-size:0.8rem;
+border-radius:10px;
+white-space:nowrap
+}
 
 /* ==================== BOTONES RECLAMAR ==================== */
 .claim-buttons{display:flex;gap:12px;margin-bottom:15px;justify-content:center;flex-wrap:wrap}
@@ -433,320 +567,146 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:linear
 
 <!-- POZO -->
 <div class="prize-section">
-<div class="prize-amount" id="prizeAmount">$0</div>
-<div class="prize-label" id="prizeType">POZO EN JUEGO</div>
-<div class="prize-breakdown" id="prizeBreakdown">
-<span style="color:var(--success)">Línea: <span id="linePrize">$0</span></span>
-<span style="color:var(--accent)">Bingo: <span id="bingoPrize">$0</span></span>
-<span style="color:var(--danger)">Restante: <span id="remainingPrize">$0</span></span>
-</div>
-<div id="customPrizeDisplay" class="prize-text-display"></div>
+  <div class="prize-amount" id="prizeAmount">$0</div>
+  <div class="prize-label" id="prizeType">POZO EN JUEGO</div>
+
+  <div class="prize-breakdown" id="prizeBreakdown">
+    <span style="color:var(--success)">
+      Línea: <span id="linePrize">$0</span>
+    </span>
+
+    <span style="color:var(--accent)">
+      Bingo: <span id="bingoPrize">$0</span>
+    </span>
+
+    <span style="color:var(--danger)">
+      Restante: <span id="remainingPrize">$0</span>
+    </span>
+  </div>
+
+  <div id="customPrizeDisplay" class="prize-text-display"></div>
 </div>
 
 <div class="controls">
-<div class="control-group">
-<div class="control-label">Auto-Marcar</div>
-<div class="toggle" id="autoMarkToggle" onclick="toggleAutoMark()"></div>
-</div>
-<div class="control-group">
-<div class="control-label">Auto-Canto</div>
-<div class="toggle" id="autoClaimToggle" onclick="toggleAutoClaim()"></div>
-</div>
-<div class="control-group">
-<div class="control-label">Voz</div>
-<div class="toggle active" id="voiceToggle" onclick="toggleVoice()"></div>
-</div>
-<div class="control-group">
-<div class="control-label">Estilo</div>
-<select id="cardStyle" class="admin-select" onchange="changeCardStyle()" style="padding:6px 12px;width:auto;margin:0;font-size:0.8rem">
-<option value="classic">🎨 Clásico</option>
-<option value="neon">⚡ Neón</option>
-<option value="gold">👑 Gold VIP</option>
-</select>
-</div>
-<button class="btn btn-success btn-control" onclick="buyCard()" id="buyCardBtn">🎫 Comprar</button>
-<button class="btn btn-warning btn-control" onclick="requestCoins()">💰 Pedir</button>
+
+  <div class="control-group">
+    <div class="control-label">Auto-Marcar</div>
+    <div class="toggle" id="autoMarkToggle" onclick="toggleAutoMark()"></div>
+  </div>
+
+  <div class="control-group">
+    <div class="control-label">Auto-Canto</div>
+    <div class="toggle" id="autoClaimToggle" onclick="toggleAutoClaim()"></div>
+  </div>
+
+  <div class="control-group">
+    <div class="control-label">Voz</div>
+    <div class="toggle active" id="voiceToggle" onclick="toggleVoice()"></div>
+  </div>
+
+  <div class="control-group">
+    <div class="control-label">Estilo</div>
+
+    <select id="cardStyle" class="admin-select" onchange="changeCardStyle()">
+      <option value="classic">🎨 Clásico</option>
+      <option value="neon">⚡ Neón</option>
+      <option value="gold">👑 Gold VIP</option>
+    </select>
+
+  </div>
+
+  <button class="btn btn-success btn-control" onclick="buyCard()" id="buyCardBtn">
+    🎫 Comprar
+  </button>
+
+  <button class="btn btn-warning btn-control" onclick="requestCoins()">
+    💰 Pedir
+  </button>
+
 </div>
 
 <div class="claim-buttons" id="claimButtons">
-<button class="claim-btn claim-btn-line" id="claimLineBtn" onclick="claimLine()" disabled>📏 LÍNEA</button>
-<button class="claim-btn claim-btn-bingo" id="claimBingoBtn" onclick="claimBingo()" disabled>🎱 BINGO</button>
+
+  <button class="claim-btn claim-btn-line"
+          id="claimLineBtn"
+          onclick="claimLine()"
+          disabled>
+    📏 LÍNEA
+  </button>
+
+  <button class="claim-btn claim-btn-bingo"
+          id="claimBingoBtn"
+          onclick="claimBingo()"
+          disabled>
+    🎱 BINGO
+  </button>
+
 </div>
 
 <div class="style-selector" id="styleSelector">
-<button class="style-btn active" onclick="selectStyle('classic')">🎨 Clásico</button>
-<button class="style-btn" onclick="selectStyle('neon')">⚡ Neón</button>
-<button class="style-btn" onclick="selectStyle('gold')">👑 Gold VIP</button>
+
+  <button class="style-btn active" onclick="selectStyle('classic')">
+    🎨 Clásico
+  </button>
+
+  <button class="style-btn" onclick="selectStyle('neon')">
+    ⚡ Neón
+  </button>
+
+  <button class="style-btn" onclick="selectStyle('gold')">
+    👑 Gold VIP
+  </button>
+
 </div>
 
 <div class="cards-container" id="cardsContainer">
-<div class="text-center" style="padding:50px 20px;opacity:0.6">
-<div style="font-size:3.5rem;margin-bottom:12px">🎫</div>
-<div style="font-size:1.1rem;font-weight:700;margin-bottom:8px">No tienes cartones</div>
-<div style="font-size:0.9rem">Compra tu primer cartón para comenzar</div>
-<button class="btn btn-success mt-15" onclick="buyCard()" style="max-width:220px" id="buyFirstCardBtn">Comprar Cartón (100 🪙)</button>
-</div>
+
+  <div class="text-center" style="padding:50px 20px;opacity:0.6">
+
+    <div style="font-size:3.5rem;margin-bottom:12px">🎫</div>
+
+    <div style="font-size:1.1rem;font-weight:700;margin-bottom:8px">
+      No tienes cartones
+    </div>
+
+    <div style="font-size:0.9rem">
+      Compra tu primer cartón para comenzar
+    </div>
+
+    <button class="btn btn-success mt-15"
+            onclick="buyCard()"
+            id="buyFirstCardBtn">
+      Comprar Cartón (100 🪙)
+    </button>
+
+  </div>
+
 </div>
 
 <div class="chat-container" id="chatContainer">
-<div class="chat-header">
-<div class="chat-title">💬 Chat</div>
-</div>
-<div class="chat-messages" id="chatMessages"></div>
-<div class="chat-input-group">
-<input type="text" id="chatInput" class="chat-input" placeholder="Escribe un mensaje..." maxlength="120" onkeypress="if(event.key==='Enter')sendMessage()">
-<button class="btn btn-primary" style="padding:10px 16px" onclick="sendMessage()">📨</button>
-</div>
-</div>
-</div>
 
-<!-- Admin Screen -->
-<div id="adminScreen" class="screen">
-<div class="header">
-<div class="player-info">
-<div class="avatar admin">👑</div>
-<div class="player-details">
-<div class="player-name">ADMINISTRADOR <span class="badge">VIP</span></div>
-<div class="player-status">
-<span class="online-dot"></span>
-<span id="adminPlayerCount">Online: 0</span>
-</div>
-</div>
-</div>
-<div class="number-section">
-<div class="current-number" id="adminCurrentNumber" style="background:linear-gradient(135deg,gold 0%,#ff6b6b 100%);color:var(--dark)">--</div>
-<div class="number-label">Control de Sala</div>
-</div>
-<button class="btn btn-danger btn-xs" onclick="logout()" style="width:auto;padding:6px 12px">Salir</button>
-</div>
+  <div class="chat-header">
+    <div class="chat-title">💬 Chat</div>
+  </div>
 
-<!-- POZO ADMIN -->
-<div class="prize-section">
-<div class="prize-amount" id="adminPrizeAmount">$0</div>
-<div class="prize-label">POZO TOTAL</div>
-<div class="prize-breakdown">
-<span style="color:var(--success)">Línea (20%): <span id="adminLinePrize">$0</span></span>
-<span style="color:var(--accent)">Bingo (80%): <span id="adminBingoPrize">$0</span></span>
-</div>
-<div style="margin-top:12px;font-size:0.85rem">
-Líneas: <span id="adminLinesClaimed" style="color:var(--danger)">0/3</span> |
-Bingo: <span id="adminBingoClaimed" style="color:var(--danger)">No</span>
-</div>
-<div id="adminCustomPrizeDisplay" class="prize-text-display" style="display:none;margin-top:12px"></div>
-</div>
+  <div class="chat-messages" id="chatMessages"></div>
 
-<div class="admin-grid" id="adminGrid">
-<!-- Control del Juego -->
-<div class="admin-card" id="adminCard1">
-<button class="minimize-btn" onclick="toggleAdminCard('adminCard1')">−</button>
-<h3>🎮 Control</h3>
-<div class="card-content">
-<div class="admin-row">
-<button class="btn btn-success w-full" onclick="startGame()" id="btnStart">▶ Iniciar</button>
-<button class="btn btn-warning w-full" onclick="pauseGame()" id="btnPause">⏸ Pausar</button>
-<button class="btn btn-info w-full" onclick="resumeGame()" id="btnResume">▶ Reanudar</button>
-<button class="btn btn-danger w-full" onclick="resetGame()">↺ Reiniciar</button>
-</div>
-<div class="mt-15">
-<div style="display:flex;justify-content:space-between;margin-bottom:6px;font-size:0.85rem;font-weight:600">
-<span>Velocidad</span>
-<span id="speedValue" style="color:var(--accent)">3 segundos</span>
-</div>
-<input type="range" id="speedControl" min="1" max="10" value="3" style="width:100%;height:6px;border-radius:3px;background:rgba(255,255,255,0.1)" oninput="updateSpeed(this.value)">
-</div>
-</div>
-</div>
+  <div class="chat-input-group">
 
-<!-- Configuración de Pozo -->
-<div class="admin-card" id="adminCard2">
-<button class="minimize-btn" onclick="toggleAdminCard('adminCard2')">−</button>
-<h3>💰 Pozo</h3>
-<div class="card-content">
-<div class="prize-mode-section">
-<h4>🎯 Modo de Pozo</h4>
-<div class="prize-mode-option" onclick="selectPrizeMode('fixed')">
-<input type="radio" name="prizeMode" id="mode-fixed" value="fixed" checked>
-<label for="mode-fixed">📌 Fijo</label>
-</div>
-<div class="prize-mode-option" onclick="selectPrizeMode('incremental')">
-<input type="radio" name="prizeMode" id="mode-incremental" value="incremental">
-<label for="mode-incremental">📈 Incremental</label>
-</div>
-<div class="prize-mode-option" onclick="selectPrizeMode('progressive')">
-<input type="radio" name="prizeMode" id="mode-progressive" value="progressive">
-<label for="mode-progressive">🚀 Progresivo</label>
-</div>
-<div class="prize-mode-option" onclick="selectPrizeMode('text')">
-<input type="radio" name="prizeMode" id="mode-text" value="text">
-<label for="mode-text">📝 Texto</label>
-</div>
-</div>
-<div class="admin-row mt-10">
-<input type="number" id="manualPrizeAmount" class="admin-input" placeholder="Monto ($)" min="100">
-<button class="btn btn-primary" style="padding:10px 16px" onclick="setManualPrize()">💵</button>
-</div>
-<div class="admin-row mt-10">
-<input type="text" id="textPrizeAmount" class="admin-input" placeholder="Ej: TV, iPhone">
-<button class="btn btn-primary" style="padding:10px 16px" onclick="setTextPrize()">📝</button>
-</div>
-<div class="admin-row mt-10">
-<input type="number" id="prizeCapAmount" class="admin-input" placeholder="Tope ($)" min="1000" value="10000">
-<button class="btn btn-info" style="padding:10px 16px" onclick="setPrizeCap()">🔒</button>
-</div>
-<div class="mt-10">
-<div style="display:flex;justify-content:space-between;align-items:center">
-<span style="font-weight:600;font-size:0.85rem">📏 Premios de Línea</span>
-<div class="toggle active" id="linePrizeToggle" onclick="toggleLinePrizes()"></div>
-</div>
-</div>
-</div>
-</div>
+    <input
+      type="text"
+      id="chatInput"
+      class="chat-input"
+      placeholder="Escribe un mensaje..."
+      maxlength="120"
+      onkeypress="if(event.key==='Enter')sendMessage()"
+    >
 
-<!-- Cartón Ganador -->
-<div class="admin-card" id="adminCard3">
-<button class="minimize-btn" onclick="toggleAdminCard('adminCard3')">−</button>
-<h3>🏆 Ganador</h3>
-<div class="card-content">
-<div id="adminWinnerCardDisplay" style="background:rgba(0,0,0,0.2);padding:12px;border-radius:10px;margin-bottom:12px">
-<div style="opacity:0.6;text-align:center;font-size:0.85rem">No hay ganador</div>
-</div>
-<button class="btn btn-danger w-full" onclick="clearWinnerCard()">🗑 Borrar</button>
-</div>
-</div>
+    <button class="btn btn-primary" onclick="sendMessage()">📨</button>
 
-<!-- Ganadores Persistentes -->
-<div class="admin-card" id="adminCard4">
-<button class="minimize-btn" onclick="toggleAdminCard('adminCard4')">−</button>
-<h3>🏆 Historial</h3>
-<div class="card-content">
-<div class="winners-persistent-section" id="persistentWinnersList">
-<div class="text-center" style="padding:15px;opacity:0.6;font-size:0.85rem">Sin registros</div>
-</div>
-</div>
-</div>
+  </div>
 
-<!-- Ganadores Actuales -->
-<div class="admin-card" id="adminCard5">
-<button class="minimize-btn" onclick="toggleAdminCard('adminCard5')">−</button>
-<h3>🏆 Validar</h3>
-<div class="card-content">
-<div style="margin-bottom:12px">
-<select id="lineWinnerSelect" class="admin-select" style="margin-bottom:8px">
-<option value="">Seleccionar jugador Línea...</option>
-</select>
-<input type="text" id="lineCardNumber" class="admin-input" placeholder="Cartón (4 dígitos)" maxlength="4" style="text-transform:uppercase">
-<button class="btn btn-success w-full mt-10" onclick="forceLineWinner()">🏆 Línea</button>
 </div>
-<div style="margin-bottom:12px">
-<select id="bingoWinnerSelect" class="admin-select" style="margin-bottom:8px">
-<option value="">Seleccionar jugador Bingo...</option>
-</select>
-<input type="text" id="bingoCardNumber" class="admin-input" placeholder="Cartón (4 dígitos)" maxlength="4" style="text-transform:uppercase">
-<button class="btn btn-warning w-full mt-10" onclick="forceBingoWinner()">🏆 Bingo</button>
-</div>
-<div id="winnersDisplay" style="background:rgba(0,0,0,0.2);padding:12px;border-radius:10px">
-<div style="font-size:0.85rem;margin-bottom:8px">Ganadores:</div>
-<div id="lineWinnersDisplay"></div>
-<div id="bingoWinnerDisplay" style="margin-top:8px"></div>
-</div>
-<div class="mt-10">
-<button class="btn btn-success w-full" onclick="confirmWinner()">✅ Confirmar</button>
-</div>
-</div>
-</div>
-
-<!-- Jugadores Conectados -->
-<div class="admin-card" id="adminCard6">
-<button class="minimize-btn" onclick="toggleAdminCard('adminCard6')">−</button>
-<h3>👥 Jugadores</h3>
-<div class="card-content">
-<div class="players-list" id="adminPlayersList">
-<div class="text-center" style="padding:25px;opacity:0.6;font-size:0.85rem">Sin jugadores</div>
-</div>
-<button class="btn btn-info w-full mt-10" onclick="refreshPlayerList()">🔄 Actualizar</button>
-</div>
-</div>
-
-<!-- Solicitudes de Monedas -->
-<div class="admin-card" id="adminCard7">
-<button class="minimize-btn" onclick="toggleAdminCard('adminCard7')">−</button>
-<h3>💰 Solicitudes</h3>
-<div class="card-content">
-<div class="coin-requests-section" id="coinRequestsList">
-<div class="text-center" style="padding:15px;opacity:0.6;font-size:0.85rem">Sin solicitudes</div>
-</div>
-<div class="admin-row mt-10">
-<select id="targetPlayer" class="admin-select" style="margin-bottom:0;flex:2">
-<option value="">Seleccionar...</option>
-</select>
-<input type="number" id="coinAmount" class="admin-input" placeholder="Cantidad" style="max-width:100px;flex:1" min="1" value="1000">
-<button class="btn btn-success" style="padding:10px 16px" onclick="giveCoins()">💰</button>
-</div>
-</div>
-</div>
-
-<!-- Chat Admin -->
-<div class="admin-card" id="adminCard8">
-<button class="minimize-btn" onclick="toggleAdminCard('adminCard8')">−</button>
-<h3>💬 Chat</h3>
-<div class="card-content">
-<div class="admin-row">
-<input type="text" id="adminMessage" class="admin-input" placeholder="Mensaje..." maxlength="150">
-<button class="btn btn-primary" style="padding:10px 16px" onclick="sendAdminMessage()">📨</button>
-</div>
-<div class="admin-row mt-10">
-<input type="text" id="globalAnnouncementText" class="admin-input" placeholder="Anuncio..." maxlength="200">
-<button class="btn btn-warning" style="padding:10px 16px" onclick="sendGlobalAnnouncement()">📢</button>
-</div>
-<button class="btn btn-danger w-full mt-10" onclick="clearAllChats()">🗑 Borrar Chat</button>
-</div>
-</div>
-
-<!-- Llamada Manual -->
-<div class="admin-card" id="adminCard9">
-<button class="minimize-btn" onclick="toggleAdminCard('adminCard9')">−</button>
-<h3>🔢 Manual</h3>
-<div class="card-content">
-<div class="number-grid" id="manualNumbers"></div>
-<button class="btn btn-dark w-full mt-10" onclick="generateRandomNumber()">🎲 Aleatorio</button>
-</div>
-</div>
-
-<!-- Estadísticas -->
-<div class="admin-card" id="adminCard10">
-<button class="minimize-btn" onclick="toggleAdminCard('adminCard10')">−</button>
-<h3>📊 Stats</h3>
-<div class="card-content">
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-<div class="text-center" style="background:rgba(0,0,0,0.2);padding:15px;border-radius:12px">
-<div style="font-size:2rem;font-weight:900;color:var(--secondary)" id="statsNumbers">0</div>
-<div style="font-size:0.75rem;opacity:0.8">Números</div>
-</div>
-<div class="text-center" style="background:rgba(0,0,0,0.2);padding:15px;border-radius:12px">
-<div style="font-size:2rem;font-weight:900;color:var(--accent)" id="statsCards">0</div>
-<div style="font-size:0.75rem;opacity:0.8">Cartones</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-
-<!-- Winner Modal -->
-<div id="winnerModal" class="modal-overlay" onclick="if(event.target === this) closeWinnerModal()">
-<div class="modal-content">
-<button class="modal-close" onclick="closeWinnerModal()">×</button>
-<div class="modal-icon">🏆</div>
-<h2 class="modal-title" id="winnerTitle">¡GANADOR!</h2>
-<div class="modal-winner" id="winnerName">Jugador</div>
-<div class="modal-prize" id="winnerPrize">Premio: $1,000</div>
-<div style="font-size:1rem;margin-bottom:15px" id="winnerCardDisplay"></div>
-<div style="font-size:0.9rem;opacity:0.9;margin-bottom:15px" id="winnerRemainingDisplay"></div>
-<div class="winner-card-display" id="winnerCardVisual"></div>
-<button class="btn btn-primary modal-btn" onclick="closeWinnerModal()">Continuar</button>
-</div>
-</div>
-
 <!-- Winner Banner -->
 <div id="winnerBanner" class="winner-banner hidden">
 <button class="winner-banner-close" onclick="closeWinnerBanner()">×</button>
@@ -912,12 +872,11 @@ const loginInfo = $('loginInfo');
 if (mode === 'admin') {
 adminSection?.classList.remove('hidden');
 if (loginInfo) loginInfo.innerHTML = '👑 Panel Admin<br>🎮 Control total<br>💰 Gestión jugadores';
-$('loginText')!.textContent = '🔓 Entrar como Admin';
+$('loginText').textContent = '🔓 Entrar como Admin';
 } else {
 adminSection?.classList.add('hidden');
 if (loginInfo) loginInfo.innerHTML = '🌐 Juego Online<br>🎨 3 Estilos<br>👥 Sala compartida';
-$('loginText')!.textContent = '🚀 Entrar a la Sala';
-}
+$('loginText').textContent = '🚀 Entrar a la Sala';}
 }
 
 async function login() {
@@ -1459,126 +1418,269 @@ bingoBtn.classList.toggle('pulse', canClaimBingo);
 
 // ==================== RECLAMAR PREMIO ====================
 async function claimLine() {
-if (!App.hasLine || App.gameState.claimedLines >= 3 || !App.gameState.linePrizesEnabled) return;
-let winningCard = null;
-for (const card of App.myCards) {
-for (let i = 0; i < 5; i++) {
-if (card.marked[i].every((m, j) => m || card.numbers[i][j] === 'FREE')) { winningCard = card; break; }
+
+  if (!App.hasLine || App.gameState.claimedLines >= 3 || !App.gameState.linePrizesEnabled) return;
+
+  let winningCard = null;
+
+  for (const card of App.myCards) {
+    for (let i = 0; i < 5; i++) {
+
+      if (card.marked[i].every((m, j) => m || card.numbers[i][j] === 'FREE')) {
+        winningCard = card;
+        break;
+      }
+
+    }
+    if (winningCard) break;
+  }
+
+  if (!winningCard) return;
+
+  if (App.db) {
+
+    await App.db.ref('gameState/paused').set(true);
+
+    await App.db.ref('potentialWinners').push({
+      player: App.user.name,
+      playerId: App.user.id,
+      cardId: winningCard.id,
+      hasLine: true,
+      hasBingo: false,
+      timestamp: Date.now()
+    });
+
+  }
+
+  showToast('📏 ¡Línea cantada!', 'success', 4000);
+  speak('Línea cantada');
+
+  const btn = $('claimLineBtn');
+  if (btn) btn.disabled = true;
+
 }
-if (winningCard) break;
-}
-if (!winningCard) return;
-if (App.db) {
-await App.db.ref('gameState/paused').set(true);
-await App.db.ref('potentialWinners').push({
-player: App.user.name, playerId: App.user.id, cardId: winningCard.id,
-hasLine: true, hasBingo: false, timestamp: Date.now()
-});
-}
-showToast('📏 ¡Línea cantada!', 'success', 4000);
-speak('Línea cantada');
-$('claimLineBtn')!.disabled = true;
-}
+
 
 async function claimBingo() {
-if (!App.hasBingo || App.gameState.bingoClaimed) return;
-let winningCard = null;
-for (const card of App.myCards) {
-if (card.marked.every((r, ri) => r.every((m, ci) => m || card.numbers[ri][ci] === 'FREE'))) { winningCard = card; break; }
+
+  if (!App.hasBingo || App.gameState.bingoClaimed) return;
+
+  let winningCard = null;
+
+  for (const card of App.myCards) {
+
+    if (card.marked.every((r, ri) =>
+      r.every((m, ci) => m || card.numbers[ri][ci] === 'FREE')
+    )) {
+      winningCard = card;
+      break;
+    }
+
+  }
+
+  if (!winningCard) return;
+
+  if (App.db) {
+
+    await App.db.ref('gameState/paused').set(true);
+
+    await App.db.ref('potentialWinners').push({
+      player: App.user.name,
+      playerId: App.user.id,
+      cardId: winningCard.id,
+      hasLine: false,
+      hasBingo: true,
+      timestamp: Date.now()
+    });
+
+  }
+
+  showToast('🎱 ¡Bingo cantado!', 'success', 4000);
+  speak('Bingo cantado');
+
+  const btn = $('claimBingoBtn');
+  if (btn) btn.disabled = true;
+
 }
-if (!winningCard) return;
-if (App.db) {
-await App.db.ref('gameState/paused').set(true);
-await App.db.ref('potentialWinners').push({
-player: App.user.name, playerId: App.user.id, cardId: winningCard.id,
-hasLine: false, hasBingo: true, timestamp: Date.now()
-});
-}
-showToast('🎱 ¡Bingo cantado!', 'success', 4000);
-speak('Bingo cantado');
-$('claimBingoBtn')!.disabled = true;
-}
+
 
 // ==================== MOSTRAR GANADOR ====================
+
 function showWinnerToAll(winner) {
-showWinnerModal(winner);
-showWinnerBanner(winner);
-if (App.isAdmin) updateAdminWinnerCardDisplay(winner);
+
+  showWinnerModal(winner);
+  showWinnerBanner(winner);
+
+  if (App.isAdmin) updateAdminWinnerCardDisplay(winner);
+
 }
+
 
 function showWinnerModal(winner) {
-const modal = $('winnerModal');
-if (!modal || !winner) return;
-const title = winner.type === 'line' ? '¡HAY LÍNEA!' : '¡BINGO!';
-$('winnerTitle')!.textContent = title;
-$('winnerName')!.textContent = winner.player;
-$('winnerPrize')!.textContent = `Premio: ${winner.prize}`;
-$('winnerCardDisplay')!.textContent = `Cartón: ${winner.cardId}`;
-const totalPrize = App.gameState.prize.amount || App.gameState.prize.baseAmount || 1000;
-const prizeValue = winner.type === 'line' ? Math.floor(totalPrize * 0.2 / 100 / 3) : Math.floor(totalPrize * 0.8 / 100);
-const remaining = totalPrize - prizeValue;
-$('winnerRemainingDisplay')!.textContent = `Restante: ${formatMoney(remaining)}`;
-renderWinnerCardVisual(winner);
-modal.classList.add('active');
+
+  const modal = $('winnerModal');
+  if (!modal || !winner) return;
+
+  const title = winner.type === 'line' ? '¡HAY LÍNEA!' : '¡BINGO!';
+
+  $('winnerTitle').textContent = title;
+  $('winnerName').textContent = winner.player;
+  $('winnerPrize').textContent = `Premio: ${winner.prize}`;
+  $('winnerCardDisplay').textContent = `Cartón: ${winner.cardId}`;
+
+  const totalPrize = App.gameState.prize.amount || App.gameState.prize.baseAmount || 1000;
+
+  const prizeValue = winner.type === 'line'
+    ? Math.floor(totalPrize * 0.2)
+    : Math.floor(totalPrize * 0.8);
+
+  const remaining = totalPrize - prizeValue;
+
+  $('winnerRemainingDisplay').textContent = `Restante: ${formatMoney(remaining)}`;
+
+  renderWinnerCardVisual(winner);
+
+  modal.classList.add('active');
+
 }
+
 
 function renderWinnerCardVisual(winner) {
-const container = $('winnerCardVisual');
-if (!container) return;
-const numbers = [[1,2,3,4,5],[6,7,8,9,10],[11,12,'FREE',13,14],[15,16,17,18,19],[20,21,22,23,24]];
-let html = '<div class="grid">';
-numbers.flat().forEach(num => {
-const isFree = num === 'FREE';
-html += `<div class="cell${isFree ? ' free' : ' marked'}">${isFree ? 'FREE' : num}</div>`;
-});
-html += `</div><div style="text-align:center;margin-top:12px;font-weight:700;color:var(--accent)">Cartón: ${winner.cardId}</div>`;
-container.innerHTML = html;
+
+  const container = $('winnerCardVisual');
+  if (!container) return;
+
+  const numbers = [
+    [1,2,3,4,5],
+    [6,7,8,9,10],
+    [11,12,'FREE',13,14],
+    [15,16,17,18,19],
+    [20,21,22,23,24]
+  ];
+
+  let html = '<div class="grid">';
+
+  numbers.flat().forEach(num => {
+
+    const isFree = num === 'FREE';
+
+    html += `<div class="cell ${isFree ? 'free' : 'marked'}">
+              ${isFree ? 'FREE' : num}
+            </div>`;
+
+  });
+
+  html += `</div>
+  <div style="text-align:center;margin-top:12px;font-weight:700;color:var(--accent)">
+  Cartón: ${winner.cardId}
+  </div>`;
+
+  container.innerHTML = html;
+
 }
 
-function closeWinnerModal() { $('winnerModal')?.classList.remove('active'); }
+
+function closeWinnerModal() {
+
+  const modal = $('winnerModal');
+  if (modal) modal.classList.remove('active');
+
+}
+
 
 function showWinnerBanner(winner) {
-const banner = $('winnerBanner');
-if (!banner || !winner) return;
-$('winnerBannerTitle')!.textContent = winner.type === 'line' ? '📏 ¡LÍNEA!' : '🎱 ¡BINGO!';
-$('winnerBannerDetails')!.textContent = winner.player;
-$('winnerBannerCard')!.textContent = `Cartón: ${winner.cardId}`;
-$('winnerBannerPrize')!.textContent = `Premio: ${winner.prize}`;
-const totalPrize = App.gameState.prize.amount || App.gameState.prize.baseAmount || 1000;
-$('winnerBannerRemaining')!.textContent = `Restante: ${formatMoney(totalPrize - (winner.prizeValue || 0))}`;
-banner.classList.remove('hidden');
+
+  const banner = $('winnerBanner');
+  if (!banner || !winner) return;
+
+  $('winnerBannerTitle').textContent =
+    winner.type === 'line' ? '📏 ¡LÍNEA!' : '🎱 ¡BINGO!';
+
+  $('winnerBannerDetails').textContent = winner.player;
+  $('winnerBannerCard').textContent = `Cartón: ${winner.cardId}`;
+  $('winnerBannerPrize').textContent = `Premio: ${winner.prize}`;
+
+  const totalPrize = App.gameState.prize.amount || App.gameState.prize.baseAmount || 1000;
+
+  $('winnerBannerRemaining').textContent =
+    `Restante: ${formatMoney(totalPrize - (winner.prizeValue || 0))}`;
+
+  banner.classList.remove('hidden');
+
 }
 
-function closeWinnerBanner() { $('winnerBanner')?.classList.add('hidden'); }
+
+function closeWinnerBanner() {
+
+  const banner = $('winnerBanner');
+  if (banner) banner.classList.add('hidden');
+
+}
+
 
 // ==================== AUTO-MARCADO ====================
+
 function toggleAutoMark() {
-App.settings.autoMark = !App.settings.autoMark;
-$('autoMarkToggle')?.classList.toggle('active', App.settings.autoMark);
-showToast(App.settings.autoMark ? 'Auto-marcado ON' : 'Auto-marcado OFF', 'info');
-if (App.settings.autoMark) autoMarkNumbers();
+
+  App.settings.autoMark = !App.settings.autoMark;
+
+  const toggle = $('autoMarkToggle');
+  if (toggle) toggle.classList.toggle('active', App.settings.autoMark);
+
+  showToast(
+    App.settings.autoMark ? 'Auto-marcado ON' : 'Auto-marcado OFF',
+    'info'
+  );
+
+  if (App.settings.autoMark) autoMarkNumbers();
+
 }
+
 
 function toggleVoice() {
-App.settings.voice = !App.settings.voice;
-$('voiceToggle')?.classList.toggle('active', App.settings.voice);
-showToast(App.settings.voice ? 'Voz ON' : 'Voz OFF', 'info');
+
+  App.settings.voice = !App.settings.voice;
+
+  const toggle = $('voiceToggle');
+  if (toggle) toggle.classList.toggle('active', App.settings.voice);
+
+  showToast(
+    App.settings.voice ? 'Voz ON' : 'Voz OFF',
+    'info'
+  );
+
 }
 
+
 function autoMarkNumbers() {
-App.myCards.forEach((card, idx) => {
-let changed = false;
-card.numbers.forEach((row, ri) => {
-row.forEach((num, ci) => {
-if (num !== 'FREE' && App.calledNumbers.includes(num) && !card.marked[ri][ci]) {
-card.marked[ri][ci] = true;
-changed = true;
-}
-});
-});
-if (changed) renderCards();
-});
-checkPlayerWinStatus();
+
+  App.myCards.forEach(card => {
+
+    let changed = false;
+
+    card.numbers.forEach((row, ri) => {
+
+      row.forEach((num, ci) => {
+
+        if (num !== 'FREE' &&
+            App.calledNumbers.includes(num) &&
+            !card.marked[ri][ci]) {
+
+          card.marked[ri][ci] = true;
+          changed = true;
+
+        }
+
+      });
+
+    });
+
+    if (changed) renderCards();
+
+  });
+
+  checkPlayerWinStatus();
+
 }
 
 // ==================== MONEDAS ====================
