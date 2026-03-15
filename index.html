@@ -8,6 +8,7 @@
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
 <style>
+/* (Mantengo todos tus estilos exactamente igual) */
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;touch-action:manipulation;-webkit-font-smoothing:antialiased}
 :root{
 --primary:#6c5ce7;--secondary:#00cec9;--accent:#fdcb6e;--danger:#e74c3c;--success:#00b894;
@@ -588,7 +589,7 @@ Bingo: <span id="adminBingoClaimed" style="color:var(--danger)">No</span>
 <div class="prize-mode-section">
 <h4>🎯 Modo de Pozo</h4>
 <div class="prize-mode-option" onclick="selectPrizeMode('fixed')">
-<input type="radio" name="prizeMode" id="mode-fixed" value="fixed">
+<input type="radio" name="prizeMode" id="mode-fixed" value="fixed" checked>
 <label for="mode-fixed">📌 Fijo (monto establecido)</label>
 </div>
 <div class="prize-mode-option" onclick="selectPrizeMode('incremental')">
@@ -623,7 +624,7 @@ Bingo: <span id="adminBingoClaimed" style="color:var(--danger)">No</span>
 <div class="mt-10">
 <div style="display:flex;justify-content:space-between;align-items:center">
 <span style="font-weight:600">📏 Activar Premios de Línea</span>
-<div class="toggle" id="linePrizeToggle" onclick="toggleLinePrizes()"></div>
+<div class="toggle active" id="linePrizeToggle" onclick="toggleLinePrizes()"></div>
 </div>
 </div>
 </div>
@@ -706,7 +707,7 @@ Bingo: <span id="adminBingoClaimed" style="color:var(--danger)">No</span>
 <select id="targetPlayer" class="admin-select" style="margin-bottom:0;flex:2">
 <option value="">Seleccionar jugador...</option>
 </select>
-<input type="number" id="coinAmount" class="admin-input" placeholder="Cantidad" style="max-width:120px;flex:1" min="1">
+<input type="number" id="coinAmount" class="admin-input" placeholder="Cantidad" style="max-width:120px;flex:1" min="1" value="1000">
 <button class="btn btn-success" style="padding:12px 20px" onclick="giveCoins()">💰</button>
 </div>
 </div>
@@ -812,7 +813,6 @@ database = firebase.database();
 console.log('✅ Firebase inicializado correctamente');
 } catch (error) {
 console.error('❌ Error inicializando Firebase:', error);
-showToast('Error de conexión. Recarga la página.', 'error', 5000);
 }
 
 // ==================== CONFIGURACIÓN ====================
@@ -821,7 +821,7 @@ ADMIN_CODE: 'fmz141236601077',
 MAX_PLAYERS: 100,
 MAX_CARDS: 6,
 CARD_PRICE: 100,
-INITIAL_COINS: 10000,
+INITIAL_COINS: 1000,
 LINE_PERCENTAGE: 20,
 BINGO_PERCENTAGE: 80,
 MAX_LINE_WINNERS: 3,
@@ -842,7 +842,14 @@ active: false,
 paused: false,
 currentNumber: null,
 speed: 3000,
-prize: { type: 'fixed', amount: 1000, baseAmount: 1000, cap: 10000, customPrize: '', textPrize: '' },
+prize: { 
+type: 'fixed', 
+amount: 1000, 
+baseAmount: 1000, 
+cap: 10000, 
+customPrize: '', 
+textPrize: '' 
+},
 lineWinners: [],
 bingoWinner: null,
 claimedLines: 0,
@@ -868,21 +875,21 @@ lastNotificationCheck: 0,
 playerJoinTime: new Map(),
 pendingWinner: null,
 lastPlayerStatusCheck: 0,
-firebaseListeners: null
+firebaseListeners: {}
 };
 
 let synth = window.speechSynthesis;
 
 // ==================== UTILIDADES ====================
-const $ = (id) => {
+function $(id) {
 const el = document.getElementById(id);
 if (!el) {
 console.warn(`⚠️ Elemento no encontrado: ${id}`);
 }
 return el;
-};
+}
 
-const showToast = (msg, type = 'success', duration = 3000) => {
+function showToast(msg, type = 'success', duration = 3000) {
 const container = $('toastContainer');
 if (!container) return;
 const toast = document.createElement('div');
@@ -895,20 +902,22 @@ toast.style.opacity = '0';
 toast.style.transition = 'opacity 0.3s';
 setTimeout(() => toast.remove(), 300);
 }, duration);
-};
+}
 
-const generateId = () => Date.now().toString(36) + Math.random().toString(36).substr(2, 9);
+function generateId() {
+return Date.now().toString(36) + Math.random().toString(36).substr(2, 9);
+}
 
-const formatMoney = (amount) => {
+function formatMoney(amount) {
 if (amount === Infinity || amount === 'Infinity') return '∞';
 return '$' + Math.floor(amount).toLocaleString('es-ES');
-};
+}
 
-const escapeHtml = (text) => {
+function escapeHtml(text) {
 const div = document.createElement('div');
 div.textContent = text;
 return div.innerHTML;
-};
+}
 
 // ==================== RELOJ ====================
 function startClock() {
@@ -959,7 +968,7 @@ if (App.isSpeaking || App.speechQueue.length === 0) return;
 App.isSpeaking = true;
 const text = App.speechQueue.shift();
 const utterance = new SpeechSynthesisUtterance(text);
-utterance.lang = 'es-ES';
+utterance.lang = 'es-AR'; // Cambiado a español argentino
 utterance.rate = 1.0;
 try {
 const voices = synth.getVoices();
@@ -1095,7 +1104,6 @@ setupFirebaseListeners();
 updateConnectionStatus('online');
 if (database) {
 await database.ref('chat').push({ text: `🎉 ¡Bienvenido ${name}!`, author: 'Sistema', isSystem: true, timestamp: Date.now() });
-await database.ref('announcements').push({ text: `${name} se ha unido al juego`, type: 'welcome', timestamp: Date.now() });
 }
 // Mostrar advertencia de juego responsable
 const warning = $('responsibleGamingWarning');
@@ -1136,16 +1144,14 @@ return;
 }
 
 // Jugadores
-if (App.firebaseListeners && App.firebaseListeners.players) {
+if (App.firebaseListeners.players) {
 App.firebaseListeners.players.off();
 }
-App.firebaseListeners = App.firebaseListeners || {};
 App.firebaseListeners.players = database.ref('players').on('value', (snapshot) => {
 const players = snapshot.val() || {};
 App.players.clear();
 const now = Date.now();
 Object.entries(players).forEach(([id, player]) => {
-// Solo mostrar jugadores online y activos (última actividad < 5 minutos)
 if (player.online && (!player.lastActive || now - player.lastActive < 300000)) {
 App.players.set(id, player);
 if (!App.playerJoinTime.has(id) && player.joinTime) {
@@ -1157,7 +1163,6 @@ updatePlayerCount();
 if (App.isAdmin) {
 updateAdminDisplay();
 updateCoinRequestsDisplay();
-checkAdminNotifications();
 }
 if (!App.isAdmin && App.user) {
 const myPlayer = players[App.user.id];
@@ -1209,10 +1214,10 @@ App.firebaseListeners.calledNumbers.off();
 App.firebaseListeners.calledNumbers = database.ref('calledNumbers').on('value', (snapshot) => {
 const numbers = snapshot.val();
 if (numbers) {
-const newNumbers = Object.values(numbers).filter(n => !App.calledNumbers.includes(n));
-App.calledNumbers = Object.values(numbers);
+const numbersArray = Object.values(numbers);
+const newNumbers = numbersArray.filter(n => !App.calledNumbers.includes(n));
+App.calledNumbers = numbersArray;
 updateGameDisplay();
-// Cantar números con voz para TODOS los jugadores
 newNumbers.forEach(num => {
 if (App.settings.voice) {
 speak(`Número ${num}`, false);
@@ -1357,7 +1362,7 @@ const notificationText = $('adminNotificationText');
 const notificationCount = $('adminNotificationCount');
 if (notification && notificationText) {
 notificationText.textContent = text;
-notificationCount.textContent = parseInt(notificationCount.textContent) + 1;
+notificationCount.textContent = (parseInt(notificationCount.textContent) + 1).toString();
 notification.classList.add('active');
 setTimeout(() => {
 notification.classList.remove('active');
@@ -1365,8 +1370,6 @@ notificationCount.textContent = '1';
 }, 5000);
 }
 }
-
-function checkAdminNotifications() {}
 
 // ==================== REINICIO DE JUEGO ====================
 function handleGameReset() {
@@ -1481,7 +1484,7 @@ claimBingo();
 // ==================== CARTONES ====================
 function generateCard() {
 const card = [];
-const ranges = [[1,15], [16,30], [31,45], [46,60], [61,90]];
+const ranges = [[1,15], [16,30], [31,45], [46,60], [61,90]]; // CORREGIDO: último rango hasta 90
 for (let col = 0; col < 5; col++) {
 const nums = new Set();
 const [min, max] = ranges[col];
@@ -1609,14 +1612,19 @@ return;
 App.hasLine = false;
 App.hasBingo = false;
 for (const card of App.myCards) {
+// Verificar filas
 for (let i = 0; i < 5; i++) {
 if (card.marked[i].every(m => m)) App.hasLine = true;
 }
+// Verificar columnas
 for (let i = 0; i < 5; i++) {
 if (card.marked.every(r => r[i])) App.hasLine = true;
 }
+// Verificar diagonal principal
 if ([0,1,2,3,4].every(i => card.marked[i][i])) App.hasLine = true;
+// Verificar diagonal secundaria
 if ([0,1,2,3,4].every(i => card.marked[i][4-i])) App.hasLine = true;
+// Verificar bingo (todas las celdas)
 if (card.marked.every(r => r.every(m => m))) App.hasBingo = true;
 }
 updateClaimButtons();
@@ -1723,6 +1731,7 @@ modal.classList.add('active');
 function renderWinnerCardVisual(winner) {
 const container = $('winnerCardVisual');
 if (!container) return;
+// Ejemplo visual de cartón ganador
 const winningCardNumbers = [
 [1, 2, 3, 4, 5],
 [6, 7, 8, 9, 10],
@@ -1732,13 +1741,10 @@ const winningCardNumbers = [
 ];
 let html = '<div class="grid">';
 winningCardNumbers.flat().forEach((num, i) => {
-const row = Math.floor(i / 5);
-const col = i % 5;
 const isFree = num === 'FREE';
-const isMarked = true;
 let cls = 'cell';
 if (isFree) cls += ' free';
-else if (isMarked) cls += ' marked';
+else cls += ' marked';
 html += `<div class="${cls}">${isFree ? 'FREE' : num}</div>`;
 });
 html += '</div>';
@@ -1767,7 +1773,6 @@ const totalPrize = App.gameState.prize.amount || App.gameState.prize.baseAmount 
 const remaining = totalPrize - (winner.prizeValue || 0);
 if (winnerBannerRemaining) winnerBannerRemaining.textContent = `Restante en pozo: ${formatMoney(remaining)}`;
 banner.classList.remove('hidden');
-// NO cerrar automáticamente - dejar hasta que admin lo borre
 }
 
 function closeWinnerBanner() {
@@ -2034,6 +2039,7 @@ if (!currentWinner) {
 container.innerHTML = '<div style="opacity:0.6;text-align:center">No hay ganador registrado</div>';
 return;
 }
+// Usamos un cartón de ejemplo para visualización
 const winningCardNumbers = [
 [1, 2, 3, 4, 5],
 [6, 7, 8, 9, 10],
@@ -2082,14 +2088,7 @@ return;
 }
 container.innerHTML = App.persistentWinners.map(w => {
 const time = new Date(w.timestamp).toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
-return `<div class="winner-persistent-item ${w.type}">
-<div class="info">
-<div class="name">${w.type === 'line' ? '📏' : '🎱'} ${w.player}</div>
-<div class="card-id">Cartón: ${w.cardId} | ${time}</div>
-</div>
-<div class="prize">${w.prize}</div>
-<button class="delete-winner-btn" onclick="deletePersistentWinner('${w.key || w.timestamp}')">🗑</button>
-</div>`;
+return `<div class="coin-request-item"><div class="info"><div class="name">${w.type === 'line' ? '📏' : '🎱'} ${w.player}</div><div class="time">${time}</div></div><div class="prize" style="color:var(--accent)">${w.prize}</div><button class="winner-btn" onclick="deletePersistentWinner('${w.key || w.timestamp}')" style="margin-left:10px;">🗑</button></div>`;
 }).join('');
 }
 
@@ -2207,7 +2206,6 @@ newAmount = App.gameState.prize.baseAmount + (App.calledNumbers.length * CONFIG.
 } else if (App.prizeMode === 'progressive') {
 newAmount = App.gameState.prize.baseAmount + (App.calledNumbers.length * CONFIG.PROGRESSIVE_AMOUNT);
 }
-// APLICAR TOPE DEL POZO
 if (newAmount > App.gameState.prize.cap) {
 newAmount = App.gameState.prize.cap;
 }
@@ -2252,7 +2250,6 @@ if (remainingPrize) remainingPrize.textContent = formatMoney(remaining);
 if (adminLinesClaimed) adminLinesClaimed.textContent = `${claimedLines}/${CONFIG.MAX_LINE_WINNERS}`;
 if (adminBingoClaimed) adminBingoClaimed.textContent = App.gameState.bingoClaimed ? 'Sí' : 'No';
 
-// MOSTRAR PREMIO PERSONALIZADO
 if (customPrizeDisplay) {
 if (App.gameState.prize.customPrize || App.gameState.prize.textPrize) {
 customPrizeDisplay.textContent = `🎁 Premio Especial: ${App.gameState.prize.textPrize || App.gameState.prize.customPrize}`;
@@ -2371,8 +2368,6 @@ updateAdminWinnerCardDisplay(winnerData);
 
 // ==================== CONFIRMAR GANADOR ====================
 async function confirmWinner() {
-// NO limpiar ganadores automáticamente - mantener hasta que admin borre
-// Solo reanudar el juego
 if (database) {
 await database.ref('gameState/paused').set(false);
 }
@@ -2380,7 +2375,6 @@ App.gameState.paused = false;
 showToast('✅ Juego continuado', 'success');
 updateWinnerDisplays();
 speak('Juego continuado', true);
-// Reanudar intervalo de números
 if (App.gameState.active && !App.gameState.paused) {
 if (App.timers.game) clearInterval(App.timers.game);
 App.timers.game = setInterval(() => { if (!App.gameState.paused) generateRandomNumber(); }, App.gameState.speed);
@@ -2534,12 +2528,6 @@ speak(`Mensaje del admin: ${text}`);
 showToast('Mensaje enviado');
 }
 
-function showCalledNumbers() {
-if (App.calledNumbers.length === 0) { showToast('No hay números', 'info'); return; }
-alert(`Números cantados (${App.calledNumbers.length}/90):
-${App.calledNumbers.join(', ')}`);
-}
-
 // ==================== DISPLAYS ====================
 function updateGameDisplay() {
 const num = App.gameState.currentNumber;
@@ -2573,7 +2561,6 @@ const players = playersSnapshot.val() || {};
 App.players.clear();
 const now = Date.now();
 Object.entries(players).forEach(([id, player]) => {
-// Solo mostrar jugadores online y activos
 if (player.online && (!player.lastActive || now - player.lastActive < 300000)) {
 App.players.set(id, player);
 }
@@ -2645,7 +2632,6 @@ window.giveCoins = giveCoins;
 window.quickGiveCoins = quickGiveCoins;
 window.generateRandomNumber = generateRandomNumber;
 window.callNumber = callNumber;
-window.showCalledNumbers = showCalledNumbers;
 window.closeWinnerModal = closeWinnerModal;
 window.closeWinnerBanner = closeWinnerBanner;
 window.refreshPlayerList = refreshPlayerList;
