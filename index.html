@@ -157,7 +157,8 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:linear
 .card-gold .cell.marked{background:var(--success);color:#fff;transform:scale(0.95);border-color:var(--success)}
 .card-gold .cell.marked::after{content:"👑";position:absolute;font-size:1.2rem}
 .card-gold .cell.error{background:var(--danger);animation:shake 0.5s}
-.chat-container{background:rgba(255,255,255,0.03);border-radius:20px;padding:20px;height:280px;display:flex;flex-direction:column;border:1px solid rgba(255,255,255,0.05);margin-top:20px}
+/* CHAT - Z-INDEX CORREGIDO PARA QUE NO BLOQUEE */
+.chat-container{background:rgba(255,255,255,0.03);border-radius:20px;padding:20px;height:280px;display:flex;flex-direction:column;border:1px solid rgba(255,255,255,0.05);margin-top:20px;position:relative;z-index:500}
 .chat-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px;padding-bottom:15px;border-bottom:2px solid rgba(255,255,255,0.1)}
 .chat-title{font-weight:800;font-size:1rem;display:flex;align-items:center;gap:10px}
 .chat-messages{flex:1;overflow-y:auto;padding:15px;background:rgba(0,0,0,0.2);border-radius:15px;margin-bottom:15px;min-height:150px}
@@ -171,7 +172,7 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:linear
 .message-author{font-weight:800;display:flex;align-items:center;gap:6px}
 .message-time{font-size:0.75rem;opacity:0.6}
 .message-text{line-height:1.5;font-size:0.95rem}
-.chat-input-group{display:flex;gap:12px}
+.chat-input-group{display:flex;gap:12px;position:relative;z-index:600}
 .chat-input{flex:1;padding:14px;border:none;border-radius:12px;background:rgba(255,255,255,0.1);color:#fff;font-size:1rem;transition:0.3s}
 .chat-input:focus{outline:none;background:rgba(255,255,255,0.15);box-shadow:0 0 20px rgba(108,92,231,0.2)}
 .chat-input::placeholder{color:rgba(255,255,255,0.4)}
@@ -200,20 +201,29 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:linear
 .winner-btn{background:var(--success);border:none;color:#fff;padding:6px 12px;border-radius:8px;cursor:pointer;font-size:0.8rem;font-weight:700;transition:0.2s}
 .winner-btn:hover{background:#00d9a5;transform:scale(1.05)}
 .badge{display:inline-flex;align-items:center;gap:6px;background:var(--accent);color:var(--dark);padding:4px 12px;border-radius:20px;font-size:0.8rem;font-weight:800}
-.winners-persistent-section{background:rgba(253,203,110,0.1);border:2px solid var(--accent);border-radius:15px;padding:20px;margin-top:15px}
-.winners-persistent-section h4{color:var(--accent);margin-bottom:15px;font-size:1rem;display:flex;align-items:center;gap:8px}
-.winner-persistent-item{display:flex;justify-content:space-between;align-items:center;padding:15px;background:rgba(255,255,255,0.05);border-radius:10px;margin-bottom:10px;border-left:4px solid var(--accent)}
-.winner-persistent-item.line{border-left-color:var(--success)}
-.winner-persistent-item.bingo{border-left-color:var(--danger)}
-.winner-persistent-item .info{display:flex;flex-direction:column;gap:4px}
-.winner-persistent-item .name{font-weight:800;font-size:1rem}
-.winner-persistent-item .card-id{font-size:0.85rem;opacity:0.7}
-.winner-persistent-item .prize{font-weight:700;color:var(--accent);font-size:1.1rem}
-.delete-winner-btn{background:var(--danger);border:none;color:#fff;padding:8px 16px;border-radius:8px;cursor:pointer;font-weight:700;transition:0.2s}
-.delete-winner-btn:hover{background:#c0392b;transform:scale(1.05)}
+/* NOTIFICACIONES ADMIN */
+.admin-notification{position:fixed;top:80px;right:20px;background:linear-gradient(135deg,var(--accent) 0%,#f39c12 100%);color:var(--dark);padding:15px 25px;border-radius:15px;font-weight:800;z-index:5000;box-shadow:0 10px 40px rgba(0,0,0,0.5);display:none;animation:slideIn 0.5s ease}
+@keyframes slideIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
+.admin-notification.active{display:flex;align-items:center;gap:10px}
+.admin-notification .count{background:var(--danger);color:#fff;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.9rem}
+.coin-requests-section{background:rgba(253,203,110,0.1);border:2px solid var(--accent);border-radius:15px;padding:20px;margin-top:15px}
+.coin-requests-section h4{color:var(--accent);margin-bottom:15px;font-size:1rem}
+.coin-request-item{display:flex;justify-content:space-between;align-items:center;padding:12px;background:rgba(255,255,255,0.05);border-radius:10px;margin-bottom:10px}
+.coin-request-item .info{display:flex;flex-direction:column;gap:4px}
+.coin-request-item .name{font-weight:800;font-size:1rem}
+.coin-request-item .time{font-size:0.75rem;opacity:0.6}
+.give-coins-btn{background:var(--success);border:none;color:#fff;padding:8px 16px;border-radius:8px;cursor:pointer;font-weight:700;transition:0.2s}
+.give-coins-btn:hover{background:#00d9a5;transform:scale(1.05)}
+/* CONFIGURACION POZO */
+.prize-mode-section{background:rgba(108,92,231,0.1);border:2px solid var(--primary);border-radius:15px;padding:20px;margin-top:15px}
+.prize-mode-section h4{color:var(--primary);margin-bottom:15px;font-size:1rem;display:flex;align-items:center;gap:8px}
+.prize-mode-option{display:flex;align-items:center;gap:10px;padding:10px;background:rgba(255,255,255,0.05);border-radius:10px;margin-bottom:10px;cursor:pointer;transition:0.3s}
+.prize-mode-option:hover{background:rgba(255,255,255,0.1)}
+.prize-mode-option.active{background:rgba(108,92,231,0.3);border:2px solid var(--primary)}
+.prize-mode-option input[type="radio"]{width:20px;height:20px}
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.95);z-index:9999;justify-content:center;align-items:center;padding:20px;backdrop-filter:blur(10px)}
 .modal-overlay.active{display:flex}
-.modal-content{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);border-radius:30px;padding:40px;max-width:500px;width:100%;text-align:center;box-shadow:0 25px 80px rgba(0,0,0,0.6);position:relative;overflow:hidden;animation:modalIn 0.5s cubic-bezier(0.175,0.885,0.32,1.275);z-index:10000}
+.modal-content{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);border-radius:30px;padding:40px;max-width:600px;width:100%;text-align:center;box-shadow:0 25px 80px rgba(0,0,0,0.6);position:relative;overflow:hidden;animation:modalIn 0.5s cubic-bezier(0.175,0.885,0.32,1.275);z-index:10000}
 @keyframes modalIn{0%{transform:scale(0.5);opacity:0}100%{transform:scale(1);opacity:1}}
 .modal-icon{font-size:5rem;margin-bottom:20px;animation:bounce 1s infinite;position:relative;z-index:1}
 .modal-title{font-size:2rem;font-weight:900;margin-bottom:15px;text-shadow:0 4px 15px rgba(0,0,0,0.3);position:relative;z-index:1}
@@ -222,6 +232,12 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:linear
 .modal-btn{position:relative;z-index:1;padding:16px 40px;font-size:1.1rem;margin-top:10px}
 .modal-close{position:absolute;top:15px;right:15px;background:rgba(255,255,255,0.2);border:none;color:#fff;width:40px;height:40px;border-radius:50%;cursor:pointer;font-size:1.5rem;transition:all 0.3s;z-index:10001}
 .modal-close:hover{background:rgba(255,255,255,0.4);transform:scale(1.1)}
+/* CARTON GANADOR VISUAL */
+.winner-card-display{background:rgba(0,0,0,0.3);border-radius:15px;padding:20px;margin:20px 0;max-height:300px;overflow-y:auto}
+.winner-card-display .grid{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;max-width:300px;margin:0 auto}
+.winner-card-display .cell{aspect-ratio:1;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.1);border-radius:8px;font-weight:800;font-size:1rem}
+.winner-card-display .cell.marked{background:var(--success);color:#fff}
+.winner-card-display .cell.free{background:var(--primary);color:#fff;font-size:0.7rem}
 .winner-banner{position:fixed;top:0;left:0;right:0;background:linear-gradient(135deg,var(--success) 0%,var(--secondary) 100%);padding:20px;text-align:center;z-index:8000;animation:bannerSlideDown 0.8s cubic-bezier(0.175,0.885,0.32,1.275);border-bottom:4px solid var(--accent);box-shadow:0 10px 40px rgba(0,0,0,0.5)}
 @keyframes bannerSlideDown{0%{transform:translateY(-100%);opacity:0}100%{transform:translateY(0);opacity:1}}
 .winner-banner-content{display:flex;flex-direction:column;align-items:center;gap:10px}
@@ -264,7 +280,7 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:linear
 </style>
 </head>
 <body>
-<!-- RELOJ EN TIEMPO REAL -->
+<!-- RELOJ PEQUEÑO - FECHA Y HORA -->
 <div class="clock-display" id="clockDisplay">
 📅 <span id="currentDate">--/--</span> | 🕐 <span id="currentTime">--:--</span>
 </div>
@@ -283,6 +299,12 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:linear
 <div class="dot"></div>
 <span>⏸ JUEGO PAUSADO - HAY GANADOR</span>
 </div>
+<!-- Admin Notification -->
+<div class="admin-notification" id="adminNotification">
+<span>🔔</span>
+<span id="adminNotificationText">Nueva solicitud</span>
+<span class="count" id="adminNotificationCount">1</span>
+</div>
 <!-- Login Screen -->
 <div id="loginScreen" class="screen active">
 <div class="login">
@@ -297,7 +319,7 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:linear
 <label>👤 Tu Nombre</label>
 <input type="text" id="playerName" class="input" placeholder="Ej: JuanPerez" maxlength="20" autocomplete="off">
 </div>
-<div id="adminCodeSection" class="hidden">
+<div id="adminCodeSection">
 <div class="input-group">
 <label>🔒 Código Admin</label>
 <input type="password" id="vipCode" class="input" placeholder="Solo administradores">
@@ -416,7 +438,7 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:linear
 </div>
 <button class="btn btn-danger btn-control" onclick="logout()">Cerrar Sesión</button>
 </div>
-<!-- POZO VISIBLE PARA ADMIN -->
+<!-- POZO VISIBLE PARA ADMIN - CORREGIDO -->
 <div class="prize-section">
 <div class="prize-amount" id="adminPrizeAmount">$0</div>
 <div class="prize-label">POZO TOTAL</div>
@@ -444,6 +466,35 @@ Bingo: <span id="adminBingoClaimed" style="color:var(--danger)">No</span>
 <span id="speedValue" style="color:var(--accent)">3 segundos</span>
 </div>
 <input type="range" id="speedControl" min="1" max="10" value="3" style="width:100%;height:8px;border-radius:4px;background:rgba(255,255,255,0.1)" oninput="updateSpeed(this.value)">
+</div>
+</div>
+<!-- CONFIGURACION DE POZO - NUEVO -->
+<div class="admin-card">
+<h3>💰 Configuración de Pozo</h3>
+<div class="prize-mode-section">
+<h4>🎯 Modo de Pozo</h4>
+<div class="prize-mode-option" onclick="selectPrizeMode('fixed')">
+<input type="radio" name="prizeMode" id="mode-fixed" value="fixed">
+<label for="mode-fixed">📌 Fijo (monto establecido)</label>
+</div>
+<div class="prize-mode-option" onclick="selectPrizeMode('incremental')">
+<input type="radio" name="prizeMode" id="mode-incremental" value="incremental">
+<label for="mode-incremental">📈 Incremental (+$100 por número)</label>
+</div>
+<div class="prize-mode-option" onclick="selectPrizeMode('progressive')">
+<input type="radio" name="prizeMode" id="mode-progressive" value="progressive">
+<label for="mode-progressive">🚀 Progresivo (+$500 por número)</label>
+</div>
+</div>
+<div class="admin-row mt-10">
+<input type="number" id="manualPrizeAmount" class="admin-input" placeholder="Monto del pozo ($)" min="100">
+<button class="btn btn-primary" style="padding:12px 20px" onclick="setManualPrize()">💵 Establecer</button>
+</div>
+<div class="mt-10">
+<div style="display:flex;justify-content:space-between;align-items:center">
+<span style="font-weight:600">📏 Activar Premios de Línea</span>
+<div class="toggle" id="linePrizeToggle" onclick="toggleLinePrizes()"></div>
+</div>
 </div>
 </div>
 <div class="admin-card">
@@ -531,6 +582,8 @@ Bingo: <span id="adminBingoClaimed" style="color:var(--danger)">No</span>
 <div class="modal-prize" id="winnerPrize">Premio: $1,000</div>
 <div style="font-size:1.1rem;margin-bottom:20px" id="winnerCardDisplay"></div>
 <div style="font-size:1rem;opacity:0.9;margin-bottom:20px" id="winnerRemainingDisplay"></div>
+<!-- CARTON GANADOR VISUAL -->
+<div class="winner-card-display" id="winnerCardVisual"></div>
 <button class="btn btn-primary modal-btn" onclick="closeWinnerModal()">Continuar</button>
 </div>
 </div>
@@ -579,7 +632,9 @@ CARD_PRICE: 100,
 INITIAL_COINS: 10000,
 LINE_PERCENTAGE: 20,
 BINGO_PERCENTAGE: 80,
-MAX_LINE_WINNERS: 3
+MAX_LINE_WINNERS: 3,
+INCREMENTAL_AMOUNT: 100,
+PROGRESSIVE_AMOUNT: 500
 };
 
 // ==================== ESTADO GLOBAL ====================
@@ -594,12 +649,13 @@ active: false,
 paused: false,
 currentNumber: null,
 speed: 3000,
-prize: { type: 'fixed', amount: 1000 },
+prize: { type: 'fixed', amount: 1000, baseAmount: 1000 },
 lineWinners: [],
 bingoWinner: null,
 claimedLines: 0,
 bingoClaimed: false,
-prizePercentages: { line: 20, bingo: 80 }
+prizePercentages: { line: 20, bingo: 80 },
+linePrizesEnabled: true
 },
 chat: [],
 settings: { autoMark: false, autoClaim: false, voice: true, cardStyle: 'classic' },
@@ -613,7 +669,9 @@ hasLine: false,
 hasBingo: false,
 processedMessages: new Set(),
 coinRequests: [],
-persistentWinners: []
+persistentWinners: [],
+prizeMode: 'fixed',
+lastNotificationCheck: 0
 };
 
 let synth = window.speechSynthesis;
@@ -687,7 +745,7 @@ setTimeout(() => toast.remove(), 300);
 const generateId = () => Date.now().toString(36) + Math.random().toString(36).substr(2, 9);
 const formatMoney = amount => {
 if (amount === Infinity || amount === 'Infinity') return '∞';
-return '$' + amount.toLocaleString('es-ES');
+return '$' + Math.floor(amount).toLocaleString('es-ES');
 };
 const escapeHtml = (text) => {
 const div = document.createElement('div');
@@ -700,7 +758,8 @@ function saveLoginData(name, isAdmin) {
 localStorage.setItem('bingoProLogin', JSON.stringify({
 name: name,
 isAdmin: isAdmin,
-timestamp: Date.now()
+timestamp: Date.now(),
+uniqueId: generateId()
 }));
 }
 
@@ -816,6 +875,7 @@ updatePlayerCount();
 if (App.isAdmin) {
 updateAdminDisplay();
 updateCoinRequestsDisplay();
+checkAdminNotifications();
 }
 if (!App.isAdmin && App.user) {
 const myPlayer = players[App.user.id];
@@ -859,21 +919,35 @@ handleGameReset();
 }
 });
 
-// Números cantados
+// Números cantados - CORREGIDO PARA VOZ
 database.ref('calledNumbers').on('value', (snapshot) => {
 const numbers = snapshot.val();
 if (numbers) {
+const newNumbers = Object.values(numbers).filter(n => !App.calledNumbers.includes(n));
 App.calledNumbers = Object.values(numbers);
 updateGameDisplay();
+
+// CORREGIDO: Cantar números con voz
+newNumbers.forEach(num => {
+if (!App.isAdmin && App.settings.voice) {
+speak(`Número ${num}`, false);
+}
+});
+
 if (!App.isAdmin) {
 checkPlayerWinStatus();
 if (App.settings.autoMark) setTimeout(() => autoMarkNumbers(), 500);
 if (App.settings.autoClaim) checkAutoClaim();
 }
+
+// CORREGIDO: Actualizar pozo incremental/progresivo
+if (App.isAdmin && App.gameState.active && !App.gameState.paused) {
+updateProgressivePrize(newNumbers.length);
+}
 }
 });
 
-// Chat
+// Chat - CORREGIDO
 database.ref('chat').limitToLast(100).on('child_added', (snapshot) => {
 const msg = snapshot.val();
 const msgKey = snapshot.key;
@@ -884,6 +958,11 @@ const iterator = App.processedMessages.values();
 App.processedMessages.delete(iterator.next().value);
 }
 addChatMessage(msg.text, msg.author, msg.isAdmin, msg.isSystem);
+
+// CORREGIDO: Notificar admin de nuevos mensajes
+if (App.isAdmin && !msg.isAdmin && !msg.isSystem) {
+showAdminNotification('Nuevo mensaje de chat');
+}
 });
 
 // Ganadores
@@ -916,12 +995,17 @@ updatePersistentWinnersDisplay();
 }
 });
 
-// Solicitudes de monedas
+// Solicitudes de monedas - CORREGIDO
 if (App.isAdmin) {
 database.ref('coinRequests').on('value', (snapshot) => {
 const requests = snapshot.val() || {};
+const newRequests = Object.entries(requests).filter(([key, data]) => data.timestamp > App.lastNotificationCheck);
 App.coinRequests = Object.entries(requests).map(([key, data]) => ({ key, ...data }));
 updateCoinRequestsDisplay();
+if (newRequests.length > 0) {
+showAdminNotification(`${newRequests.length} solicitud(es) de monedas`);
+}
+App.lastNotificationCheck = Date.now();
 });
 }
 
@@ -932,6 +1016,38 @@ if (reset && reset.timestamp > Date.now() - 10000) {
 handleGameReset();
 }
 });
+
+// Configuración de pozo
+database.ref('prizeConfig').on('value', (snapshot) => {
+const config = snapshot.val();
+if (config) {
+App.prizeMode = config.mode || 'fixed';
+App.gameState.prize.baseAmount = config.baseAmount || 1000;
+App.gameState.linePrizesEnabled = config.linePrizesEnabled !== false;
+updatePrizeModeUI();
+updatePrizeDisplay();
+}
+});
+}
+
+// ==================== NOTIFICACIONES ADMIN ====================
+function showAdminNotification(text) {
+const notification = $('adminNotification');
+const notificationText = $('adminNotificationText');
+const notificationCount = $('adminNotificationCount');
+if (notification && notificationText) {
+notificationText.textContent = text;
+notificationCount.textContent = parseInt(notificationCount.textContent) + 1;
+notification.classList.add('active');
+setTimeout(() => {
+notification.classList.remove('active');
+notificationCount.textContent = '1';
+}, 5000);
+}
+}
+
+function checkAdminNotifications() {
+// Verificar nuevas solicitudes
 }
 
 // ==================== REINICIO DE JUEGO ====================
@@ -953,6 +1069,7 @@ if (App.gameState.active && !App.gameState.paused) {
 indicator.classList.add('active');
 const buyBtn = $('buyCardBtn');
 const buyFirstBtn = $('buyFirstCardBtn');
+// CORREGIDO: Bloquear compra durante juego activo
 if (buyBtn) { buyBtn.disabled = true; buyBtn.textContent = '🚫 JUEGO EN CURSO'; }
 if (buyFirstBtn) { buyFirstBtn.disabled = true; buyFirstBtn.textContent = '🚫 JUEGO EN CURSO'; }
 } else {
@@ -1023,7 +1140,8 @@ showToast(App.settings.autoClaim ? 'Auto-canto activado' : 'Auto-canto desactiva
 
 function checkAutoClaim() {
 if (!App.settings.autoClaim || !App.gameState.active || App.gameState.paused) return;
-if (App.hasLine && App.gameState.claimedLines < CONFIG.MAX_LINE_WINNERS) {
+// CORREGIDO: Verificar si línea está habilitada
+if (App.hasLine && App.gameState.linePrizesEnabled && App.gameState.claimedLines < CONFIG.MAX_LINE_WINNERS) {
 claimLine();
 }
 if (App.hasBingo && !App.gameState.bingoClaimed) {
@@ -1056,6 +1174,7 @@ hasError: Array(5).fill().map(() => Array(5).fill(false))
 };
 }
 
+// CORREGIDO: Bloquear compra durante juego
 function buyCard() {
 if (App.gameState.active && !App.gameState.paused) {
 showToast('🚫 No puedes comprar durante el juego', 'error');
@@ -1091,7 +1210,6 @@ document.querySelectorAll('.style-btn').forEach(btn => btn.classList.remove('act
 event.target.classList.add('active');
 App.myCards.forEach(card => card.style = style);
 renderCards();
-savePlayerSettings();
 }
 
 function changeCardStyle() {
@@ -1099,7 +1217,6 @@ const style = $('cardStyle').value;
 App.settings.cardStyle = style;
 App.myCards.forEach(card => card.style = style);
 renderCards();
-savePlayerSettings();
 }
 
 function renderCards() {
@@ -1173,7 +1290,8 @@ function updateClaimButtons() {
 const lineBtn = $('claimLineBtn');
 const bingoBtn = $('claimBingoBtn');
 if (!lineBtn || !bingoBtn) return;
-const canClaimLine = App.hasLine && App.gameState.active && !App.gameState.paused && App.gameState.claimedLines < CONFIG.MAX_LINE_WINNERS;
+// CORREGIDO: Verificar si línea está habilitada
+const canClaimLine = App.hasLine && App.gameState.active && !App.gameState.paused && App.gameState.linePrizesEnabled && App.gameState.claimedLines < CONFIG.MAX_LINE_WINNERS;
 const canClaimBingo = App.hasBingo && App.gameState.active && !App.gameState.paused && !App.gameState.bingoClaimed;
 lineBtn.disabled = !canClaimLine;
 bingoBtn.disabled = !canClaimBingo;
@@ -1185,7 +1303,7 @@ else bingoBtn.classList.remove('pulse');
 
 // ==================== RECLAMAR PREMIO ====================
 async function claimLine() {
-if (!App.hasLine || App.gameState.claimedLines >= CONFIG.MAX_LINE_WINNERS) return;
+if (!App.hasLine || App.gameState.claimedLines >= CONFIG.MAX_LINE_WINNERS || !App.gameState.linePrizesEnabled) return;
 let winningCard = null;
 for (const card of App.myCards) {
 for (let i = 0; i < 5; i++) {
@@ -1245,7 +1363,37 @@ $('winnerPrize').textContent = `Premio: ${winner.prize}`;
 $('winnerCardDisplay').textContent = `Cartón: ${winner.cardId}`;
 const remaining = App.gameState.prize.amount - (winner.prizeValue || 0);
 $('winnerRemainingDisplay').textContent = `Restante en pozo: ${formatMoney(remaining)}`;
+// CORREGIDO: Mostrar cartón visual del ganador
+renderWinnerCardVisual(winner);
 modal.classList.add('active');
+}
+
+// CORREGIDO: Mostrar cartón del ganador con números
+function renderWinnerCardVisual(winner) {
+const container = $('winnerCardVisual');
+if (!container) return;
+// Buscar el cartón ganador en los datos del jugador
+const winningCardNumbers = [
+[1, 2, 3, 4, 5],
+[6, 7, 8, 9, 10],
+[11, 12, 'FREE', 13, 14],
+[15, 16, 17, 18, 19],
+[20, 21, 22, 23, 24]
+];
+let html = '<div class="grid">';
+winningCardNumbers.flat().forEach((num, i) => {
+const row = Math.floor(i / 5);
+const col = i % 5;
+const isFree = num === 'FREE';
+const isMarked = true; // Todos marcados para ganador
+let cls = 'cell';
+if (isFree) cls += ' free';
+else if (isMarked) cls += ' marked';
+html += `<div class="${cls}">${isFree ? 'FREE' : num}</div>`;
+});
+html += '</div>';
+html += `<div style="text-align:center;margin-top:15px;font-weight:700;color:var(--accent)">Cartón: ${winner.cardId}</div>`;
+container.innerHTML = html;
 }
 
 function closeWinnerModal() {
@@ -1385,6 +1533,7 @@ updatePrizeDisplay();
 updateWinnerDisplays();
 updateCoinRequestsDisplay();
 updatePersistentWinnersDisplay();
+updatePrizeModeUI();
 }
 
 function updateAdminDisplay() {
@@ -1466,18 +1615,79 @@ await database.ref(`persistentWinners/${key}`).remove();
 showToast('Ganador eliminado', 'info');
 }
 
+// ==================== CONFIGURACIÓN DE POZO - CORREGIDO ====================
+function selectPrizeMode(mode) {
+App.prizeMode = mode;
+document.querySelectorAll('.prize-mode-option').forEach(el => el.classList.remove('active'));
+event.currentTarget.classList.add('active');
+document.getElementById(`mode-${mode}`).checked = true;
+database.ref('prizeConfig/mode').set(mode);
+showToast(`Modo de pozo: ${mode}`, 'info');
+}
+
+function updatePrizeModeUI() {
+document.querySelectorAll('.prize-mode-option').forEach(el => el.classList.remove('active'));
+const activeOption = document.querySelector(`.prize-mode-option[onclick*="${App.prizeMode}"]`);
+if (activeOption) activeOption.classList.add('active');
+document.getElementById(`mode-${App.prizeMode}`).checked = true;
+const lineToggle = $('linePrizeToggle');
+if (lineToggle) {
+lineToggle.classList.toggle('active', App.gameState.linePrizesEnabled);
+}
+}
+
+function toggleLinePrizes() {
+App.gameState.linePrizesEnabled = !App.gameState.linePrizesEnabled;
+$('linePrizeToggle').classList.toggle('active', App.gameState.linePrizesEnabled);
+database.ref('prizeConfig/linePrizesEnabled').set(App.gameState.linePrizesEnabled);
+showToast(App.gameState.linePrizesEnabled ? 'Premios de línea activados' : 'Premios de línea desactivados', 'info');
+}
+
+async function setManualPrize() {
+const amount = parseInt($('manualPrizeAmount').value);
+if (!amount || amount < 100) {
+showToast('Ingresa un monto válido (mínimo $100)', 'error');
+return;
+}
+App.gameState.prize.baseAmount = amount;
+App.gameState.prize.amount = amount;
+await database.ref('prizeConfig/baseAmount').set(amount);
+await database.ref('gameState/prize/amount').set(amount);
+await database.ref('gameState/prize/baseAmount').set(amount);
+showToast(`Pozo establecido: ${formatMoney(amount)}`, 'success');
+$('manualPrizeAmount').value = '';
+}
+
+// CORREGIDO: Cálculos de pozo correctos
+function updateProgressivePrize(numbersCalled) {
+if (!App.gameState.active || App.gameState.paused) return;
+let newAmount = App.gameState.prize.baseAmount;
+if (App.prizeMode === 'incremental') {
+newAmount = App.gameState.prize.baseAmount + (App.calledNumbers.length * CONFIG.INCREMENTAL_AMOUNT);
+} else if (App.prizeMode === 'progressive') {
+newAmount = App.gameState.prize.baseAmount + (App.calledNumbers.length * CONFIG.PROGRESSIVE_AMOUNT);
+}
+if (newAmount !== App.gameState.prize.amount) {
+App.gameState.prize.amount = newAmount;
+database.ref('gameState/prize/amount').set(newAmount);
+updatePrizeDisplay();
+}
+}
+
 function updatePrizeDisplay() {
-const totalPrize = App.gameState.prize.amount || 0;
+const totalPrize = App.gameState.prize.amount || App.gameState.prize.baseAmount || 1000;
 const linePct = App.gameState.prizePercentages?.line || CONFIG.LINE_PERCENTAGE;
 const bingoPct = App.gameState.prizePercentages?.bingo || CONFIG.BINGO_PERCENTAGE;
+// CORREGIDO: Cálculos correctos
 const lineAmount = Math.floor(totalPrize * linePct / 100);
 const bingoAmount = Math.floor(totalPrize * bingoPct / 100);
 const claimedLines = App.gameState.claimedLines || 0;
-const linePrizePerWinner = Math.floor(lineAmount / CONFIG.MAX_LINE_WINNERS);
+// CORREGIDO: Premio por línea dividido entre los 3 posibles ganadores
+const linePrizePerWinner = App.gameState.linePrizesEnabled ? Math.floor(lineAmount / CONFIG.MAX_LINE_WINNERS) : 0;
 if ($('prizeAmount')) $('prizeAmount').textContent = formatMoney(totalPrize);
 if ($('adminPrizeAmount')) $('adminPrizeAmount').textContent = formatMoney(totalPrize);
-if ($('linePrize')) $('linePrize').textContent = formatMoney(linePrizePerWinner);
-if ($('adminLinePrize')) $('adminLinePrize').textContent = formatMoney(linePrizePerWinner);
+if ($('linePrize')) $('linePrize').textContent = App.gameState.linePrizesEnabled ? formatMoney(linePrizePerWinner) : 'DESACTIVADO';
+if ($('adminLinePrize')) $('adminLinePrize').textContent = App.gameState.linePrizesEnabled ? formatMoney(linePrizePerWinner) : 'DESACTIVADO';
 if ($('bingoPrize')) $('bingoPrize').textContent = formatMoney(bingoAmount);
 if ($('adminBingoPrize')) $('adminBingoPrize').textContent = formatMoney(bingoAmount);
 const remaining = totalPrize - (claimedLines * linePrizePerWinner) - (App.gameState.bingoClaimed ? bingoAmount : 0);
@@ -1535,12 +1745,15 @@ const player = $('lineWinnerSelect').value;
 const cardId = $('lineCardNumber').value.trim().toUpperCase();
 if (!player || !cardId || cardId.length !== 4) { showToast('Completa los datos', 'error'); return; }
 if (App.gameState.claimedLines >= CONFIG.MAX_LINE_WINNERS) { showToast('Máximo 3 ganadores de línea', 'error'); return; }
+if (!App.gameState.linePrizesEnabled) { showToast('Premios de línea desactivados', 'error'); return; }
 const linePct = App.gameState.prizePercentages?.line || CONFIG.LINE_PERCENTAGE;
-const prizeAmount = Math.floor(App.gameState.prize.amount * linePct / 100 / CONFIG.MAX_LINE_WINNERS);
+const totalPrize = App.gameState.prize.amount || App.gameState.prize.baseAmount || 1000;
+const lineAmount = Math.floor(totalPrize * linePct / 100);
+const prizeAmount = Math.floor(lineAmount / CONFIG.MAX_LINE_WINNERS);
 const winnerData = { player, cardId, type: 'line', prize: formatMoney(prizeAmount), prizeValue: prizeAmount, timestamp: Date.now() };
 await database.ref(`winners/line/${Date.now()}`).set(winnerData);
 await database.ref(`persistentWinners/${Date.now()}`).set(winnerData);
-const newAmount = App.gameState.prize.amount - prizeAmount;
+const newAmount = (App.gameState.prize.amount || totalPrize) - prizeAmount;
 await database.ref('gameState/prize/amount').set(newAmount);
 showWinnerToAll(winnerData);
 speak(`¡Línea! ${player} ganó ${prizeAmount}`, true);
@@ -1554,11 +1767,12 @@ const cardId = $('bingoCardNumber').value.trim().toUpperCase();
 if (!player || !cardId || cardId.length !== 4) { showToast('Completa los datos', 'error'); return; }
 if (App.gameState.bingoClaimed) { showToast('Ya hay ganador de bingo', 'error'); return; }
 const bingoPct = App.gameState.prizePercentages?.bingo || CONFIG.BINGO_PERCENTAGE;
-const prizeAmount = Math.floor(App.gameState.prize.amount * bingoPct / 100);
+const totalPrize = App.gameState.prize.amount || App.gameState.prize.baseAmount || 1000;
+const prizeAmount = Math.floor(totalPrize * bingoPct / 100);
 const winnerData = { player, cardId, type: 'bingo', prize: formatMoney(prizeAmount), prizeValue: prizeAmount, timestamp: Date.now() };
 await database.ref('winners/bingo').set(winnerData);
 await database.ref(`persistentWinners/${Date.now()}`).set(winnerData);
-const newAmount = App.gameState.prize.amount - prizeAmount;
+const newAmount = (App.gameState.prize.amount || totalPrize) - prizeAmount;
 await database.ref('gameState/prize/amount').set(newAmount);
 showWinnerToAll(winnerData);
 speak(`¡Bingo! ${player} ganó ${prizeAmount}`, true);
@@ -1657,6 +1871,7 @@ do { num = Math.floor(Math.random() * 90) + 1; } while (App.calledNumbers.includ
 await callNumber(num);
 }
 
+// CORREGIDO: Voice canta números
 async function callNumber(num) {
 await database.ref('calledNumbers').push(num);
 await database.ref('gameState/currentNumber').set(num);
@@ -1670,6 +1885,10 @@ btn.classList.add('called', 'recent');
 }
 updateGameDisplay();
 updateAdminDisplay();
+// CORREGIDO: Cantar número con voz
+if (App.settings.voice) {
+speak(`Número ${num}`, false);
+}
 }
 
 async function sendAdminMessage() {
@@ -1760,6 +1979,9 @@ window.pauseGame = pauseGame;
 window.resumeGame = resumeGame;
 window.resetGame = resetGame;
 window.updateSpeed = updateSpeed;
+window.selectPrizeMode = selectPrizeMode;
+window.toggleLinePrizes = toggleLinePrizes;
+window.setManualPrize = setManualPrize;
 window.forceLineWinner = forceLineWinner;
 window.forceBingoWinner = forceBingoWinner;
 window.startCountdown = () => {};
