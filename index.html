@@ -450,6 +450,19 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:linear
 <button class="claim-btn claim-btn-bingo" id="claimBingoBtn" onclick="claimBingo()" disabled>🎱 CANTAR BINGO</button>
 </div>
 
+<div id="publicWinnersPanel" style="background:linear-gradient(135deg,rgba(108,92,231,0.15),rgba(253,203,110,0.1));border:2px solid rgba(253,203,110,0.3);border-radius:16px;padding:15px;margin-bottom:20px;display:none">
+<div style="font-weight:800;font-size:1rem;margin-bottom:12px;text-align:center;color:var(--accent)">🏆 GANADORES DE ESTA RONDA</div>
+<div id="publicLineWinnersSection">
+<div style="font-size:0.85rem;font-weight:700;color:var(--success);margin-bottom:8px;display:flex;align-items:center;gap:6px">📏 LÍNEA <span id="publicLineBadge" style="background:var(--success);color:#fff;padding:1px 8px;border-radius:20px;font-size:0.75rem">0/3</span></div>
+<div id="publicLineWinnersDisplay" style="min-height:30px"><div style="opacity:0.5;font-size:0.85rem;padding:4px 0">— Ningún ganador aún —</div></div>
+</div>
+<div style="height:1px;background:rgba(255,255,255,0.1);margin:12px 0"></div>
+<div id="publicBingoSection">
+<div style="font-size:0.85rem;font-weight:700;color:var(--accent);margin-bottom:8px;display:flex;align-items:center;gap:6px">🎱 BINGO</div>
+<div id="publicBingoWinnerDisplay" style="min-height:30px"><div style="opacity:0.5;font-size:0.85rem;padding:4px 0">— Ningún ganador aún —</div></div>
+</div>
+</div>
+
 <div class="style-selector" id="styleSelector">
 <button class="style-btn active" onclick="selectStyle('classic',this)">🎨 Clásico</button>
 <button class="style-btn" onclick="selectStyle('neon',this)">⚡ Neón</button>
@@ -530,6 +543,7 @@ Bingo: <span id="adminBingoClaimed" style="color:var(--danger)">No</span>
 <button class="btn btn-warning w-full" onclick="pauseGame()" id="btnPause">⏸ Pausar</button>
 <button class="btn btn-info w-full" onclick="resumeGame()" id="btnResume">▶ Reanudar</button>
 <button class="btn btn-danger w-full" onclick="resetGame()">↺ Reiniciar</button>
+<button class="btn btn-warning w-full" onclick="clearCurrentWinners()" style="background:linear-gradient(135deg,#e17055,#d63031)">🗑 Limpiar Ganadores</button>
 </div>
 <div class="mt-20">
 <div style="display:flex;justify-content:space-between;margin-bottom:8px;font-size:0.9rem;font-weight:600">
@@ -666,6 +680,9 @@ Bingo: <span id="adminBingoClaimed" style="color:var(--danger)">No</span>
 <div class="mt-10">
 <button class="btn btn-success w-full" onclick="confirmWinner()">✅ Confirmar y Continuar Juego</button>
 </div>
+<div class="mt-10">
+<button class="btn btn-danger w-full" onclick="clearCurrentWinners()" style="background:linear-gradient(135deg,#e17055,#d63031)">🗑 Limpiar Ganadores (Ronda)</button>
+</div>
 </div>
 </div>
 
@@ -715,7 +732,7 @@ Bingo: <span id="adminBingoClaimed" style="color:var(--danger)">No</span>
 <button class="btn btn-danger w-full mt-10" onclick="clearAllChats()">🗑 Borrar Todo el Chat</button>
 <div style="margin-top:20px">
 <div style="font-weight:800;color:var(--secondary);margin-bottom:10px;font-size:0.95rem;display:flex;align-items:center;gap:8px">👁 Mensajes de Jugadores <span id="adminChatBadge" style="background:var(--danger);color:#fff;padding:2px 8px;border-radius:20px;font-size:0.75rem;display:none">0 nuevos</span></div>
-<div id="adminChatViewer" style="max-height:280px;overflow-y:auto;background:rgba(0,0,0,0.2);border-radius:12px;padding:10px">
+<div id="adminChatViewer" style="max-height:220px;overflow-y:auto;background:rgba(0,0,0,0.2);border-radius:12px;padding:10px">
 <div style="opacity:0.5;text-align:center;padding:15px">No hay mensajes de jugadores</div>
 </div>
 </div>
@@ -755,17 +772,16 @@ Bingo: <span id="adminBingoClaimed" style="color:var(--danger)">No</span>
 <!-- Winner Modal -->
 <div id="winnerModal" class="modal-overlay">
 <div class="modal-content">
-<button class="modal-close" id="winnerModalCloseBtn" onclick="closeWinnerModal()" style="display:none">×</button>
 <div class="modal-icon">🏆</div>
 <h2 class="modal-title" id="winnerTitle">¡GANADOR!</h2>
 <div class="modal-winner" id="winnerName">Jugador</div>
+<div style="font-size:1.1rem;font-weight:900;color:var(--accent);position:relative;z-index:1;margin-bottom:6px;background:rgba(0,0,0,0.3);padding:8px 16px;border-radius:10px;border:1px solid rgba(253,203,110,0.4)" id="winnerCardDisplay">Cartón: ----</div>
 <div class="modal-prize" id="winnerPrize">Premio: $0</div>
-<div class="modal-card-id" id="winnerCardDisplay">Cartón: ----</div>
-<div style="font-size:1rem;opacity:0.9;margin-bottom:10px;position:relative;z-index:1" id="winnerRemainingDisplay"></div>
-<div style="font-size:0.9rem;opacity:0.7;margin-bottom:15px;position:relative;z-index:1;background:rgba(231,76,60,0.3);padding:10px;border-radius:10px;border:1px dashed rgba(231,76,60,0.6)">⏸ El juego está pausado. El administrador reanudará pronto.</div>
-<div id="winnerAdminControls" style="display:none;flex-direction:column;gap:10px;width:100%;margin-top:5px;position:relative;z-index:1">
-<button class="btn btn-success modal-btn" onclick="adminResumeFromWinner()" style="background:linear-gradient(135deg,var(--success),#00d9a5)">▶ Reanudar Juego</button>
-<button class="btn btn-danger modal-btn" onclick="adminClearWinner()" style="background:linear-gradient(135deg,var(--danger),#c0392b)">🗑 Borrar Ganador y Reanudar</button>
+<div style="font-size:0.95rem;opacity:0.85;margin-bottom:10px;position:relative;z-index:1" id="winnerRemainingDisplay"></div>
+<div style="font-size:0.85rem;background:rgba(231,76,60,0.2);border:1px dashed rgba(231,76,60,0.5);padding:8px 14px;border-radius:10px;margin-bottom:12px;position:relative;z-index:1" id="winnerPausedNote">⏸ Juego pausado — El administrador reanudará pronto</div>
+<div id="winnerAdminControls" style="display:none;flex-direction:column;gap:10px;width:100%;position:relative;z-index:1">
+<button class="btn btn-success modal-btn" onclick="adminResumeFromWinner()" style="background:linear-gradient(135deg,var(--success),#00d9a5)">▶ Confirmar y Reanudar Juego</button>
+<button class="btn btn-danger modal-btn" onclick="adminClearWinner()" style="background:linear-gradient(135deg,#e17055,#d63031)">🗑 Borrar Ganador y Reanudar</button>
 </div>
 <button class="btn btn-primary modal-btn" id="winnerContinueBtn" onclick="closeWinnerModal()" style="display:none">Continuar</button>
 </div>
@@ -870,7 +886,7 @@ const CONFIG = {
     MAX_PLAYERS: 100,
     MAX_CARDS: 6,
     CARD_PRICE: 100,
-    INITIAL_COINS: 1000,
+    INITIAL_COINS: 0,
     MAX_LINE_WINNERS: 3,
     INCREMENTAL_AMOUNT: 100,
     PROGRESSIVE_AMOUNT: 500,
@@ -994,7 +1010,7 @@ async function login() {
 }
 
 async function loginAsAdmin(name) {
-    App.user = { id: 'admin-' + generateId(), name, coins: Infinity, isAdmin: true };
+    App.user = { id: 'admin-' + generateId(), name, coins: Infinity, isAdmin: true, infiniteCoins: true };
     App.isAdmin = true;
     $('loginScreen')?.classList.remove('active');
     $('adminScreen')?.classList.add('active');
@@ -1007,6 +1023,18 @@ async function loginAsAdmin(name) {
 }
 
 async function loginAsNormal(name) {
+    // Check player limit
+    if (database) {
+        const snap = await database.ref('players').once('value');
+        const playersData = snap.val() || {};
+        const now = Date.now();
+        const onlineCount = Object.values(playersData).filter(p => p.online && p.lastActive && (now - p.lastActive < CONFIG.PLAYER_TIMEOUT_MS)).length;
+        if (onlineCount >= CONFIG.MAX_PLAYERS) {
+            showToast('🚫 Sala llena (máximo 100 jugadores). Intenta más tarde.', 'error', 6000);
+            speak('La sala está llena. Intenta más tarde.');
+            return;
+        }
+    }
     App.user = { id: generateId(), name, coins: CONFIG.INITIAL_COINS, isAdmin: false };
     App.isAdmin = false;
     if (database) {
@@ -1231,6 +1259,34 @@ function setupFirebaseListeners() {
     });
     App.firebaseListeners.announcements = { off: () => annoRef.off('child_added', annoHandler) };
 
+    // Line claim window listener (auto-pause after simultaneous window)
+    const lcwRef = database.ref('lineClaimWindow');
+    const lcwHandler = lcwRef.on('value', (snapshot) => {
+        try {
+            const data = snapshot.val();
+            if (data && data.openAt) {
+                App.lineClaimWindowOpenAt = data.openAt;
+                const remaining = 3500 - (Date.now() - data.openAt);
+                if (remaining > 0) {
+                    if (App.timers.lineClaimWindow) clearTimeout(App.timers.lineClaimWindow);
+                    App.timers.lineClaimWindow = setTimeout(async () => {
+                        App.lineClaimWindowOpenAt = 0;
+                        if (database) await database.ref('gameState/paused').set(true);
+                        updateClaimButtons();
+                    }, remaining);
+                } else {
+                    App.lineClaimWindowOpenAt = 0;
+                    updateClaimButtons();
+                }
+            } else {
+                App.lineClaimWindowOpenAt = 0;
+                if (App.timers.lineClaimWindow) clearTimeout(App.timers.lineClaimWindow);
+                updateClaimButtons();
+            }
+        } catch(e) {}
+    });
+    App.firebaseListeners.lineClaimWindow = { off: () => lcwRef.off('value', lcwHandler) };
+
     // Line winners
     const lineRef = database.ref('winners/line');
     const lineHandler = lineRef.on('value', (snapshot) => {
@@ -1238,6 +1294,8 @@ function setupFirebaseListeners() {
             const winners = snapshot.val() || {};
             App.gameState.lineWinners = Object.values(winners);
             App.gameState.claimedLines = App.gameState.lineWinners.length;
+            updatePublicWinnersPanel();
+            updateClaimButtons();
             if (App.isAdmin) { updateWinnerDisplays(); updateAdminWinnerCardDisplay(); }
         } catch(e) {}
     });
@@ -1250,6 +1308,8 @@ function setupFirebaseListeners() {
             const winner = snapshot.val();
             App.gameState.bingoWinner = winner;
             App.gameState.bingoClaimed = !!winner;
+            updatePublicWinnersPanel();
+            updateClaimButtons();
             if (App.isAdmin) { updateWinnerDisplays(); updateAdminWinnerCardDisplay(); }
         } catch(e) {}
     });
@@ -1313,9 +1373,7 @@ function setupFirebaseListeners() {
         const vaHandler = vaRef.on('child_added', (snapshot) => {
             try {
                 const ann = snapshot.val();
-                if (ann && ann.timestamp > Date.now() - 10000) {
-                    speak(ann.text, true);
-                }
+                if (ann && ann.timestamp > Date.now() - 10000) speak(ann.text, true);
             } catch(e) {}
         });
         App.firebaseListeners.voiceAnn = { off: () => vaRef.off('child_added', vaHandler) };
@@ -1411,7 +1469,13 @@ function updatePlayerCount() {
 
 function updateCoinsDisplay() {
     const el = $('playerCoins');
-    if (el) el.textContent = App.isAdmin ? '∞' : (App.user ? App.user.coins.toLocaleString('es-ES') : '0');
+    if (el) {
+        if (App.isAdmin) {
+            el.innerHTML = '∞ <span style="font-size:0.7rem;opacity:0.7">Admin</span>';
+        } else {
+            el.textContent = App.user ? App.user.coins.toLocaleString('es-ES') : '0';
+        }
+    }
 }
 
 // ==================== AUTO CLAIM ====================
@@ -1455,19 +1519,22 @@ function updateBuyCardStatus() {
     const countEl = $('myCardCount');
     const btn = $('buyCardBtn');
     const qtySelect = $('cardQtySelect');
-    const gameRunning = App.gameState.active && !App.gameState.paused;
+    const ballsDrawn = App.calledNumbers.length > 0;
     const remaining = CONFIG.MAX_CARDS - App.myCards.length;
     if (countEl) countEl.textContent = `${App.myCards.length}/${CONFIG.MAX_CARDS}`;
-    if (gameRunning) {
-        if (btn) { btn.disabled = true; btn.textContent = '🚫 JUEGO EN CURSO'; }
-        if (statusEl) statusEl.textContent = 'No se puede comprar mientras el juego está activo.';
+    if (ballsDrawn) {
+        if (btn) { btn.disabled = true; btn.textContent = '🚫 JUEGO INICIADO'; }
+        if (qtySelect) qtySelect.disabled = true;
+        if (statusEl) statusEl.textContent = 'La compra se bloquea cuando ya se sorteó una bolilla.';
     } else if (remaining <= 0) {
         if (btn) { btn.disabled = true; btn.textContent = '✅ MÁXIMO ALCANZADO'; }
         if (statusEl) statusEl.textContent = `Tienes los ${CONFIG.MAX_CARDS} cartones máximos.`;
     } else {
         if (btn) { btn.disabled = false; btn.textContent = '🎫 COMPRAR'; }
+        if (qtySelect) qtySelect.disabled = false;
         const coins = App.user ? App.user.coins : 0;
-        if (statusEl) statusEl.textContent = `Fichas: ${coins.toLocaleString('es-ES')} 🪙 | Disponibles: ${remaining} cartón(es)`;
+        const coinsMsg = coins <= 0 ? `⚠ Sin fichas — pide al admin | Disponibles: ${remaining} cartón(es)` : `Fichas: ${coins.toLocaleString('es-ES')} 🪙 | Disponibles: ${remaining} cartón(es)`;
+        if (statusEl) statusEl.textContent = coinsMsg;
     }
     // Limit qty selector to available slots
     if (qtySelect) {
@@ -1485,8 +1552,8 @@ function updateBuyCardStatus() {
 
 function buyCards() {
     const qty = parseInt($('cardQtySelect')?.value) || 1;
-    const gameRunning = App.gameState.active && !App.gameState.paused;
-    if (gameRunning) { showToast('🚫 No puedes comprar durante el juego', 'error'); return; }
+    const ballsDrawn = App.calledNumbers.length > 0;
+    if (ballsDrawn) { showToast('🚫 Ya se sorteo una bolilla. Solo se compran cartones al inicio.', 'error'); return; }
     if (App.myCards.length >= CONFIG.MAX_CARDS) { showToast(`Máximo ${CONFIG.MAX_CARDS} cartones`, 'error'); return; }
     const canBuy = Math.min(qty, CONFIG.MAX_CARDS - App.myCards.length);
     const totalCost = canBuy * CONFIG.CARD_PRICE;
@@ -1633,6 +1700,10 @@ function updateClaimButtons() {
 // ==================== CLAIM PRIZES ====================
 async function claimLine() {
     if (!App.hasLine || App.gameState.claimedLines >= CONFIG.MAX_LINE_WINNERS || !App.gameState.linePrizesEnabled) return;
+    const now = Date.now();
+    const windowOpenAt = App.lineClaimWindowOpenAt || 0;
+    const windowOpen = windowOpenAt > 0 && (now - windowOpenAt) < 3500;
+    if (!windowOpen && App.gameState.claimedLines > 0) { showToast('⏰ Tiempo de reclamo cerrado', 'error'); return; }
     let winningCard = null;
     for (const card of App.myCards) {
         for (let i = 0; i < 5; i++) {
@@ -1642,10 +1713,12 @@ async function claimLine() {
     }
     if (!winningCard) return;
     if (database) {
-        await database.ref('gameState/paused').set(true);
+        if (!windowOpen && App.gameState.claimedLines === 0) {
+            await database.ref('lineClaimWindow').set({ openAt: now });
+        }
         await database.ref('potentialWinners').push({
             player: App.user.name, playerId: App.user.id, cardId: winningCard.id,
-            hasLine: true, hasBingo: false, timestamp: Date.now()
+            hasLine: true, hasBingo: false, timestamp: now
         });
     }
     showToast('📏 ¡Línea cantada! Esperando confirmación del admin...', 'success', 5000);
@@ -1668,8 +1741,8 @@ async function claimBingo() {
             hasLine: false, hasBingo: true, timestamp: Date.now()
         });
     }
-    showToast('🎱 ¡Bingo cantado! Esperando confirmación del admin...', 'success', 5000);
-    speak('Bingo cantado. Esperando confirmación.');
+    showToast('🎱 ¡BINGO! Esperando confirmación del admin...', 'success', 5000);
+    speak('¡Bingo! Esperando confirmación del administrador.');
     const claimBingoBtn = $('claimBingoBtn');
     if (claimBingoBtn) claimBingoBtn.disabled = true;
 }
@@ -1689,24 +1762,24 @@ function showWinnerModal(winner) {
     if ($('winnerTitle')) $('winnerTitle').textContent = title;
     if ($('winnerName')) $('winnerName').textContent = winner.player;
     if ($('winnerPrize')) $('winnerPrize').textContent = `Premio: ${winner.prize}`;
-    if ($('winnerCardDisplay')) $('winnerCardDisplay').textContent = `Cartón: ${winner.cardId}`;
+    if ($('winnerCardDisplay')) $('winnerCardDisplay').textContent = `🎫 Cartón: ${winner.cardId}`;
     const linePrize = App.gameState.manualPrizes?.line ?? 200;
     const bingoPrize = App.gameState.manualPrizes?.bingo ?? 800;
     const totalPrize = linePrize + bingoPrize;
     const prizeValue = winner.prizeValue || (winner.type === 'line' ? linePrize : bingoPrize);
     const remaining = Math.max(0, totalPrize - prizeValue);
     if ($('winnerRemainingDisplay')) $('winnerRemainingDisplay').textContent = `Restante en pozo: ${formatMoney(remaining)}`;
-    const adminControls = $('winnerAdminControls');
+    const adminCtrl = $('winnerAdminControls');
     const continueBtn = $('winnerContinueBtn');
-    const closeBtn = $('winnerModalCloseBtn');
+    const pausedNote = $('winnerPausedNote');
     if (App.isAdmin) {
-        if (adminControls) adminControls.style.display = 'flex';
+        if (adminCtrl) adminCtrl.style.display = 'flex';
         if (continueBtn) continueBtn.style.display = 'none';
-        if (closeBtn) closeBtn.style.display = 'none';
+        if (pausedNote) pausedNote.style.display = 'none';
     } else {
-        if (adminControls) adminControls.style.display = 'none';
+        if (adminCtrl) adminCtrl.style.display = 'none';
         if (continueBtn) continueBtn.style.display = 'block';
-        if (closeBtn) closeBtn.style.display = 'block';
+        if (pausedNote) pausedNote.style.display = 'block';
     }
     modal.classList.add('active');
 }
@@ -1716,37 +1789,43 @@ function closeWinnerModal() {
     if (modal) modal.classList.remove('active');
 }
 
-function adminResumeFromWinner() {
+async function adminResumeFromWinner() {
     closeWinnerModal();
-    confirmWinner();
-    speak('El administrador reanuda el juego', true);
-    if (database) {
-        database.ref('announcements').push({ text: '▶ El administrador ha reanudado el juego', type:'info', timestamp: Date.now(), author: 'Admin' });
-    }
+    await confirmWinner();
 }
 
-function adminClearWinner() {
+async function adminClearWinner() {
+    closeWinnerModal();
+    await clearCurrentWinners();
+    await resumeGame();
+}
+
+async function clearCurrentWinners() {
     if (database) {
-        database.ref('winners').remove();
-        database.ref('potentialWinners').remove();
-        database.ref('gameState/lineWinners').remove();
-        database.ref('gameState/bingoWinner').remove();
-        database.ref('gameState/paused').set(false);
-        database.ref('announcements').push({ text: '↺ El administrador ha borrado el ganador y reanudado el juego', type:'info', timestamp: Date.now(), author: 'Admin' });
+        await database.ref('winners').remove();
+        await database.ref('potentialWinners').remove();
+        await database.ref('lineClaimWindow').remove();
+        await database.ref('gameState/lineWinners').remove();
+        await database.ref('gameState/bingoWinner').remove();
+        await database.ref('gameState/claimedLines').set(0);
+        await database.ref('gameState/bingoClaimed').set(false);
+        await database.ref('gameState/paused').set(false);
+        await database.ref('announcements').push({ text: '↺ Ganadores borrados por el administrador. Sigan jugando.', type:'info', timestamp: Date.now() });
     }
     App.gameState.lineWinners = [];
     App.gameState.bingoWinner = null;
     App.gameState.claimedLines = 0;
     App.gameState.bingoClaimed = false;
     App.gameState.paused = false;
-    closeWinnerModal();
+    App.lineClaimWindowOpenAt = 0;
     closeWinnerBanner();
     updateWinnerDisplays();
     updateAdminWinnerCardDisplay();
-    showToast('✅ Ganador borrado y juego reanudado', 'success');
-    speak('El administrador ha borrado el ganador y reanudado el juego', true);
-    if (App.timers.game && App.gameState.active) {
-        clearInterval(App.timers.game);
+    updatePublicWinnersPanel();
+    showToast('✅ Ganadores borrados — juego continúa', 'success');
+    speak('El administrador borró los ganadores. Sigan jugando.', true);
+    if (App.gameState.active) {
+        if (App.timers.game) clearInterval(App.timers.game);
         App.timers.game = setInterval(() => { if (!App.gameState.paused) generateRandomNumber(); }, App.gameState.speed);
     }
 }
@@ -1837,14 +1916,13 @@ function renderAdminChatViewer(newMsg) {
         container.innerHTML = '<div style="opacity:0.5;text-align:center;padding:15px">No hay mensajes de jugadores</div>';
     } else {
         container.innerHTML = adminChatMessages.map(m => {
-            const isPriv = m.isPrivate;
-            const toAdmin = m.recipient === 'admin';
-            return `<div style="margin-bottom:10px;padding:10px;border-radius:10px;background:${toAdmin?'rgba(253,203,110,0.25)':'rgba(108,92,231,0.15)'};border-left:3px solid ${toAdmin?'var(--accent)':'var(--primary)'}">
-                <div style="display:flex;justify-content:space-between;margin-bottom:4px;font-size:0.78rem;opacity:0.8">
-                    <span style="font-weight:800">${toAdmin?'🔒 ':''}${escapeHtml(m.author)}${isPriv&&m.recipient?'→ '+escapeHtml(m.recipient):''}</span>
+            const toAdmin = m.recipient === 'admin' || m.isPrivate;
+            return `<div style="margin-bottom:8px;padding:9px 12px;border-radius:10px;background:${toAdmin?'rgba(253,203,110,0.2)':'rgba(108,92,231,0.15)'};border-left:3px solid ${toAdmin?'var(--accent)':'var(--primary)'}">
+                <div style="display:flex;justify-content:space-between;margin-bottom:3px;font-size:0.78rem;opacity:0.8">
+                    <span style="font-weight:800">${toAdmin?'🔒 ':''}${escapeHtml(m.author)}</span>
                     <span>${m.time}</span>
                 </div>
-                <div style="font-size:0.9rem">${escapeHtml(m.text)}</div>
+                <div style="font-size:0.88rem">${escapeHtml(m.text)}</div>
             </div>`;
         }).join('');
         container.scrollTop = container.scrollHeight;
@@ -1853,9 +1931,7 @@ function renderAdminChatViewer(newMsg) {
         if (adminChatUnread > 0) {
             badge.style.display = 'inline-block';
             badge.textContent = adminChatUnread + ' nuevo' + (adminChatUnread > 1 ? 's' : '');
-        } else {
-            badge.style.display = 'none';
-        }
+        } else { badge.style.display = 'none'; }
     }
 }
 
@@ -1980,7 +2056,7 @@ function initAdminPanel() {
 
 function toggleAdminCard(cardId) {
     $(cardId)?.classList.toggle('minimized');
-    if (cardId === 'adminCard8' && !$(cardId).classList.contains('minimized')) {
+    if (cardId === 'adminCard8' && !$(cardId)?.classList.contains('minimized')) {
         adminChatUnread = 0;
         renderAdminChatViewer(null);
     }
@@ -2034,6 +2110,39 @@ function preselectWinner(playerName) {
     showToast(`${playerName} preseleccionado`, 'info');
 }
 
+function updatePublicWinnersPanel() {
+    const panel = $('publicWinnersPanel');
+    const lineDisplay = $('publicLineWinnersDisplay');
+    const bingoDisplay = $('publicBingoWinnerDisplay');
+    const lineBadge = $('publicLineBadge');
+    const hasAny = (App.gameState.lineWinners?.length > 0) || App.gameState.bingoWinner;
+    if (panel) panel.style.display = hasAny ? 'block' : 'none';
+    if (lineDisplay) {
+        if (!App.gameState.lineWinners?.length) {
+            lineDisplay.innerHTML = '<div style="opacity:0.5;font-size:0.85rem;padding:4px 0">— Ningún ganador aún —</div>';
+        } else {
+            lineDisplay.innerHTML = App.gameState.lineWinners.map((w, i) =>
+                `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:rgba(0,184,148,0.2);border-radius:10px;margin-bottom:6px;font-size:0.9rem">
+                    <span><strong style="color:var(--success)">${i+1}.</strong> <strong>${escapeHtml(w.player)}</strong></span>
+                    <span style="background:rgba(0,0,0,0.3);padding:2px 10px;border-radius:10px;font-size:0.8rem;color:var(--accent)">🎫 ${w.cardId}</span>
+                </div>`
+            ).join('');
+        }
+    }
+    if (lineBadge) lineBadge.textContent = `${App.gameState.lineWinners?.length || 0}/3`;
+    if (bingoDisplay) {
+        if (!App.gameState.bingoWinner) {
+            bingoDisplay.innerHTML = '<div style="opacity:0.5;font-size:0.85rem;padding:4px 0">— Ningún ganador aún —</div>';
+        } else {
+            const w = App.gameState.bingoWinner;
+            bingoDisplay.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:rgba(253,203,110,0.2);border-radius:10px;font-size:0.9rem">
+                <span>🏆 <strong>${escapeHtml(w.player)}</strong></span>
+                <span style="background:rgba(0,0,0,0.3);padding:2px 10px;border-radius:10px;font-size:0.8rem;color:var(--accent)">🎫 ${w.cardId}</span>
+            </div>`;
+        }
+    }
+}
+
 function updateWinnerDisplays() {
     const lineDisplay = $('lineWinnersDisplay');
     if (lineDisplay) {
@@ -2060,6 +2169,7 @@ function updateWinnerDisplays() {
         }
     }
     updatePrizeDisplay();
+    updatePublicWinnersPanel();
 }
 
 // ==================== ADMIN WINNER CARD DISPLAY ====================
@@ -2380,6 +2490,7 @@ async function forceLineWinner() {
     if (playerSelect) playerSelect.value = '';
     if (cardInput) cardInput.value = '';
     updateAdminWinnerCardDisplay(winnerData);
+    updatePublicWinnersPanel();
 }
 
 async function forceBingoWinner() {
@@ -2402,16 +2513,20 @@ async function forceBingoWinner() {
     if (playerSelect) playerSelect.value = '';
     if (cardInput) cardInput.value = '';
     updateAdminWinnerCardDisplay(winnerData);
+    updatePublicWinnersPanel();
 }
 
 async function confirmWinner() {
-    if (database) await database.ref('gameState/paused').set(false);
+    if (database) {
+        await database.ref('gameState/paused').set(false);
+        database.ref('voiceAnnouncements').push({ text: 'El administrador ha confirmado al ganador. El juego continúa.', timestamp: Date.now() });
+    }
     App.gameState.paused = false;
+    closeWinnerModal();
     showToast('✅ Juego continuado', 'success');
     updateWinnerDisplays();
     speak('Juego continuado', true);
-    if (database) database.ref('voiceAnnouncements').push({ text: 'El administrador ha confirmado al ganador. El juego continúa.', timestamp: Date.now() });
-    if (App.gameState.active && !App.gameState.paused) {
+    if (App.gameState.active) {
         if (App.timers.game) clearInterval(App.timers.game);
         App.timers.game = setInterval(() => { if (!App.gameState.paused) generateRandomNumber(); }, App.gameState.speed);
     }
@@ -2444,6 +2559,7 @@ async function startGame() {
     showToast('🎮 Juego iniciado');
     speak('¡El juego ha comenzado!');
     if (database) database.ref('voiceAnnouncements').push({ text: '¡El juego ha comenzado!', timestamp: Date.now() });
+    updatePublicWinnersPanel();
 }
 
 async function pauseGame() {
@@ -2455,7 +2571,7 @@ async function pauseGame() {
     showToast('⏸ Juego pausado', 'info');
     if (database) {
         await database.ref('gameState/paused').set(true);
-        database.ref('voiceAnnouncements').push({ text: 'El juego ha sido pausado por el administrador', timestamp: Date.now() });
+        database.ref('voiceAnnouncements').push({ text: 'El juego ha sido pausado', timestamp: Date.now() });
     }
 }
 
@@ -2467,7 +2583,7 @@ async function resumeGame() {
     showToast('▶ Juego reanudado', 'success');
     if (database) {
         await database.ref('gameState/paused').set(false);
-        database.ref('voiceAnnouncements').push({ text: 'El juego ha sido reanudado', timestamp: Date.now() });
+        database.ref('voiceAnnouncements').push({ text: '¡El juego ha sido reanudado!', timestamp: Date.now() });
     }
     if (App.timers.game) clearInterval(App.timers.game);
     App.timers.game = setInterval(() => { if (!App.gameState.paused) generateRandomNumber(); }, App.gameState.speed);
@@ -2492,6 +2608,7 @@ async function resetGame() {
         });
         await database.ref().update(updates);
         await database.ref('gameReset').set({ timestamp: Date.now() });
+        await database.ref('lineClaimWindow').remove();
         await database.ref('voiceAnnouncements').remove();
         await database.ref('announcements').push({ text: '🔄 El juego ha sido reiniciado por el administrador', type:'reset', timestamp: Date.now() });
     }
@@ -2518,8 +2635,13 @@ async function resetGame() {
     updateWinnerDisplays();
     updatePersistentWinnersDisplay();
     updateAdminWinnerCardDisplay();
+    App.lineClaimWindowOpenAt = 0;
+    closeWinnerModal();
+    closeWinnerBanner();
+    updatePublicWinnersPanel();
     showToast('🔄 Juego reiniciado completamente');
     speak('Juego reiniciado. Compra nuevos cartones.', true);
+    if (database) database.ref('voiceAnnouncements').push({ text: 'El juego ha sido reiniciado. Compra nuevos cartones.', timestamp: Date.now() });
 }
 
 async function generateRandomNumber() {
