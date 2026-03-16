@@ -2801,66 +2801,100 @@ function checkAutoClaim() {
 
 // ==================== CARDS ====================
 function generateCard() {
-    // Bingo 90 bolas: 3 filas x 9 columnas, exactamente 5 números por fila (15 total).
-    // Rangos: col0=1-9, col1=10-19, col2=20-29, col3=30-39, col4=40-49,
-    //         col5=50-59, col6=60-69, col7=70-79, col8=80-90
-    // Números únicos dentro del cartón, ordenados de menor a mayor dentro de cada columna.
+    // PROFESSIONAL 90-BALL BINGO CARD ALGORITHM
+    // 3 rows x 9 columns | exactly 15 numbers | exactly 5 per row | 4 nulls per row
+    // Column ranges: col0=1-9, col1=10-19, col2=20-29, col3=30-39, col4=40-49,
+    //                col5=50-59, col6=60-69, col7=70-79, col8=80-90
+    // Every column gets at least 1 number (1, 2, or 3 max).
+    // Numbers in each column sorted smallest (top row) → largest (bottom row).
+    // Numbers are unique within the card.
 
     const COL_MIN = [1,10,20,30,40,50,60,70,80];
     const COL_MAX = [9,19,29,39,49,59,69,79,90];
 
-    // --- Paso 1: decidir qué columnas activa cada fila ---
-    // Cada fila activa exactamente 5 de las 9 columnas (las otras 4 quedan en null).
-    // Se usa Fisher-Yates independiente por fila, sin restricción entre filas
-    // (el único requisito es 5 por fila, no hay mínimo por columna).
-    const active = [
-        [false,false,false,false,false,false,false,false,false],
-        [false,false,false,false,false,false,false,false,false],
-        [false,false,false,false,false,false,false,false,false]
-    ];
-    for (let r = 0; r < 3; r++) {
-        const order = [0,1,2,3,4,5,6,7,8];
-        for (let k = 8; k > 0; k--) {
-            const j = Math.floor(Math.random() * (k + 1));
-            const tmp = order[k]; order[k] = order[j]; order[j] = tmp;
+    // ── STEP 1: Decide how many numbers each column gets ──────────────────────
+    // Distribution: 6 columns get 2 numbers, 3 columns get 1 number → total = 15
+    // Every column is guaranteed at least 1 number (professional standard).
+    const colCount = [1,1,1,1,1,1,1,1,1]; // start: 9 columns × 1 = 9
+    const shuffledCols = [0,1,2,3,4,5,6,7,8];
+    for (let k = 8; k > 0; k--) {
+        const j = Math.floor(Math.random() * (k + 1));
+        const t = shuffledCols[k]; shuffledCols[k] = shuffledCols[j]; shuffledCols[j] = t;
+    }
+    for (let i = 0; i < 6; i++) colCount[shuffledCols[i]]++; // give 6 random cols a 2nd number
+    // colCount now sums to 15, each entry is 1 or 2
+
+    // ── STEP 2: Assign columns to rows, respecting per-row budget of 5 ────────
+    // rowBudget[r] = how many more numbers row r can still receive.
+    const rowBudget = [5, 5, 5];
+    // rowCols[r] = which columns are assigned to row r
+    const rowCols = [[], [], []];
+
+    // Process double-count columns first (harder constraint), then singles.
+    const doubleCols = shuffledCols.slice(0, 6); // the 6 that got count=2
+    const singleCols = shuffledCols.slice(6);    // the 3 that keep count=1
+
+    function pickRows(need) {
+        // Eligible rows: those that still have budget.
+        // Sort by budget descending to balance load and prevent dead-ends.
+        const eligible = [0,1,2]
+            .filter(r => rowBudget[r] > 0)
+            .sort((a, b) => rowBudget[b] - rowBudget[a]);
+        if (eligible.length < need) return null; // should never happen
+        // Randomly swap among top candidates to avoid deterministic bias
+        if (eligible.length > need) {
+            const swapIdx = need + Math.floor(Math.random() * (eligible.length - need));
+            if (Math.random() < 0.5) {
+                const t = eligible[need - 1]; eligible[need - 1] = eligible[swapIdx]; eligible[swapIdx] = t;
+            }
         }
-        for (let i = 0; i < 5; i++) active[r][order[i]] = true;
+        return eligible.slice(0, need).sort((a, b) => a - b); // keep rows in ascending order
     }
 
-    // --- Paso 2: asignar números únicos por columna, ordenados arriba-abajo ---
+    // Assign double-count columns (need 2 rows each)
+    for (const col of doubleCols) {
+        const rows = pickRows(2);
+        if (!rows) return generateCard(); // retry (should virtually never happen)
+        rows.forEach(r => { rowCols[r].push(col); rowBudget[r]--; });
+    }
+    // Assign single-count columns (need 1 row each)
+    for (const col of singleCols) {
+        const rows = pickRows(1);
+        if (!rows) return generateCard();
+        rows.forEach(r => { rowCols[r].push(col); rowBudget[r]--; });
+    }
+
+    // ── STEP 3: Pick unique random numbers for each column, sort top→bottom ───
     const grid = [
         [null,null,null,null,null,null,null,null,null],
         [null,null,null,null,null,null,null,null,null],
         [null,null,null,null,null,null,null,null,null]
     ];
     for (let col = 0; col < 9; col++) {
-        // filas que usan esta columna, en orden ascendente (fila 0, 1, 2)
-        const rows = [];
-        for (let r = 0; r < 3; r++) { if (active[r][col]) rows.push(r); }
-        if (rows.length === 0) continue;
+        // Collect which rows use this column (in ascending order)
+        const usedRows = [];
+        for (let r = 0; r < 3; r++) { if (rowCols[r].includes(col)) usedRows.push(r); }
+        if (usedRows.length === 0) continue;
 
-        // construir el pool completo de números para este rango
+        // Build pool of all valid numbers for this column range
         const pool = [];
         for (let n = COL_MIN[col]; n <= COL_MAX[col]; n++) pool.push(n);
 
-        // barajar parcialmente y tomar exactamente rows.length números
-        for (let k = 0; k < rows.length; k++) {
+        // Partial Fisher-Yates: shuffle only the first usedRows.length positions
+        for (let k = 0; k < usedRows.length; k++) {
             const j = k + Math.floor(Math.random() * (pool.length - k));
-            const tmp = pool[k]; pool[k] = pool[j]; pool[j] = tmp;
+            const t = pool[k]; pool[k] = pool[j]; pool[j] = t;
         }
-        const chosen = pool.slice(0, rows.length).sort((a, b) => a - b);
-
-        // asignar: la fila con índice menor recibe el número menor
-        for (let i = 0; i < rows.length; i++) {
-            grid[rows[i]][col] = chosen[i];
-        }
+        // Sort chosen numbers ascending → smallest number goes to topmost row
+        const chosen = pool.slice(0, usedRows.length).sort((a, b) => a - b);
+        usedRows.forEach((r, i) => { grid[r][col] = chosen[i]; });
     }
 
-    // --- Paso 3: validación --- (debe tener exactamente 5 números por fila)
+    // ── STEP 4: Validate (self-check — each row must have exactly 5 numbers) ──
     for (let r = 0; r < 3; r++) {
         let cnt = 0;
         for (let col = 0; col < 9; col++) { if (grid[r][col] !== null) cnt++; }
-        if (cnt !== 5) return generateCard(); // reintentar si algo falló
+        if (cnt !== 5) return generateCard(); // retry on any anomaly
     }
 
     return {
