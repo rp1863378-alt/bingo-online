@@ -2801,74 +2801,82 @@ function checkAutoClaim() {
 
 // ==================== CARDS ====================
 function generateCard() {
-    // 3 filas x 9 columnas | Col 0:1-9 | Col 1:10-19 | Col 2:20-29 | Col 3:30-39
-    // Col 4:40-49 | Col 5:50-59 | Col 6:60-69 | Col 7:70-79 | Col 8:80-90
-    // Cada fila tiene EXACTAMENTE 5 números y 4 coronas (👑).
-    // Números únicos por columna, ordenados ascendente (menor arriba, mayor abajo).
-    const colMin = [1,10,20,30,40,50,60,70,80];
-    const colMax = [9,19,29,39,49,59,69,79,90];
+    // Bingo 90 bolas: 3 filas x 9 columnas, exactamente 5 números por fila (15 total).
+    // Rangos: col0=1-9, col1=10-19, col2=20-29, col3=30-39, col4=40-49,
+    //         col5=50-59, col6=60-69, col7=70-79, col8=80-90
+    // Números únicos dentro del cartón, ordenados de menor a mayor dentro de cada columna.
+
+    const COL_MIN = [1,10,20,30,40,50,60,70,80];
+    const COL_MAX = [9,19,29,39,49,59,69,79,90];
+
+    // --- Paso 1: decidir qué columnas activa cada fila ---
+    // Cada fila activa exactamente 5 de las 9 columnas (las otras 4 quedan en null).
+    // Se usa Fisher-Yates independiente por fila, sin restricción entre filas
+    // (el único requisito es 5 por fila, no hay mínimo por columna).
+    const active = [
+        [false,false,false,false,false,false,false,false,false],
+        [false,false,false,false,false,false,false,false,false],
+        [false,false,false,false,false,false,false,false,false]
+    ];
+    for (let r = 0; r < 3; r++) {
+        const order = [0,1,2,3,4,5,6,7,8];
+        for (let k = 8; k > 0; k--) {
+            const j = Math.floor(Math.random() * (k + 1));
+            const tmp = order[k]; order[k] = order[j]; order[j] = tmp;
+        }
+        for (let i = 0; i < 5; i++) active[r][order[i]] = true;
+    }
+
+    // --- Paso 2: asignar números únicos por columna, ordenados arriba-abajo ---
     const grid = [
         [null,null,null,null,null,null,null,null,null],
         [null,null,null,null,null,null,null,null,null],
         [null,null,null,null,null,null,null,null,null]
     ];
+    for (let col = 0; col < 9; col++) {
+        // filas que usan esta columna, en orden ascendente (fila 0, 1, 2)
+        const rows = [];
+        for (let r = 0; r < 3; r++) { if (active[r][col]) rows.push(r); }
+        if (rows.length === 0) continue;
 
-    // Generar una distribución válida de columnas para las 3 filas.
-    // Restricción: cada fila debe tener exactamente 5 columnas activas de las 9.
-    // Usamos backtracking aleatorio para garantizar que ninguna columna reciba más de 3 filas.
-    let colUsed = [[], [], []];
-    let colCount = new Array(9).fill(0);
+        // construir el pool completo de números para este rango
+        const pool = [];
+        for (let n = COL_MIN[col]; n <= COL_MAX[col]; n++) pool.push(n);
 
-    // Asignar las columnas para cada fila de forma que cada fila tenga exactamente 5
-    for (let f = 0; f < 3; f++) {
-        // Barajar los índices de columna disponibles (las que no superarán el límite de 3 filas)
-        const available = [];
-        for (let c = 0; c < 9; c++) {
-            if (colCount[c] < 3) available.push(c);
+        // barajar parcialmente y tomar exactamente rows.length números
+        for (let k = 0; k < rows.length; k++) {
+            const j = k + Math.floor(Math.random() * (pool.length - k));
+            const tmp = pool[k]; pool[k] = pool[j]; pool[j] = tmp;
         }
-        // Fisher-Yates shuffle
-        for (let k = available.length - 1; k > 0; k--) {
-            const j = Math.floor(Math.random() * (k + 1));
-            [available[k], available[j]] = [available[j], available[k]];
+        const chosen = pool.slice(0, rows.length).sort((a, b) => a - b);
+
+        // asignar: la fila con índice menor recibe el número menor
+        for (let i = 0; i < rows.length; i++) {
+            grid[rows[i]][col] = chosen[i];
         }
-        // Tomar exactamente 5 columnas para esta fila
-        const chosen = available.slice(0, 5);
-        chosen.forEach(col => {
-            colUsed[f].push(col);
-            colCount[col]++;
-        });
     }
 
-    // Para cada columna, asignar números únicos a las filas que la usan,
-    // ordenados de menor a mayor (fila 0 recibe el menor, fila 2 el mayor).
-    for (let col = 0; col < 9; col++) {
-        const filas = [];
-        for (let f = 0; f < 3; f++) {
-            if (colUsed[f].includes(col)) filas.push(f);
-        }
-        if (filas.length === 0) continue;
-
-        const pool = [];
-        for (let n = colMin[col]; n <= colMax[col]; n++) pool.push(n);
-        // Mezclar el pool y seleccionar los números necesarios
-        for (let k = pool.length - 1; k > 0; k--) {
-            const j = Math.floor(Math.random() * (k + 1));
-            [pool[k], pool[j]] = [pool[j], pool[k]];
-        }
-        // Tomar tantos números como filas activas y ordenarlos ascendentemente
-        const elegidos = pool.slice(0, filas.length).sort((a, b) => a - b);
-        // La fila más pequeña recibe el número más pequeño (orden top-down)
-        filas.sort((a, b) => a - b).forEach((f, i) => {
-            grid[f][col] = elegidos[i];
-        });
+    // --- Paso 3: validación --- (debe tener exactamente 5 números por fila)
+    for (let r = 0; r < 3; r++) {
+        let cnt = 0;
+        for (let col = 0; col < 9; col++) { if (grid[r][col] !== null) cnt++; }
+        if (cnt !== 5) return generateCard(); // reintentar si algo falló
     }
 
     return {
         id: generateId().slice(-4).toUpperCase(),
         numbers: grid,
-        marked: Array.from({length: 3}, () => Array(9).fill(false)),
+        marked: [
+            [false,false,false,false,false,false,false,false,false],
+            [false,false,false,false,false,false,false,false,false],
+            [false,false,false,false,false,false,false,false,false]
+        ],
         style: App.settings.cardStyle,
-        hasError: Array.from({length: 3}, () => Array(9).fill(false))
+        hasError: [
+            [false,false,false,false,false,false,false,false,false],
+            [false,false,false,false,false,false,false,false,false],
+            [false,false,false,false,false,false,false,false,false]
+        ]
     };
 }
 
@@ -3016,7 +3024,10 @@ function markNumber(cardIdx, row, col, num) {
     if (num === 'FREE') return;
     const card = App.myCards[cardIdx];
     if (!card) return;
-    const number = parseInt(num);
+    const number = parseInt(num, 10);
+    if (isNaN(number)) return;
+    // verificar que la celda realmente tiene este número (evita marcar posiciones erróneas)
+    if (card.numbers[row][col] !== number) return;
     if (!App.calledNumbers.includes(number)) {
         card.hasError[row][col] = true;
         renderCards();
@@ -3024,6 +3035,7 @@ function markNumber(cardIdx, row, col, num) {
         showToast('❌ Número no cantado aún', 'error');
         return;
     }
+    // toggle: marca o desmarca (solo si el número está en la celda correcta)
     card.marked[row][col] = !card.marked[row][col];
     renderCards();
     if (card.marked[row][col]) checkPlayerWinStatus();
