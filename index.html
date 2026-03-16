@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#0a0a1a">
-<title>Bingo Pro Live - Casino Online</title>
+<title>BINGO PRO Live</title>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
 <style>
@@ -41,7 +41,6 @@ body{
   min-height:100vh;
   overflow-x:hidden;
 }
-/* Particle background effect */
 body::before{
   content:'';
   position:fixed;inset:0;
@@ -55,28 +54,38 @@ body::before{
 .screen.active{display:block}
 @keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 
-/* ===== CLOCK ===== */
+/* ===== CLOCK - centered ===== */
 .clock-display{
-  position:fixed;top:10px;left:10px;
+  position:fixed;top:10px;left:50%;transform:translateX(-50%);
   background:rgba(5,5,20,0.85);
-  padding:6px 14px;border-radius:20px;
-  font-size:0.7rem;font-weight:600;z-index:1000;
+  padding:6px 18px;border-radius:20px;
+  font-size:0.75rem;font-weight:600;z-index:1000;
   backdrop-filter:blur(12px);
   border:1px solid var(--border-gold);
-  display:flex;align-items:center;gap:6px;white-space:nowrap;
+  display:flex;align-items:center;gap:8px;white-space:nowrap;
   box-shadow:var(--shadow-gold);
 }
 .clock-display span{color:var(--gold)}
 
-/* ===== RESPONSIBLE GAMING ===== */
-.responsible-gaming-warning{
-  position:fixed;bottom:10px;left:10px;
-  background:rgba(255,59,92,0.9);
-  padding:10px 20px;border-radius:15px;font-size:0.75rem;font-weight:600;
-  z-index:999;backdrop-filter:blur(10px);border:2px solid var(--danger);
-  display:none;animation:pulseWarning 3s infinite;
+/* ===== RESPONSIBLE GAMING POPUP ===== */
+.responsible-gaming-popup{
+  position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:99999;
+  display:none;justify-content:center;align-items:center;
+  backdrop-filter:blur(8px);
 }
-@keyframes pulseWarning{0%,100%{opacity:0.8}50%{opacity:1}}
+.responsible-gaming-popup.active{display:flex}
+.rg-box{
+  background:linear-gradient(135deg,#1a0010,#2a0015);
+  border:3px solid var(--danger);border-radius:24px;padding:40px;
+  max-width:400px;width:90%;text-align:center;
+  box-shadow:0 0 60px rgba(255,59,92,0.4);
+  animation:modalIn 0.5s cubic-bezier(0.175,0.885,0.32,1.275);
+}
+.rg-box h2{font-size:1.6rem;color:var(--danger);margin-bottom:16px}
+.rg-box p{color:var(--text-main);font-size:1rem;line-height:1.7;margin-bottom:20px}
+.rg-progress{height:6px;background:rgba(255,255,255,0.1);border-radius:3px;overflow:hidden;margin-bottom:20px}
+.rg-bar{height:100%;background:var(--danger);border-radius:3px;animation:rgCountdown 4s linear forwards}
+@keyframes rgCountdown{from{width:100%}to{width:0%}}
 
 /* ===== LOGIN SCREEN ===== */
 .login{
@@ -105,7 +114,7 @@ body::before{
   to{text-shadow:0 0 40px var(--gold),0 0 80px rgba(255,215,0,0.8),0 0 120px rgba(255,215,0,0.3)}
 }
 .subtitle{
-  text-align:center;margin-bottom:40px;
+  text-align:center;margin-bottom:30px;
   color:var(--electric);font-size:1rem;font-weight:500;
   letter-spacing:3px;text-transform:uppercase;
   text-shadow:0 0 20px var(--electric);position:relative;
@@ -185,6 +194,9 @@ body::before{
   color:var(--text-dim);line-height:1.8;
 }
 .info-text span{color:var(--gold)}
+
+/* LOGIN centered group */
+.login-btn-group{display:flex;justify-content:center;margin-top:10px}
 
 /* ===== TOGGLE CONTAINER (login mode) ===== */
 .toggle-container{
@@ -454,39 +466,70 @@ body::before{
 .card-neon .cell.marked::after{content:"★";position:absolute;font-size:1.3rem}
 .card-neon .cell.error{background:var(--danger);animation:shake 0.5s}
 
-/* Gold VIP card */
+/* Gold VIP card - PREMIUM DESIGN */
 .card-gold{
-  background:linear-gradient(135deg,#0a0a05 0%,#1a1500 50%,#0a0a05 100%);
-  border-radius:20px;padding:20px;color:var(--gold);
-  box-shadow:0 0 50px rgba(255,215,0,0.2),var(--shadow-deep);
-  position:relative;overflow:hidden;border:3px solid var(--gold3);transition:all 0.3s;
+  background:linear-gradient(145deg,#0d0a00 0%,#1a1200 30%,#1f1500 60%,#0d0a00 100%);
+  border-radius:22px;padding:22px;color:var(--gold);
+  box-shadow:0 0 60px rgba(255,215,0,0.35),0 0 120px rgba(255,184,0,0.15),var(--shadow-deep);
+  position:relative;overflow:hidden;
+  border:3px solid transparent;
+  background-clip:padding-box;
+  transition:all 0.4s;
 }
 .card-gold::before{
-  content:'';position:absolute;inset:0;
-  background:repeating-linear-gradient(45deg,rgba(255,215,0,0.02) 0px,rgba(255,215,0,0.02) 1px,transparent 1px,transparent 8px);
+  content:'';position:absolute;inset:-3px;border-radius:25px;
+  background:linear-gradient(135deg,#ffd700,#c8860a,#ffb800,#c8860a,#ffd700);
+  background-size:300% 300%;
+  animation:goldBorderAnim 3s ease infinite;
+  z-index:-1;
+}
+@keyframes goldBorderAnim{
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
 }
 .card-gold::after{
-  content:'VIP';position:absolute;top:15px;right:-30px;
+  content:'VIP';position:absolute;top:18px;right:-28px;
   background:linear-gradient(135deg,var(--gold),var(--gold3));
-  color:#000;padding:5px 40px;transform:rotate(45deg);
-  font-size:0.7rem;font-weight:900;letter-spacing:2px;
+  color:#000;padding:6px 42px;transform:rotate(45deg);
+  font-size:0.72rem;font-weight:900;letter-spacing:3px;
+  box-shadow:0 0 15px rgba(255,215,0,0.5);
 }
-.card-gold:hover{transform:translateY(-5px) scale(1.01);box-shadow:0 0 80px rgba(255,215,0,0.3),var(--shadow-deep)}
-.card-gold.winner{animation:goldWin 2s infinite;border-color:var(--success)}
-@keyframes goldWin{0%,100%{box-shadow:0 0 40px var(--gold),0 0 80px rgba(255,215,0,0.4)}50%{box-shadow:0 0 80px var(--gold)}}
-.card-gold .card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;padding-bottom:12px;border-bottom:2px solid rgba(255,215,0,0.3)}
-.card-gold .card-title{font-weight:900;color:var(--gold);font-size:1.1rem;text-shadow:0 0 15px rgba(255,215,0,0.5)}
-.card-gold .grid{display:grid;grid-template-columns:repeat(5,1fr);gap:7px}
+.card-gold-inner{
+  position:relative;z-index:1;
+}
+.card-gold:hover{transform:translateY(-6px) scale(1.01);box-shadow:0 0 90px rgba(255,215,0,0.5),0 0 160px rgba(255,215,0,0.2),var(--shadow-deep)}
+.card-gold.winner{animation:goldWin 1.5s infinite}
+@keyframes goldWin{0%,100%{box-shadow:0 0 60px var(--gold),0 0 120px rgba(255,215,0,0.5)}50%{box-shadow:0 0 100px var(--gold),0 0 200px rgba(255,215,0,0.7)}}
+.card-gold .card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;padding-bottom:14px;border-bottom:2px solid rgba(255,215,0,0.4)}
+.card-gold .card-title{
+  font-weight:900;color:var(--gold);font-size:1.1rem;
+  text-shadow:0 0 20px rgba(255,215,0,0.8),0 0 40px rgba(255,215,0,0.4);
+}
+.card-gold .grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
 .card-gold .cell{
   aspect-ratio:1;display:flex;align-items:center;justify-content:center;
   background:rgba(255,215,0,0.08);border-radius:10px;font-weight:900;font-size:1.1rem;
-  cursor:pointer;transition:all 0.2s;position:relative;border:1px solid rgba(255,215,0,0.2);
+  cursor:pointer;transition:all 0.25s;position:relative;
+  border:1px solid rgba(255,215,0,0.25);
   color:var(--gold);
+  text-shadow:0 0 8px rgba(255,215,0,0.5);
 }
-.card-gold .cell:hover:not(.marked):not(.free){background:rgba(255,215,0,0.15);transform:scale(1.08);border-color:var(--gold)}
-.card-gold .cell.free{background:linear-gradient(135deg,var(--gold3),var(--gold));color:#000;font-size:0.7rem;font-weight:900}
-.card-gold .cell.marked{background:linear-gradient(135deg,#00c853,#00e676);color:#000;transform:scale(0.94);border-color:#00e676}
-.card-gold .cell.marked::after{content:"👑";position:absolute;font-size:1.1rem}
+.card-gold .cell:hover:not(.marked):not(.free){
+  background:rgba(255,215,0,0.2);transform:scale(1.1);border-color:var(--gold);
+  box-shadow:0 0 12px rgba(255,215,0,0.4);
+}
+.card-gold .cell.free{
+  background:linear-gradient(135deg,var(--gold3),var(--gold));
+  color:#000;font-size:0.7rem;font-weight:900;
+  box-shadow:0 0 15px rgba(255,215,0,0.6);
+}
+.card-gold .cell.marked{
+  background:linear-gradient(135deg,#005c20,#00c853);
+  color:#ffd700;transform:scale(0.94);border-color:#00e676;
+  box-shadow:0 0 10px rgba(0,200,83,0.5);
+}
+.card-gold .cell.marked::after{content:"👑";position:absolute;font-size:1rem;filter:drop-shadow(0 0 6px gold)}
 .card-gold .cell.error{background:var(--danger);animation:shake 0.5s;color:#fff}
 
 @keyframes checkPop{0%{transform:scale(0)}50%{transform:scale(1.3)}100%{transform:scale(1)}}
@@ -574,7 +617,21 @@ body::before{
 .admin-select:focus{outline:none;border-color:var(--gold)}
 .admin-select option{background:#0d1020}
 
-/* ===== SPEED SLIDER (NUEVO) ===== */
+/* ===== MANUAL CALL MODE ===== */
+.manual-call-input{
+  display:none;background:rgba(255,215,0,0.08);
+  border:2px solid var(--border-gold);border-radius:14px;
+  padding:16px;margin-top:12px;
+}
+.manual-call-input.active{display:block}
+.manual-call-input input{
+  width:100%;padding:14px;border-radius:10px;
+  background:rgba(0,0,0,0.4);border:2px solid var(--border-gold);
+  color:var(--gold);font-size:2rem;font-weight:900;text-align:center;
+}
+.manual-call-input input:focus{outline:none;border-color:var(--gold);box-shadow:0 0 20px rgba(255,215,0,0.3)}
+
+/* ===== SPEED SLIDER ===== */
 .speed-control-wrapper{
   background:rgba(0,0,0,0.3);border-radius:15px;padding:18px;
   border:1px solid rgba(255,215,0,0.2);margin-top:10px;
@@ -800,6 +857,27 @@ body::before{
 }
 .winner-banner-close:hover{background:rgba(255,255,255,0.2);transform:scale(1.1)}
 
+/* ===== "ÉS A UN NÚMERO" NOTIFICATION ===== */
+.near-win-notification{
+  position:fixed;bottom:100px;right:20px;z-index:7000;
+  background:linear-gradient(135deg,#1a0030,#2d0050);
+  border:2px solid var(--primary);
+  border-radius:18px;padding:16px 20px;
+  box-shadow:0 0 40px rgba(108,92,231,0.5);
+  max-width:300px;display:none;
+  animation:slideInRight 0.5s ease;
+}
+.near-win-notification.active{display:block}
+@keyframes slideInRight{from{transform:translateX(120%);opacity:0}to{transform:translateX(0);opacity:1}}
+.near-win-notification h4{color:var(--primary);font-size:1rem;margin-bottom:6px;display:flex;align-items:center;gap:8px}
+.near-win-notification p{color:var(--text-main);font-size:0.88rem;line-height:1.5}
+.near-win-close{
+  position:absolute;top:8px;right:10px;
+  background:none;border:none;color:var(--text-dim);
+  cursor:pointer;font-size:1.3rem;line-height:1;
+}
+.near-win-close:hover{color:#fff}
+
 /* ===== CONNECTION STATUS ===== */
 .connection-status{
   position:fixed;top:10px;right:10px;display:flex;align-items:center;gap:8px;
@@ -886,6 +964,46 @@ body::before{
 }
 .refresh-btn:hover{transform:translateY(-2px);box-shadow:0 0 30px rgba(0,212,255,0.5)}
 
+/* ===== LAYOUT MODE ===== */
+.layout-mode-overlay{
+  position:fixed;top:0;left:0;right:0;
+  background:rgba(255,215,0,0.1);
+  border-bottom:3px dashed var(--gold);
+  padding:10px 20px;z-index:8500;
+  display:none;justify-content:space-between;align-items:center;
+  backdrop-filter:blur(4px);
+}
+.layout-mode-overlay.active{display:flex}
+.layout-mode-label{color:var(--gold);font-weight:800;font-size:0.9rem;display:flex;align-items:center;gap:8px}
+.draggable-elem{
+  cursor:grab;position:relative;
+}
+.draggable-elem.dragging{
+  opacity:0.7;cursor:grabbing;
+  outline:2px dashed var(--gold);outline-offset:4px;
+  z-index:9000;
+}
+.drag-handle{
+  display:none;position:absolute;top:6px;left:6px;
+  background:rgba(255,215,0,0.8);color:#000;
+  border-radius:6px;padding:2px 8px;font-size:0.7rem;font-weight:800;
+  cursor:grab;z-index:1;
+}
+.layout-mode-active .drag-handle{display:block}
+
+/* ===== MUTE BUTTON ADMIN ===== */
+.admin-mute-btn{
+  display:flex;align-items:center;gap:8px;
+  background:rgba(255,59,92,0.15);border:2px solid rgba(255,59,92,0.4);
+  color:var(--danger);padding:8px 16px;border-radius:12px;
+  cursor:pointer;font-weight:800;font-size:0.85rem;transition:all 0.3s;
+  white-space:nowrap;
+}
+.admin-mute-btn.muted{
+  background:rgba(255,215,0,0.15);border-color:rgba(255,215,0,0.4);color:var(--gold);
+}
+.admin-mute-btn:hover{transform:scale(1.05)}
+
 /* ===== UTILITY ===== */
 .hidden{display:none!important}
 .text-center{text-align:center}
@@ -911,526 +1029,571 @@ body::before{
   .refresh-btn{top:58px;right:10px;padding:7px 11px;font-size:0.7rem}
   .percentage-row{flex-direction:column;align-items:flex-start}
   .speed-quick-btns{gap:5px}
+  .near-win-notification{bottom:80px;right:10px;left:10px;max-width:none}
 }
 </style>
 </head>
 <body>
+
+<!-- Clock - centered -->
 <div class="clock-display" id="clockDisplay">
 📅 <span id="currentDate">--/--/----</span> | 🕐 <span id="currentTime">--:--:--</span>
 </div>
-<div class="responsible-gaming-warning" id="responsibleGamingWarning">
-⚠️ El juego compulsivo hace mal a la salud. Juega responsablemente.
+
+<!-- Responsible Gaming Popup (4 segundos) -->
+<div class="responsible-gaming-popup" id="responsibleGamingPopup">
+  <div class="rg-box">
+    <h2>⚠️ Juego Responsable</h2>
+    <p>El juego compulsivo puede ser perjudicial para tu salud y bienestar. Juega con responsabilidad. Si crees que tienes un problema, busca ayuda profesional.</p>
+    <div class="rg-progress"><div class="rg-bar" id="rgBar"></div></div>
+    <button class="btn btn-danger" style="max-width:200px;margin:0 auto;display:block;padding:12px" onclick="closeRGWarning()">Entendido ✓</button>
+  </div>
 </div>
+
+<!-- Near Win Notification -->
+<div class="near-win-notification" id="nearWinNotification">
+  <button class="near-win-close" onclick="closeNearWin()">×</button>
+  <h4>🔥 ¡Estás a un número!</h4>
+  <p id="nearWinText">¡Casi tienes línea! Sigue marcando...</p>
+</div>
+
 <div class="connection-status" id="connStatus">
-<div class="conn-dot connecting" id="connDot"></div>
-<span id="connText">Conectando...</span>
+  <div class="conn-dot connecting" id="connDot"></div>
+  <span id="connText">Conectando...</span>
 </div>
 <div class="game-active-indicator" id="gameActiveIndicator">
-<div class="dot"></div>
-<span>🎮 JUEGO EN CURSO</span>
+  <div class="dot"></div>
+  <span>🎮 JUEGO EN CURSO</span>
 </div>
 <div class="game-paused-indicator" id="gamePausedIndicator">
-<div class="dot"></div>
-<span>⏸ JUEGO PAUSADO - HAY GANADOR</span>
+  <div class="dot"></div>
+  <span>⏸ JUEGO PAUSADO - HAY GANADOR</span>
 </div>
 <div class="admin-notification" id="adminNotification">
-<span>🔔</span>
-<span id="adminNotificationText">Nueva solicitud</span>
-<span class="count" id="adminNotificationCount">1</span>
+  <span>🔔</span>
+  <span id="adminNotificationText">Nueva solicitud</span>
+  <span class="count" id="adminNotificationCount">1</span>
 </div>
 <div class="global-announcement" id="globalAnnouncement">
-<button class="global-announcement-close" onclick="closeGlobalAnnouncement()">×</button>
-<h2 id="announcementTitle">📢 ANUNCIO</h2>
-<p id="announcementText">Mensaje del administrador</p>
+  <button class="global-announcement-close" onclick="closeGlobalAnnouncement()">×</button>
+  <h2 id="announcementTitle">📢 ANUNCIO</h2>
+  <p id="announcementText">Mensaje del administrador</p>
 </div>
 <div class="countdown-overlay" id="countdownOverlay">
-<div class="countdown-content">
-<div class="countdown-number" id="countdownNumber">10</div>
-<div class="countdown-text">El juego comienza en...</div>
+  <div class="countdown-content">
+    <div class="countdown-number" id="countdownNumber">10</div>
+    <div class="countdown-text">El juego comienza en...</div>
+  </div>
 </div>
+
+<!-- Layout Mode Bar -->
+<div class="layout-mode-overlay" id="layoutModeBar">
+  <div class="layout-mode-label">✏️ MODO LAYOUT — Arrastra los elementos para reordenarlos</div>
+  <button class="btn btn-danger btn-xs" style="width:auto" onclick="toggleLayoutMode()">✕ Salir</button>
 </div>
 
 <!-- Login Screen -->
 <div id="loginScreen" class="screen active">
-<div class="login">
-<div class="logo">🎱 BINGO <span>PRO</span></div>
-<div class="subtitle">⚡ Casino Online en Vivo ⚡</div>
-<div class="box">
-<div class="toggle-container">
-<div class="toggle-option active" onclick="setLoginMode('normal')" id="mode-normal">🎮 JUGADOR</div>
-<div class="toggle-option" onclick="setLoginMode('admin')" id="mode-admin">👑 ADMINISTRADOR</div>
-</div>
-<div class="input-group">
-<label>👤 Tu Nombre</label>
-<input type="text" id="playerName" class="input" placeholder="Ej: JuanPerez" maxlength="20" autocomplete="off">
-</div>
-<div id="adminCodeSection" class="hidden">
-<div class="input-group">
-<label>🔒 Código Admin</label>
-<input type="password" id="vipCode" class="input" placeholder="Solo administradores">
-</div>
-</div>
-<button class="btn btn-primary" onclick="login()" id="loginBtn">
-<span id="loginText">🚀 Entrar al Casino</span>
-</button>
-<div class="info-text">
-🌐 Juego Online en Tiempo Real<br>
-🎨 3 Estilos de Cartón Disponibles<br>
-👥 Sala compartida · <span>Máx 100 jugadores</span>
-</div>
-</div>
-</div>
+  <div class="login">
+    <div class="logo">🎱 BINGO <span>PRO</span></div>
+    <div class="subtitle">⚡ En Vivo Online ⚡</div>
+    <div class="box">
+      <div class="toggle-container">
+        <div class="toggle-option active" onclick="setLoginMode('normal')" id="mode-normal">🎮 JUGADOR</div>
+        <div class="toggle-option" onclick="setLoginMode('admin')" id="mode-admin">👑 ADMINISTRADOR</div>
+      </div>
+      <div class="input-group">
+        <label>👤 Tu Nombre</label>
+        <input type="text" id="playerName" class="input" placeholder="Ej: JuanPerez" maxlength="20" autocomplete="off">
+      </div>
+      <div id="adminCodeSection" class="hidden">
+        <div class="input-group">
+          <label>🔒 Código Admin</label>
+          <input type="password" id="vipCode" class="input" placeholder="Solo administradores">
+        </div>
+      </div>
+      <div class="login-btn-group">
+        <button class="btn btn-primary" onclick="login()" id="loginBtn" style="max-width:320px;width:100%">
+          <span id="loginText">🚀 Entrar al BINGO PRO</span>
+        </button>
+      </div>
+      <div class="info-text">
+        🌐 Juego Online en Tiempo Real<br>
+        🎨 3 Estilos de Cartón Disponibles<br>
+        👥 Sala compartida · <span>Máx 100 jugadores</span>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- Player Game Screen -->
 <div id="gameScreen" class="screen">
-<div class="header">
-<div class="player-info">
-<div class="avatar" id="playerAvatar">?</div>
-<div class="player-details">
-<div class="player-name" id="displayName">Jugador</div>
-<div class="player-status">
-<span class="online-dot"></span>
-<span id="playerCount">Online: 0</span>
-</div>
-</div>
-</div>
-<div class="number-section">
-<div class="current-number" id="currentNumber">--</div>
-<div class="number-label">Número Actual</div>
-<div class="last-numbers" id="lastNumbers"></div>
-</div>
-<div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px">
-<div class="coins" id="playerCoins">🪙 0</div>
-<button class="btn btn-danger btn-xs" onclick="logout()" style="width:auto;padding:7px 14px">Salir</button>
-</div>
-</div>
+  <div class="header draggable-elem" id="drag-header" data-drag="true">
+    <div class="drag-handle">☰ mover</div>
+    <div class="player-info">
+      <div class="avatar" id="playerAvatar">?</div>
+      <div class="player-details">
+        <div class="player-name" id="displayName">Jugador</div>
+        <div class="player-status">
+          <span class="online-dot"></span>
+          <span id="playerCount">Online: 0</span>
+        </div>
+      </div>
+    </div>
+    <div class="number-section">
+      <div class="current-number" id="currentNumber">--</div>
+      <div class="number-label">Número Actual</div>
+      <div class="last-numbers" id="lastNumbers"></div>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px">
+      <div class="coins" id="playerCoins">🪙 0</div>
+      <button class="btn btn-danger btn-xs" onclick="logout()" style="width:auto;padding:7px 14px">Salir</button>
+    </div>
+  </div>
 
-<!-- POZO -->
-<div class="prize-section">
-<div class="prize-amount" id="prizeAmount">$0</div>
-<div class="prize-label">POZO EN JUEGO</div>
-<div class="prize-breakdown" id="prizeBreakdown">
-<span style="color:var(--success)">Línea: <span id="linePrize">$0</span></span>
-<span style="color:var(--gold)">Bingo: <span id="bingoPrize">$0</span></span>
-<span style="color:var(--danger)">Restante: <span id="remainingPrize">$0</span></span>
-</div>
-<div id="customPrizeDisplay" class="prize-text-display" style="display:none"></div>
-</div>
+  <!-- POZO -->
+  <div class="prize-section draggable-elem" id="drag-prize" data-drag="true">
+    <div class="drag-handle">☰ mover</div>
+    <div class="prize-amount" id="prizeAmount">$0</div>
+    <div class="prize-label">POZO EN JUEGO</div>
+    <div class="prize-breakdown" id="prizeBreakdown">
+      <span style="color:var(--success)">Línea: <span id="linePrize">$0</span></span>
+      <span style="color:var(--gold)">Bingo: <span id="bingoPrize">$0</span></span>
+      <span style="color:var(--danger)">Restante: <span id="remainingPrize">$0</span></span>
+    </div>
+    <div id="customPrizeDisplay" class="prize-text-display" style="display:none"></div>
+  </div>
 
-<div class="controls">
-<div class="control-group">
-<div class="control-label">Auto-Marcar</div>
-<div class="toggle" id="autoMarkToggle" onclick="toggleAutoMark()"></div>
-</div>
-<div class="control-group">
-<div class="control-label">Auto-Canto</div>
-<div class="toggle" id="autoClaimToggle" onclick="toggleAutoClaim()"></div>
-</div>
-<div class="control-group">
-<div class="control-label">Voz</div>
-<div class="toggle active" id="voiceToggle" onclick="toggleVoice()"></div>
-</div>
-<div class="control-group">
-<div class="control-label">Estilo</div>
-<select id="cardStyle" class="admin-select" onchange="changeCardStyle()" style="padding:8px 14px;width:auto;margin:0">
-<option value="classic">🎨 Clásico</option>
-<option value="neon">⚡ Neón</option>
-<option value="gold">👑 Gold VIP</option>
-</select>
-</div>
-<button class="btn btn-warning btn-control" onclick="requestCoins()">💰 Pedir Fichas</button>
-</div>
+  <div class="controls draggable-elem" id="drag-controls" data-drag="true">
+    <div class="drag-handle">☰ mover</div>
+    <div class="control-group">
+      <div class="control-label">Auto-Marcar</div>
+      <div class="toggle" id="autoMarkToggle" onclick="toggleAutoMark()"></div>
+    </div>
+    <div class="control-group">
+      <div class="control-label">Auto-Canto</div>
+      <div class="toggle" id="autoClaimToggle" onclick="toggleAutoClaim()"></div>
+    </div>
+    <div class="control-group">
+      <div class="control-label">Voz</div>
+      <div class="toggle active" id="voiceToggle" onclick="toggleVoice()"></div>
+    </div>
+    <div class="control-group">
+      <div class="control-label">Estilo</div>
+      <select id="cardStyle" class="admin-select" onchange="changeCardStyle()" style="padding:8px 14px;width:auto;margin:0">
+        <option value="classic">🎨 Clásico</option>
+        <option value="neon">⚡ Neón</option>
+        <option value="gold">👑 Gold VIP</option>
+      </select>
+    </div>
+    <button class="btn btn-warning btn-control" onclick="requestCoins()">💰 Pedir Fichas</button>
+    <button class="btn btn-dark btn-control" id="layoutModeBtn" onclick="toggleLayoutMode()">✏️ Modo Layout</button>
+  </div>
 
-<!-- SECCIÓN COMPRA DE CARTONES -->
-<div id="buyCardsSection">
-<div style="font-weight:800;font-size:1.05rem;margin-bottom:15px;display:flex;align-items:center;gap:10px;color:var(--success)">
-🎫 COMPRAR CARTONES <span id="myCardCount" style="background:rgba(0,200,83,0.2);padding:3px 12px;border-radius:20px;font-size:0.82rem;border:1px solid rgba(0,200,83,0.4)">0/6</span>
-</div>
-<div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:12px">
-<div style="display:flex;flex-direction:column;align-items:center;gap:6px">
-<span style="font-size:0.75rem;font-weight:700;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px">CANTIDAD</span>
-<select id="cardQtySelect" class="admin-select" style="width:auto;padding:10px 18px;margin:0;font-size:1rem;font-weight:800;text-align:center">
-<option value="1">1 cartón — 100🪙</option>
-<option value="2">2 cartones — 200🪙</option>
-<option value="3">3 cartones — 300🪙</option>
-<option value="4">4 cartones — 400🪙</option>
-<option value="5">5 cartones — 500🪙</option>
-<option value="6">6 cartones — 600🪙</option>
-</select>
-</div>
-<button class="btn btn-success" onclick="buyCards()" id="buyCardBtn" style="flex:1;min-width:170px;padding:13px;font-size:0.95rem">🎫 COMPRAR</button>
-</div>
-<div id="buyCardStatus" style="font-size:0.82rem;color:var(--text-dim);text-align:center"></div>
-</div>
+  <!-- SECCIÓN COMPRA DE CARTONES -->
+  <div id="buyCardsSection" class="draggable-elem" data-drag="true">
+    <div class="drag-handle">☰ mover</div>
+    <div style="font-weight:800;font-size:1.05rem;margin-bottom:15px;display:flex;align-items:center;gap:10px;color:var(--success)">
+      🎫 COMPRAR CARTONES <span id="myCardCount" style="background:rgba(0,200,83,0.2);padding:3px 12px;border-radius:20px;font-size:0.82rem;border:1px solid rgba(0,200,83,0.4)">0/6</span>
+    </div>
+    <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:12px">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
+        <span style="font-size:0.75rem;font-weight:700;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px">CANTIDAD</span>
+        <select id="cardQtySelect" class="admin-select" style="width:auto;padding:10px 18px;margin:0;font-size:1rem;font-weight:800;text-align:center">
+          <option value="1">1 cartón — 100🪙</option>
+          <option value="2">2 cartones — 200🪙</option>
+          <option value="3">3 cartones — 300🪙</option>
+          <option value="4">4 cartones — 400🪙</option>
+          <option value="5">5 cartones — 500🪙</option>
+          <option value="6">6 cartones — 600🪙</option>
+        </select>
+      </div>
+      <button class="btn btn-success" onclick="buyCards()" id="buyCardBtn" style="flex:1;min-width:170px;padding:13px;font-size:0.95rem">🎫 COMPRAR</button>
+    </div>
+    <div id="buyCardStatus" style="font-size:0.82rem;color:var(--text-dim);text-align:center"></div>
+  </div>
 
-<div class="claim-buttons" id="claimButtons">
-<button class="claim-btn claim-btn-line" id="claimLineBtn" onclick="claimLine()" disabled>📏 CANTAR LÍNEA</button>
-<button class="claim-btn claim-btn-bingo" id="claimBingoBtn" onclick="claimBingo()" disabled>🎱 CANTAR BINGO</button>
-</div>
+  <div class="claim-buttons" id="claimButtons">
+    <button class="claim-btn claim-btn-line" id="claimLineBtn" onclick="claimLine()" disabled>📏 CANTAR LÍNEA</button>
+    <button class="claim-btn claim-btn-bingo" id="claimBingoBtn" onclick="claimBingo()" disabled>🎱 CANTAR BINGO</button>
+  </div>
 
-<div id="publicWinnersPanel" style="display:none">
-<div style="font-weight:800;font-size:1rem;margin-bottom:12px;text-align:center;color:var(--gold)">🏆 GANADORES DE ESTA RONDA</div>
-<div id="publicLineWinnersSection">
-<div style="font-size:0.82rem;font-weight:700;color:var(--success);margin-bottom:8px;display:flex;align-items:center;gap:6px">
-📏 LÍNEA <span id="publicLineBadge" style="background:rgba(0,200,83,0.25);color:var(--success);padding:1px 10px;border-radius:20px;font-size:0.75rem;border:1px solid rgba(0,200,83,0.4)">0/3</span>
-</div>
-<div id="publicLineWinnersDisplay" style="min-height:28px"><div style="color:var(--text-dim);font-size:0.85rem;padding:4px 0">— Ningún ganador aún —</div></div>
-</div>
-<div style="height:1px;background:rgba(255,255,255,0.08);margin:12px 0"></div>
-<div id="publicBingoSection">
-<div style="font-size:0.82rem;font-weight:700;color:var(--gold);margin-bottom:8px;display:flex;align-items:center;gap:6px">🎱 BINGO</div>
-<div id="publicBingoWinnerDisplay" style="min-height:28px"><div style="color:var(--text-dim);font-size:0.85rem;padding:4px 0">— Ningún ganador aún —</div></div>
-</div>
-</div>
+  <div id="publicWinnersPanel" style="display:none">
+    <div style="font-weight:800;font-size:1rem;margin-bottom:12px;text-align:center;color:var(--gold)">🏆 GANADORES DE ESTA RONDA</div>
+    <div id="publicLineWinnersSection">
+      <div style="font-size:0.82rem;font-weight:700;color:var(--success);margin-bottom:8px;display:flex;align-items:center;gap:6px">
+        📏 LÍNEA <span id="publicLineBadge" style="background:rgba(0,200,83,0.25);color:var(--success);padding:1px 10px;border-radius:20px;font-size:0.75rem;border:1px solid rgba(0,200,83,0.4)">0/3</span>
+      </div>
+      <div id="publicLineWinnersDisplay" style="min-height:28px"><div style="color:var(--text-dim);font-size:0.85rem;padding:4px 0">— Ningún ganador aún —</div></div>
+    </div>
+    <div style="height:1px;background:rgba(255,255,255,0.08);margin:12px 0"></div>
+    <div id="publicBingoSection">
+      <div style="font-size:0.82rem;font-weight:700;color:var(--gold);margin-bottom:8px;display:flex;align-items:center;gap:6px">🎱 BINGO</div>
+      <div id="publicBingoWinnerDisplay" style="min-height:28px"><div style="color:var(--text-dim);font-size:0.85rem;padding:4px 0">— Ningún ganador aún —</div></div>
+    </div>
+  </div>
 
-<div class="style-selector" id="styleSelector">
-<button class="style-btn active" onclick="selectStyle('classic',this)">🎨 Clásico</button>
-<button class="style-btn" onclick="selectStyle('neon',this)">⚡ Neón</button>
-<button class="style-btn" onclick="selectStyle('gold',this)">👑 Gold VIP</button>
-</div>
+  <div class="style-selector" id="styleSelector">
+    <button class="style-btn active" onclick="selectStyle('classic',this)">🎨 Clásico</button>
+    <button class="style-btn" onclick="selectStyle('neon',this)">⚡ Neón</button>
+    <button class="style-btn" onclick="selectStyle('gold',this)">👑 Gold VIP</button>
+  </div>
 
-<div class="cards-container" id="cardsContainer">
-<div class="text-center" style="padding:60px 20px;color:var(--text-dim)">
-<div style="font-size:4rem;margin-bottom:15px">🎫</div>
-<div style="font-size:1.2rem;font-weight:700;margin-bottom:10px;color:var(--text-main)">No tienes cartones</div>
-<div style="font-size:1rem">Compra tu primer cartón para comenzar a jugar</div>
-<button class="btn btn-success mt-20" onclick="buyCard()" style="max-width:250px" id="buyFirstCardBtn">Comprar Cartón (100 🪙)</button>
-</div>
-</div>
+  <div class="cards-container" id="cardsContainer">
+    <div class="text-center" style="padding:60px 20px;color:var(--text-dim)">
+      <div style="font-size:4rem;margin-bottom:15px">🎫</div>
+      <div style="font-size:1.2rem;font-weight:700;margin-bottom:10px;color:var(--text-main)">No tienes cartones</div>
+      <div style="font-size:1rem">Compra tu primer cartón para comenzar a jugar</div>
+      <button class="btn btn-success mt-20" onclick="buyCard()" style="max-width:250px" id="buyFirstCardBtn">Comprar Cartón (100 🪙)</button>
+    </div>
+  </div>
 
-<!-- CHAT -->
-<div class="chat-container" id="chatContainer">
-<div class="chat-header">
-<div class="chat-title">💬 Chat en Vivo</div>
-</div>
-<div class="chat-recipient-selector">
-<select id="chatRecipient" class="recipient-select">
-<option value="all">👥 Todos</option>
-<option value="admin">👑 Administrador</option>
-</select>
-</div>
-<div class="chat-messages" id="chatMessages"></div>
-<div class="chat-input-group">
-<input type="text" id="chatInput" class="chat-input" placeholder="Escribe un mensaje..." maxlength="120" onkeypress="if(event.key==='Enter')sendMessage()">
-<button class="btn btn-primary" style="padding:12px 18px;width:auto" onclick="sendMessage()">📨</button>
-</div>
-</div>
+  <!-- CHAT -->
+  <div class="chat-container" id="chatContainer">
+    <div class="chat-header">
+      <div class="chat-title">💬 Chat en Vivo</div>
+    </div>
+    <div class="chat-recipient-selector">
+      <select id="chatRecipient" class="recipient-select">
+        <option value="all">👥 Todos</option>
+        <option value="admin">👑 Administrador</option>
+      </select>
+    </div>
+    <div class="chat-messages" id="chatMessages"></div>
+    <div class="chat-input-group">
+      <input type="text" id="chatInput" class="chat-input" placeholder="Escribe un mensaje..." maxlength="120" onkeypress="if(event.key==='Enter')sendMessage()">
+      <button class="btn btn-primary" style="padding:12px 18px;width:auto" onclick="sendMessage()">📨</button>
+    </div>
+  </div>
 </div>
 
 <!-- Admin Screen -->
 <div id="adminScreen" class="screen">
-<div class="header">
-<div class="player-info">
-<div class="avatar admin">👑</div>
-<div class="player-details">
-<div class="player-name">ADMINISTRADOR <span class="badge">VIP</span></div>
-<div class="player-status">
-<span class="online-dot"></span>
-<span id="adminPlayerCount">Online: 0</span>
-</div>
-</div>
-</div>
-<div class="number-section">
-<div class="current-number" id="adminCurrentNumber" style="background:radial-gradient(circle,var(--gold) 0%,var(--gold3) 100%);color:#000;box-shadow:0 0 40px rgba(255,215,0,0.7)">--</div>
-<div class="number-label">Control de Sala</div>
-</div>
-<button class="btn btn-danger btn-xs" onclick="logout()" style="width:auto;padding:7px 14px">Salir</button>
-</div>
+  <div class="header">
+    <div class="player-info">
+      <div class="avatar admin">👑</div>
+      <div class="player-details">
+        <div class="player-name">BINGO PRO — ADMIN <span class="badge">VIP</span></div>
+        <div class="player-status">
+          <span class="online-dot"></span>
+          <span id="adminPlayerCount">Online: 0</span>
+        </div>
+      </div>
+    </div>
+    <div class="number-section">
+      <div class="current-number" id="adminCurrentNumber" style="background:radial-gradient(circle,var(--gold) 0%,var(--gold3) 100%);color:#000;box-shadow:0 0 40px rgba(255,215,0,0.7)">--</div>
+      <div class="number-label">Control de Sala</div>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px">
+      <button class="admin-mute-btn" id="adminMuteBtn" onclick="toggleAdminMute()">🔊 Voz ON</button>
+      <button class="btn btn-danger btn-xs" onclick="logout()" style="width:auto;padding:7px 14px">Salir</button>
+    </div>
+  </div>
 
-<!-- POZO ADMIN -->
-<div class="prize-section">
-<div class="prize-amount" id="adminPrizeAmount">$0</div>
-<div class="prize-label">POZO TOTAL</div>
-<div class="prize-breakdown">
-<span style="color:var(--success)">Línea: <span id="adminLinePrize">$0</span></span>
-<span style="color:var(--gold)">Bingo: <span id="adminBingoPrize">$0</span></span>
-</div>
-<div style="margin-top:12px;font-size:0.9rem;color:var(--text-dim)">
-Líneas: <span id="adminLinesClaimed" style="color:var(--danger)">0/3</span> |
-Bingo: <span id="adminBingoClaimed" style="color:var(--danger)">No</span>
-</div>
-<div id="adminCustomPrizeDisplay" class="prize-text-display" style="display:none;margin-top:12px"></div>
-</div>
+  <!-- POZO ADMIN -->
+  <div class="prize-section">
+    <div class="prize-amount" id="adminPrizeAmount">$0</div>
+    <div class="prize-label">POZO TOTAL</div>
+    <div class="prize-breakdown">
+      <span style="color:var(--success)">Línea: <span id="adminLinePrize">$0</span></span>
+      <span style="color:var(--gold)">Bingo: <span id="adminBingoPrize">$0</span></span>
+    </div>
+    <div style="margin-top:12px;font-size:0.9rem;color:var(--text-dim)">
+      Líneas: <span id="adminLinesClaimed" style="color:var(--danger)">0/3</span> |
+      Bingo: <span id="adminBingoClaimed" style="color:var(--danger)">No</span>
+    </div>
+    <div id="adminCustomPrizeDisplay" class="prize-text-display" style="display:none;margin-top:12px"></div>
+  </div>
 
-<div class="admin-grid" id="adminGrid">
-<!-- Control del Juego -->
-<div class="admin-card" id="adminCard1">
-<button class="minimize-btn" onclick="toggleAdminCard('adminCard1')">−</button>
-<h3>🎮 Control del Juego</h3>
-<div class="card-content">
-<div class="admin-row">
-<button class="btn btn-success w-full" onclick="startGame()" id="btnStart">▶ Iniciar</button>
-<button class="btn btn-warning w-full" onclick="pauseGame()" id="btnPause">⏸ Pausar</button>
-<button class="btn btn-info w-full" onclick="resumeGame()" id="btnResume">▶ Reanudar</button>
-<button class="btn btn-danger w-full" onclick="resetGame()">↺ Reiniciar</button>
-<button class="btn btn-danger w-full" onclick="clearCurrentWinners()" style="background:linear-gradient(135deg,#8B0000,#c0392b)">🗑 Limpiar Ganadores</button>
-</div>
+  <div class="admin-grid" id="adminGrid">
+    <!-- Control del Juego -->
+    <div class="admin-card" id="adminCard1">
+      <button class="minimize-btn" onclick="toggleAdminCard('adminCard1')">−</button>
+      <h3>🎮 Control del Juego</h3>
+      <div class="card-content">
+        <div class="admin-row">
+          <button class="btn btn-success w-full" onclick="startGame()" id="btnStart">▶ Iniciar</button>
+          <button class="btn btn-warning w-full" onclick="pauseGame()" id="btnPause">⏸ Pausar</button>
+          <button class="btn btn-info w-full" onclick="resumeGame()" id="btnResume">▶ Reanudar</button>
+          <button class="btn btn-danger w-full" onclick="resetGame()">↺ Reiniciar</button>
+        </div>
 
-<!-- SPEED CONTROL (Nuevo diseño) -->
-<div class="speed-control-wrapper">
-<div class="speed-header">
-<span class="speed-label">⏱ Velocidad entre bolillas</span>
-<span class="speed-value" id="speedValue">3 seg</span>
-</div>
-<input type="range" id="speedControl" class="speed-slider" min="3" max="10" value="3" oninput="updateSpeed(this.value)">
-<div style="display:flex;justify-content:space-between;font-size:0.7rem;color:var(--text-dim);margin-top:4px">
-<span>3s (rápido)</span><span>6s (normal)</span><span>10s (lento)</span>
-</div>
-<div class="speed-quick-btns">
-<button class="speed-quick-btn active" onclick="setSpeedQuick(3)">3s</button>
-<button class="speed-quick-btn" onclick="setSpeedQuick(5)">5s</button>
-<button class="speed-quick-btn" onclick="setSpeedQuick(7)">7s</button>
-<button class="speed-quick-btn" onclick="setSpeedQuick(10)">10s</button>
-</div>
-</div>
-</div>
-</div>
+        <!-- Canto Manual Switch -->
+        <div style="background:rgba(255,215,0,0.06);border:1px solid var(--border-gold);border-radius:14px;padding:16px;margin-bottom:14px">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+            <span style="font-weight:700;color:var(--gold);font-size:0.9rem">🎤 Canto Manual</span>
+            <div class="toggle" id="manualCallToggle" onclick="toggleManualCall()"></div>
+          </div>
+          <div class="manual-call-input" id="manualCallSection">
+            <div style="font-size:0.8rem;color:var(--text-dim);margin-bottom:10px">Elige el número a cantar (1-90):</div>
+            <input type="number" id="manualNumberInput" min="1" max="90" placeholder="0" class="admin-input" style="text-align:center;font-size:1.6rem;font-weight:900;width:100%">
+            <button class="btn btn-warning w-full mt-10" onclick="callManualNumber()">🎤 Cantar Este Número</button>
+          </div>
+        </div>
 
-<!-- Configuración de Pozo -->
-<div class="admin-card" id="adminCard2">
-<button class="minimize-btn" onclick="toggleAdminCard('adminCard2')">−</button>
-<h3>💰 Configuración de Pozo y Premios</h3>
-<div class="card-content">
-<div class="prize-mode-section">
-<h4>🎯 Modo de Pozo</h4>
-<div class="prize-mode-option" onclick="selectPrizeMode('fixed',this)">
-<input type="radio" name="prizeMode" id="mode-fixed" value="fixed" checked>
-<label for="mode-fixed">📌 Fijo (monto establecido)</label>
-</div>
-<div class="prize-mode-option" onclick="selectPrizeMode('incremental',this)">
-<input type="radio" name="prizeMode" id="mode-incremental" value="incremental">
-<label for="mode-incremental">📈 Incremental (+$100 por número)</label>
-</div>
-<div class="prize-mode-option" onclick="selectPrizeMode('progressive',this)">
-<input type="radio" name="prizeMode" id="mode-progressive" value="progressive">
-<label for="mode-progressive">🚀 Progresivo (+$500 por número)</label>
-</div>
-<div class="prize-mode-option" onclick="selectPrizeMode('text',this)">
-<input type="radio" name="prizeMode" id="mode-text" value="text">
-<label for="mode-text">📝 Texto (TV, Celular, etc.)</label>
-</div>
-</div>
+        <!-- SPEED CONTROL -->
+        <div class="speed-control-wrapper">
+          <div class="speed-header">
+            <span class="speed-label">⏱ Velocidad entre bolillas</span>
+            <span class="speed-value" id="speedValue">3 seg</span>
+          </div>
+          <input type="range" id="speedControl" class="speed-slider" min="3" max="10" value="3" oninput="updateSpeed(this.value)">
+          <div style="display:flex;justify-content:space-between;font-size:0.7rem;color:var(--text-dim);margin-top:4px">
+            <span>3s (rápido)</span><span>6s (normal)</span><span>10s (lento)</span>
+          </div>
+          <div class="speed-quick-btns">
+            <button class="speed-quick-btn active" onclick="setSpeedQuick(3)">3s</button>
+            <button class="speed-quick-btn" onclick="setSpeedQuick(5)">5s</button>
+            <button class="speed-quick-btn" onclick="setSpeedQuick(7)">7s</button>
+            <button class="speed-quick-btn" onclick="setSpeedQuick(10)">10s</button>
+          </div>
+        </div>
+      </div>
+    </div>
 
-<!-- Premios Manuales -->
-<div class="percentage-config">
-<h4 style="color:var(--gold);margin-bottom:15px;">💰 PREMIOS MANUALES (VALOR FIJO)</h4>
-<div class="percentage-row">
-<span class="percentage-label">Línea ($):</span>
-<input type="number" id="linePrizeManual" class="percentage-input" min="0" value="200" step="1" oninput="livePreviewPrize()">
-<button class="btn btn-success btn-sm" onclick="setLinePrizeManual()" style="width:auto;padding:9px 13px;">✔ Establecer</button>
-</div>
-<div class="percentage-row">
-<span class="percentage-label">Bingo ($):</span>
-<input type="number" id="bingoPrizeManual" class="percentage-input" min="0" value="800" step="1" oninput="livePreviewPrize()">
-<button class="btn btn-warning btn-sm" onclick="setBingoPrizeManual()" style="width:auto;padding:9px 13px;">✔ Establecer</button>
-</div>
-<div class="percentage-preview" id="prizeManualPreview" style="font-size:0.95rem;line-height:2">
-💰 Total pozo: <span id="previewTotalPrize" style="color:var(--gold);font-weight:900;font-size:1.15rem">$1000</span><br>
-📏 Línea total: <span id="previewLineAmount" style="color:var(--success);font-weight:800">$200</span>
-&nbsp;(por ganador: <span id="previewLinePerWinner" style="color:var(--success)">$67</span>)<br>
-🎱 Bingo: <span id="previewBingoAmount" style="color:var(--gold);font-weight:800">$800</span>
-</div>
-<div style="margin-top:8px;font-size:0.78rem;color:var(--text-dim)">
-⚡ Premio línea total se divide en hasta 3 ganadores &nbsp;|&nbsp; Presiona ✔ para guardar
-</div>
-</div>
+    <!-- Configuración de Pozo -->
+    <div class="admin-card" id="adminCard2">
+      <button class="minimize-btn" onclick="toggleAdminCard('adminCard2')">−</button>
+      <h3>💰 Configuración de Pozo y Premios</h3>
+      <div class="card-content">
+        <div class="prize-mode-section">
+          <h4>🎯 Modo de Pozo</h4>
+          <div class="prize-mode-option" onclick="selectPrizeMode('fixed',this)">
+            <input type="radio" name="prizeMode" id="mode-fixed" value="fixed" checked>
+            <label for="mode-fixed">📌 Fijo (monto establecido)</label>
+          </div>
+          <div class="prize-mode-option" onclick="selectPrizeMode('incremental',this)">
+            <input type="radio" name="prizeMode" id="mode-incremental" value="incremental">
+            <label for="mode-incremental">📈 Incremental (+$100 por número)</label>
+          </div>
+          <div class="prize-mode-option" onclick="selectPrizeMode('progressive',this)">
+            <input type="radio" name="prizeMode" id="mode-progressive" value="progressive">
+            <label for="mode-progressive">🚀 Progresivo (+$500 por número)</label>
+          </div>
+          <div class="prize-mode-option" onclick="selectPrizeMode('text',this)">
+            <input type="radio" name="prizeMode" id="mode-text" value="text">
+            <label for="mode-text">📝 Texto (TV, Celular, etc.)</label>
+          </div>
+        </div>
 
-<div class="admin-row mt-10">
-<input type="number" id="manualPrizeAmount" class="admin-input" placeholder="Pozo total ($) 20/80 auto" min="100">
-<button class="btn btn-primary" style="padding:11px 18px;width:auto" onclick="setManualPrize()">💵 Establecer Pozo</button>
-</div>
-<div class="admin-row mt-10">
-<input type="text" id="textPrizeAmount" class="admin-input" placeholder="Ej: TV 50', iPhone 15, etc.">
-<button class="btn btn-primary" style="padding:11px 18px;width:auto" onclick="setTextPrize()">📝 Texto</button>
-</div>
-<div class="admin-row mt-10">
-<input type="number" id="prizeCapAmount" class="admin-input" placeholder="Tope máximo ($)" min="1000" value="10000">
-<button class="btn btn-info" style="padding:11px 18px;width:auto" onclick="setPrizeCap()">🔒 Tope</button>
-</div>
-<div class="admin-row mt-10">
-<input type="text" id="customPrizeText" class="admin-input" placeholder="Premio personalizado...">
-<button class="btn btn-warning" style="padding:11px 18px;width:auto" onclick="setCustomPrize()">🎁 Establecer</button>
-</div>
-<div class="mt-10">
-<div style="display:flex;justify-content:space-between;align-items:center">
-<span style="font-weight:600;font-size:0.9rem">📏 Premios de Línea Activados</span>
-<div class="toggle active" id="linePrizeToggle" onclick="toggleLinePrizes()"></div>
-</div>
-</div>
-</div>
-</div>
+        <div class="percentage-config">
+          <h4 style="color:var(--gold);margin-bottom:15px;">💰 PREMIOS MANUALES (VALOR FIJO)</h4>
+          <div class="percentage-row">
+            <span class="percentage-label">Línea ($):</span>
+            <input type="number" id="linePrizeManual" class="percentage-input" min="0" value="200" step="1" oninput="livePreviewPrize()">
+            <button class="btn btn-success btn-sm" onclick="setLinePrizeManual()" style="width:auto;padding:9px 13px;">✔ Establecer</button>
+          </div>
+          <div class="percentage-row">
+            <span class="percentage-label">Bingo ($):</span>
+            <input type="number" id="bingoPrizeManual" class="percentage-input" min="0" value="800" step="1" oninput="livePreviewPrize()">
+            <button class="btn btn-warning btn-sm" onclick="setBingoPrizeManual()" style="width:auto;padding:9px 13px;">✔ Establecer</button>
+          </div>
+          <div class="percentage-preview" id="prizeManualPreview" style="font-size:0.95rem;line-height:2">
+            💰 Total pozo: <span id="previewTotalPrize" style="color:var(--gold);font-weight:900;font-size:1.15rem">$1000</span><br>
+            📏 Línea total: <span id="previewLineAmount" style="color:var(--success);font-weight:800">$200</span>
+            &nbsp;(por ganador: <span id="previewLinePerWinner" style="color:var(--success)">$67</span>)<br>
+            🎱 Bingo: <span id="previewBingoAmount" style="color:var(--gold);font-weight:800">$800</span>
+          </div>
+          <div style="margin-top:8px;font-size:0.78rem;color:var(--text-dim)">
+            ⚡ Premio línea total se divide en hasta 3 ganadores &nbsp;|&nbsp; Presiona ✔ para guardar
+          </div>
+        </div>
 
-<!-- Cartón Ganador -->
-<div class="admin-card" id="adminCard3">
-<button class="minimize-btn" onclick="toggleAdminCard('adminCard3')">−</button>
-<h3>🏆 Cartón Ganador Actual</h3>
-<div class="card-content">
-<div id="adminWinnerCardDisplay" style="background:rgba(0,0,0,0.3);padding:15px;border-radius:12px;margin-bottom:15px;border:1px solid rgba(255,215,0,0.1)">
-<div style="color:var(--text-dim);text-align:center">No hay ganador registrado</div>
-</div>
-<button class="btn btn-danger w-full" onclick="clearWinnerCard()">🗑 Borrar Cartón Ganador</button>
-</div>
-</div>
+        <div class="admin-row mt-10">
+          <input type="number" id="manualPrizeAmount" class="admin-input" placeholder="Pozo total ($) 20/80 auto" min="100">
+          <button class="btn btn-primary" style="padding:11px 18px;width:auto" onclick="setManualPrize()">💵 Establecer Pozo</button>
+        </div>
+        <div class="admin-row mt-10">
+          <input type="text" id="textPrizeAmount" class="admin-input" placeholder="Ej: TV 50', iPhone 15, etc.">
+          <button class="btn btn-primary" style="padding:11px 18px;width:auto" onclick="setTextPrize()">📝 Texto</button>
+        </div>
+        <div class="admin-row mt-10">
+          <input type="number" id="prizeCapAmount" class="admin-input" placeholder="Tope máximo ($)" min="1000" value="10000">
+          <button class="btn btn-info" style="padding:11px 18px;width:auto" onclick="setPrizeCap()">🔒 Tope</button>
+        </div>
+        <div class="admin-row mt-10">
+          <input type="text" id="customPrizeText" class="admin-input" placeholder="Premio personalizado...">
+          <button class="btn btn-warning" style="padding:11px 18px;width:auto" onclick="setCustomPrize()">🎁 Establecer</button>
+        </div>
+        <div class="mt-10">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <span style="font-weight:600;font-size:0.9rem">📏 Premios de Línea Activados</span>
+            <div class="toggle active" id="linePrizeToggle" onclick="toggleLinePrizes()"></div>
+          </div>
+        </div>
+      </div>
+    </div>
 
-<!-- Ganadores Persistentes -->
-<div class="admin-card" id="adminCard4">
-<button class="minimize-btn" onclick="toggleAdminCard('adminCard4')">−</button>
-<h3>🏆 Ganadores Persistentes</h3>
-<div class="card-content">
-<div class="winners-persistent-section" id="persistentWinnersList">
-<div class="text-center" style="padding:20px;color:var(--text-dim)">No hay ganadores registrados</div>
-</div>
-<button class="btn btn-danger w-full mt-10" onclick="clearAllPersistentWinners()">🗑 Borrar Todos los Ganadores</button>
-</div>
-</div>
+    <!-- Cartón Ganador -->
+    <div class="admin-card" id="adminCard3">
+      <button class="minimize-btn" onclick="toggleAdminCard('adminCard3')">−</button>
+      <h3>🏆 Cartón Ganador Actual</h3>
+      <div class="card-content">
+        <div id="adminWinnerCardDisplay" style="background:rgba(0,0,0,0.3);padding:15px;border-radius:12px;margin-bottom:15px;border:1px solid rgba(255,215,0,0.1)">
+          <div style="color:var(--text-dim);text-align:center">No hay ganador registrado</div>
+        </div>
+        <button class="btn btn-danger w-full" onclick="clearWinnerCard()">🗑 Borrar Cartón Ganador</button>
+      </div>
+    </div>
 
-<!-- Ganadores Actuales -->
-<div class="admin-card" id="adminCard5">
-<button class="minimize-btn" onclick="toggleAdminCard('adminCard5')">−</button>
-<h3>🏆 Otorgar Ganadores</h3>
-<div class="card-content">
-<div style="margin-bottom:15px">
-<select id="lineWinnerSelect" class="admin-select">
-<option value="">Seleccionar jugador para Línea...</option>
-</select>
-<input type="text" id="lineCardNumber" class="admin-input" placeholder="Cartón (4 dígitos)" maxlength="4" style="text-transform:uppercase;margin-top:10px">
-<button class="btn btn-success w-full mt-10" onclick="forceLineWinner()">📏 Otorgar Línea</button>
-</div>
-<div style="margin-bottom:15px">
-<select id="bingoWinnerSelect" class="admin-select">
-<option value="">Seleccionar jugador para Bingo...</option>
-</select>
-<input type="text" id="bingoCardNumber" class="admin-input" placeholder="Cartón (4 dígitos)" maxlength="4" style="text-transform:uppercase;margin-top:10px">
-<button class="btn btn-warning w-full mt-10" onclick="forceBingoWinner()">🎱 Otorgar Bingo</button>
-</div>
-<div id="winnersDisplay" style="background:rgba(0,0,0,0.25);padding:15px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)">
-<div style="font-size:0.85rem;margin-bottom:10px;color:var(--text-dim)">Ganadores:</div>
-<div id="lineWinnersDisplay"></div>
-<div id="bingoWinnerDisplay" style="margin-top:10px"></div>
-</div>
-<div class="mt-10">
-<button class="btn btn-success w-full" onclick="confirmWinner()">✅ Confirmar y Continuar Juego</button>
-</div>
-<div class="mt-10">
-<button class="btn btn-danger w-full" onclick="clearCurrentWinners()">🗑 Limpiar Ganadores (Ronda)</button>
-</div>
-</div>
-</div>
+    <!-- Ganadores Persistentes - con botón borrar historial -->
+    <div class="admin-card" id="adminCard4">
+      <button class="minimize-btn" onclick="toggleAdminCard('adminCard4')">−</button>
+      <h3>🏆 Historial de Ganadores</h3>
+      <div class="card-content">
+        <div class="winners-persistent-section" id="persistentWinnersList">
+          <div class="text-center" style="padding:20px;color:var(--text-dim)">No hay ganadores registrados</div>
+        </div>
+        <button class="btn btn-danger w-full mt-10" onclick="clearAllPersistentWinners()">🗑 Borrar Historial de Ganadores</button>
+      </div>
+    </div>
 
-<!-- Jugadores Conectados -->
-<div class="admin-card" id="adminCard6">
-<button class="minimize-btn" onclick="toggleAdminCard('adminCard6')">−</button>
-<h3>👥 Jugadores Conectados</h3>
-<div class="card-content">
-<div class="players-list" id="adminPlayersList">
-<div class="text-center" style="padding:30px;color:var(--text-dim)">No hay jugadores</div>
-</div>
-<button class="btn btn-info w-full mt-10" onclick="refreshPlayerList()">🔄 Actualizar Lista (Elimina Desconectados)</button>
-</div>
-</div>
+    <!-- Ganadores Actuales -->
+    <div class="admin-card" id="adminCard5">
+      <button class="minimize-btn" onclick="toggleAdminCard('adminCard5')">−</button>
+      <h3>🏆 Otorgar Ganadores</h3>
+      <div class="card-content">
+        <div style="margin-bottom:15px">
+          <select id="lineWinnerSelect" class="admin-select">
+            <option value="">Seleccionar jugador para Línea...</option>
+          </select>
+          <input type="text" id="lineCardNumber" class="admin-input" placeholder="Cartón (4 dígitos)" maxlength="4" style="text-transform:uppercase;margin-top:10px">
+          <button class="btn btn-success w-full mt-10" onclick="forceLineWinner()">📏 Otorgar Línea</button>
+        </div>
+        <div style="margin-bottom:15px">
+          <select id="bingoWinnerSelect" class="admin-select">
+            <option value="">Seleccionar jugador para Bingo...</option>
+          </select>
+          <input type="text" id="bingoCardNumber" class="admin-input" placeholder="Cartón (4 dígitos)" maxlength="4" style="text-transform:uppercase;margin-top:10px">
+          <button class="btn btn-warning w-full mt-10" onclick="forceBingoWinner()">🎱 Otorgar Bingo</button>
+        </div>
+        <div id="winnersDisplay" style="background:rgba(0,0,0,0.25);padding:15px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)">
+          <div style="font-size:0.85rem;margin-bottom:10px;color:var(--text-dim)">Ganadores:</div>
+          <div id="lineWinnersDisplay"></div>
+          <div id="bingoWinnerDisplay" style="margin-top:10px"></div>
+        </div>
+        <div class="mt-10">
+          <button class="btn btn-success w-full" onclick="confirmWinner()">✅ Confirmar y Continuar Juego</button>
+        </div>
+        <div class="mt-10">
+          <button class="btn btn-danger w-full" onclick="clearCurrentWinners()">🗑 Limpiar Ganadores (Ronda)</button>
+        </div>
+      </div>
+    </div>
 
-<!-- Solicitudes de Monedas -->
-<div class="admin-card" id="adminCard7">
-<button class="minimize-btn" onclick="toggleAdminCard('adminCard7')">−</button>
-<h3>💰 Solicitudes de Monedas</h3>
-<div class="card-content">
-<div class="coin-requests-section" id="coinRequestsList">
-<div class="text-center" style="padding:20px;color:var(--text-dim)">No hay solicitudes</div>
-</div>
-<div class="admin-row mt-10">
-<select id="targetPlayer" class="admin-select" style="margin-bottom:0;flex:2">
-<option value="">Seleccionar jugador...</option>
-</select>
-<input type="number" id="coinAmount" class="admin-input" placeholder="Cantidad" style="max-width:110px;flex:1" min="1" value="1000">
-<button class="btn btn-success" style="padding:11px 18px;width:auto" onclick="giveCoins()">💰 Dar</button>
-</div>
-</div>
-</div>
+    <!-- Jugadores Conectados -->
+    <div class="admin-card" id="adminCard6">
+      <button class="minimize-btn" onclick="toggleAdminCard('adminCard6')">−</button>
+      <h3>👥 Jugadores Conectados</h3>
+      <div class="card-content">
+        <div class="players-list" id="adminPlayersList">
+          <div class="text-center" style="padding:30px;color:var(--text-dim)">No hay jugadores</div>
+        </div>
+        <button class="btn btn-info w-full mt-10" onclick="refreshPlayerList()">🔄 Actualizar Lista (Elimina Desconectados)</button>
+      </div>
+    </div>
 
-<!-- Chat Admin -->
-<div class="admin-card" id="adminCard8">
-<button class="minimize-btn" onclick="toggleAdminCard('adminCard8')">−</button>
-<h3>💬 Chat Admin</h3>
-<div class="card-content">
-<div class="admin-row">
-<input type="text" id="adminMessage" class="admin-input" placeholder="Mensaje para todos..." maxlength="150">
-<button class="btn btn-primary" style="padding:11px 18px;width:auto" onclick="sendAdminMessage()">📨</button>
-</div>
-<div class="admin-row mt-10">
-<input type="text" id="globalAnnouncementText" class="admin-input" placeholder="Anuncio para todos..." maxlength="200">
-<button class="btn btn-warning" style="padding:11px 18px;width:auto" onclick="sendGlobalAnnouncement()">📢</button>
-</div>
-<button class="btn btn-danger w-full mt-10" onclick="clearAllChats()">🗑 Borrar Todo el Chat</button>
-<div style="margin-top:20px">
-<div style="font-weight:800;color:var(--electric);margin-bottom:10px;font-size:0.9rem;display:flex;align-items:center;gap:8px">
-👁 Mensajes de Jugadores <span id="adminChatBadge" style="background:var(--danger);color:#fff;padding:2px 8px;border-radius:20px;font-size:0.72rem;display:none">0 nuevos</span>
-</div>
-<div id="adminChatViewer" style="max-height:200px;overflow-y:auto;background:rgba(0,0,0,0.25);border-radius:12px;padding:10px">
-<div style="color:var(--text-dim);text-align:center;padding:15px">No hay mensajes de jugadores</div>
-</div>
-</div>
-</div>
-</div>
+    <!-- Solicitudes de Monedas -->
+    <div class="admin-card" id="adminCard7">
+      <button class="minimize-btn" onclick="toggleAdminCard('adminCard7')">−</button>
+      <h3>💰 Solicitudes de Monedas</h3>
+      <div class="card-content">
+        <div class="coin-requests-section" id="coinRequestsList">
+          <div class="text-center" style="padding:20px;color:var(--text-dim)">No hay solicitudes</div>
+        </div>
+        <div class="admin-row mt-10">
+          <select id="targetPlayer" class="admin-select" style="margin-bottom:0;flex:2">
+            <option value="">Seleccionar jugador...</option>
+          </select>
+          <input type="number" id="coinAmount" class="admin-input" placeholder="Cantidad" style="max-width:110px;flex:1" min="1" value="1000">
+          <button class="btn btn-success" style="padding:11px 18px;width:auto" onclick="giveCoins()">💰 Dar</button>
+        </div>
+      </div>
+    </div>
 
-<!-- Llamada Manual -->
-<div class="admin-card" id="adminCard9">
-<button class="minimize-btn" onclick="toggleAdminCard('adminCard9')">−</button>
-<h3>🔢 Llamada Manual</h3>
-<div class="card-content">
-<div class="number-grid" id="manualNumbers"></div>
-<button class="btn btn-dark w-full mt-10" onclick="generateRandomNumber()">🎲 Número Aleatorio</button>
-</div>
-</div>
+    <!-- Chat Admin -->
+    <div class="admin-card" id="adminCard8">
+      <button class="minimize-btn" onclick="toggleAdminCard('adminCard8')">−</button>
+      <h3>💬 Chat Admin</h3>
+      <div class="card-content">
+        <div class="admin-row">
+          <input type="text" id="adminMessage" class="admin-input" placeholder="Mensaje para todos..." maxlength="150">
+          <button class="btn btn-primary" style="padding:11px 18px;width:auto" onclick="sendAdminMessage()">📨</button>
+        </div>
+        <div class="admin-row mt-10">
+          <input type="text" id="globalAnnouncementText" class="admin-input" placeholder="Anuncio para todos..." maxlength="200">
+          <button class="btn btn-warning" style="padding:11px 18px;width:auto" onclick="sendGlobalAnnouncement()">📢</button>
+        </div>
+        <button class="btn btn-danger w-full mt-10" onclick="clearAllChats()">🗑 Borrar Todo el Chat</button>
+        <div style="margin-top:20px">
+          <div style="font-weight:800;color:var(--electric);margin-bottom:10px;font-size:0.9rem;display:flex;align-items:center;gap:8px">
+            👁 Mensajes de Jugadores <span id="adminChatBadge" style="background:var(--danger);color:#fff;padding:2px 8px;border-radius:20px;font-size:0.72rem;display:none">0 nuevos</span>
+          </div>
+          <div id="adminChatViewer" style="max-height:200px;overflow-y:auto;background:rgba(0,0,0,0.25);border-radius:12px;padding:10px">
+            <div style="color:var(--text-dim);text-align:center;padding:15px">No hay mensajes de jugadores</div>
+          </div>
+        </div>
+      </div>
+    </div>
 
-<!-- Estadísticas -->
-<div class="admin-card" id="adminCard10">
-<button class="minimize-btn" onclick="toggleAdminCard('adminCard10')">−</button>
-<h3>📊 Estadísticas</h3>
-<div class="card-content">
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:15px">
-<div class="text-center" style="background:rgba(0,212,255,0.08);padding:20px;border-radius:15px;border:1px solid rgba(0,212,255,0.2)">
-<div style="font-size:2.5rem;font-weight:900;color:var(--electric)" id="statsNumbers">0</div>
-<div style="font-size:0.82rem;color:var(--text-dim)">Números Sorteados</div>
-</div>
-<div class="text-center" style="background:rgba(255,215,0,0.08);padding:20px;border-radius:15px;border:1px solid var(--border-gold)">
-<div style="font-size:2.5rem;font-weight:900;color:var(--gold)" id="statsCards">0</div>
-<div style="font-size:0.82rem;color:var(--text-dim)">Cartones Vendidos</div>
-</div>
-</div>
-</div>
-</div>
-</div>
+    <!-- Llamada Manual -->
+    <div class="admin-card" id="adminCard9">
+      <button class="minimize-btn" onclick="toggleAdminCard('adminCard9')">−</button>
+      <h3>🔢 Llamada Manual</h3>
+      <div class="card-content">
+        <div class="number-grid" id="manualNumbers"></div>
+        <button class="btn btn-dark w-full mt-10" onclick="generateRandomNumber()">🎲 Número Aleatorio</button>
+      </div>
+    </div>
+
+    <!-- Estadísticas -->
+    <div class="admin-card" id="adminCard10">
+      <button class="minimize-btn" onclick="toggleAdminCard('adminCard10')">−</button>
+      <h3>📊 Estadísticas</h3>
+      <div class="card-content">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px">
+          <div class="text-center" style="background:rgba(0,212,255,0.08);padding:20px;border-radius:15px;border:1px solid rgba(0,212,255,0.2)">
+            <div style="font-size:2.5rem;font-weight:900;color:var(--electric)" id="statsNumbers">0</div>
+            <div style="font-size:0.82rem;color:var(--text-dim)">Números Sorteados</div>
+          </div>
+          <div class="text-center" style="background:rgba(255,215,0,0.08);padding:20px;border-radius:15px;border:1px solid var(--border-gold)">
+            <div style="font-size:2.5rem;font-weight:900;color:var(--gold)" id="statsCards">0</div>
+            <div style="font-size:0.82rem;color:var(--text-dim)">Cartones Vendidos</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- Winner Modal -->
 <div id="winnerModal" class="modal-overlay">
-<div class="modal-content">
-<div class="modal-icon">🏆</div>
-<h2 class="modal-title" id="winnerTitle">¡GANADOR!</h2>
-<div class="modal-winner" id="winnerName">Jugador</div>
-<div style="font-size:1rem;font-weight:900;color:var(--gold);position:relative;z-index:1;margin-bottom:6px;background:rgba(255,215,0,0.1);padding:8px 16px;border-radius:10px;border:1px solid var(--border-gold)" id="winnerCardDisplay">Cartón: ----</div>
-<div class="modal-prize" id="winnerPrize">Premio: $0</div>
-<div style="font-size:0.92rem;color:var(--text-dim);margin-bottom:10px;position:relative;z-index:1" id="winnerRemainingDisplay"></div>
-<div style="font-size:0.85rem;background:rgba(255,59,92,0.1);border:1px dashed rgba(255,59,92,0.4);padding:8px 14px;border-radius:10px;margin-bottom:12px;position:relative;z-index:1" id="winnerPausedNote">⏸ Juego pausado — El administrador reanudará pronto</div>
-<div id="winnerAdminControls" style="display:none;flex-direction:column;gap:10px;width:100%;position:relative;z-index:1">
-<button class="btn btn-success modal-btn" onclick="adminResumeFromWinner()">▶ Confirmar y Reanudar Juego</button>
-<button class="btn btn-danger modal-btn" onclick="adminClearWinner()">🗑 Borrar Ganador y Reanudar</button>
-</div>
-<button class="btn btn-primary modal-btn" id="winnerContinueBtn" onclick="closeWinnerModal()" style="display:none">Continuar</button>
-</div>
+  <div class="modal-content">
+    <div class="modal-icon">🏆</div>
+    <h2 class="modal-title" id="winnerTitle">¡GANADOR!</h2>
+    <div class="modal-winner" id="winnerName">Jugador</div>
+    <div style="font-size:1rem;font-weight:900;color:var(--gold);position:relative;z-index:1;margin-bottom:6px;background:rgba(255,215,0,0.1);padding:8px 16px;border-radius:10px;border:1px solid var(--border-gold)" id="winnerCardDisplay">Cartón: ----</div>
+    <div class="modal-prize" id="winnerPrize">Premio: $0</div>
+    <div style="font-size:0.92rem;color:var(--text-dim);margin-bottom:10px;position:relative;z-index:1" id="winnerRemainingDisplay"></div>
+    <div style="font-size:0.85rem;background:rgba(255,59,92,0.1);border:1px dashed rgba(255,59,92,0.4);padding:8px 14px;border-radius:10px;margin-bottom:12px;position:relative;z-index:1" id="winnerPausedNote">⏸ Juego pausado — El administrador reanudará pronto</div>
+    <div id="winnerAdminControls" style="display:none;flex-direction:column;gap:10px;width:100%;position:relative;z-index:1">
+      <button class="btn btn-success modal-btn" onclick="adminResumeFromWinner()">▶ Confirmar y Reanudar Juego</button>
+      <button class="btn btn-danger modal-btn" onclick="adminClearWinner()">🗑 Borrar Ganador y Reanudar</button>
+    </div>
+    <button class="btn btn-primary modal-btn" id="winnerContinueBtn" onclick="closeWinnerModal()" style="display:none">Continuar</button>
+  </div>
 </div>
 
 <!-- Winner Banner -->
 <div id="winnerBanner" class="winner-banner hidden">
-<button class="winner-banner-close" onclick="closeWinnerBanner()">×</button>
-<div class="winner-banner-content">
-<h2 id="winnerBannerTitle">🏆 ¡GANADOR!</h2>
-<div class="winner-details" id="winnerBannerDetails">Jugador</div>
-<div class="card-info" id="winnerBannerCard">Cartón: ----</div>
-<div class="prize-info" id="winnerBannerPrize">Premio: $0</div>
-<div class="prize-info" id="winnerBannerRemaining"></div>
-</div>
+  <button class="winner-banner-close" onclick="closeWinnerBanner()">×</button>
+  <div class="winner-banner-content">
+    <h2 id="winnerBannerTitle">🏆 ¡GANADOR!</h2>
+    <div class="winner-details" id="winnerBannerDetails">Jugador</div>
+    <div class="card-info" id="winnerBannerCard">Cartón: ----</div>
+    <div class="prize-info" id="winnerBannerPrize">Premio: $0</div>
+    <div class="prize-info" id="winnerBannerRemaining"></div>
+  </div>
 </div>
 
 <!-- Toast Container -->
@@ -1458,74 +1621,36 @@ function showToast(message, type = 'success', duration = 3000) {
     toast.className = 'toast' + (type === 'error' ? ' error' : type === 'info' ? ' info' : '');
     toast.innerHTML = `<span>${type==='error'?'❌':type==='info'?'ℹ️':'✅'}</span><span>${message}</span>`;
     container.appendChild(toast);
-    setTimeout(() => {
-        toast.style.opacity = '0';
-        toast.style.transform = 'translateX(100%)';
-        toast.style.transition = 'all 0.5s';
-        setTimeout(() => { if (container.contains(toast)) container.removeChild(toast); }, 500);
-    }, duration);
-}
-
-function formatMoney(amount) {
-    if (amount === undefined || amount === null) return '$0';
-    return '$' + Number(amount).toLocaleString('es-ES');
-}
-
-function generateId() {
-    return Date.now().toString(36) + Math.random().toString(36).substring(2);
-}
-
-function escapeHtml(text) {
-    if (!text) return '';
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
+    setTimeout(() => { try { container.removeChild(toast); } catch(e){} }, duration);
 }
 
 function $(id) { return document.getElementById(id); }
 
-// ==================== FIREBASE INIT ====================
-let database = null;
-let firebaseInitialized = false;
+function generateId() {
+    return Date.now().toString(36) + Math.random().toString(36).slice(2);
+}
 
-function initFirebase() {
-    try {
-        if (typeof firebase !== 'undefined') {
-            if (!firebase.apps.length) {
-                firebase.initializeApp(firebaseConfig);
-            }
-            database = firebase.database();
-            firebaseInitialized = true;
-            database.ref('.info/connected').on('value', (snap) => {
-                if (snap.val() === true) {
-                    updateConnectionStatus('online');
-                } else {
-                    updateConnectionStatus('offline');
-                    setTimeout(() => { if (database) database.goOnline(); }, 5000);
-                }
-            });
-        } else {
-            updateConnectionStatus('offline');
-            showToast('❌ Error de conexión a Firebase', 'error');
-        }
-    } catch (error) {
-        updateConnectionStatus('offline');
-        showToast('❌ Error al conectar con el servidor', 'error');
-    }
+function formatMoney(n) {
+    if (typeof n !== 'number') return '$0';
+    return '$' + n.toLocaleString('es-ES');
+}
+
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.appendChild(document.createTextNode(text));
+    return div.innerHTML;
 }
 
 // ==================== CONFIG ====================
 const CONFIG = {
-    ADMIN_CODE: 'fmz141236601077',
-    MAX_PLAYERS: 100,
+    ADMIN_CODE: 'admin2024',
     MAX_CARDS: 6,
     CARD_PRICE: 100,
-    INITIAL_COINS: 0,
+    INITIAL_COINS: 3000,
     MAX_LINE_WINNERS: 3,
     INCREMENTAL_AMOUNT: 100,
     PROGRESSIVE_AMOUNT: 500,
-    DEFAULT_PRIZE_CAP: 10000,
-    PLAYER_TIMEOUT_MS: 120000
+    PLAYER_TIMEOUT_MS: 90000
 };
 
 // ==================== APP STATE ====================
@@ -1535,469 +1660,893 @@ const App = {
     players: new Map(),
     myCards: [],
     calledNumbers: [],
+    hasLine: false,
+    hasBingo: false,
+    chat: [],
+    processedMessages: new Set(),
+    coinRequests: [],
+    persistentWinners: [],
+    lineClaimWindowOpenAt: 0,
+    lastNumberCall: 0,
+    prizeMode: 'fixed',
+    adminMuted: false,
+    manualCallMode: false,
+    layoutModeActive: false,
     gameState: {
         active: false,
         paused: false,
         currentNumber: null,
-        speed: 3000,
-        prize: { type: 'fixed', amount: 1000, baseAmount: 1000, cap: 10000, customPrize: '', textPrize: '' },
         lineWinners: [],
         bingoWinner: null,
         claimedLines: 0,
         bingoClaimed: false,
+        speed: 3000,
+        prize: { amount: 0, baseAmount: 0, cap: 10000, textPrize: '', customPrize: '' },
         linePrizesEnabled: true,
         manualPrizes: { line: 200, bingo: 800 }
     },
-    chat: [],
     settings: { autoMark: false, autoClaim: false, voice: true, cardStyle: 'classic' },
-    stats: { cardsSold: 0, numbersCalled: 0 },
-    timers: { game: null, countdown: null, clock: null, heartbeat: null },
-    roomId: 'main-room',
-    speechQueue: [],
-    isSpeaking: false,
-    hasLine: false,
-    hasBingo: false,
-    processedMessages: new Set(),
-    coinRequests: [],
-    persistentWinners: [],
-    prizeMode: 'fixed',
-    lastNotificationCheck: 0,
-    firebaseListeners: {},
-    lastNumberCall: 0,
-    initialLoadDone: false,
-    lineClaimWindowOpenAt: 0
+    stats: { numbersCalled: 0, cardsSold: 0 },
+    timers: { game: null, clock: null, heartbeat: null },
+    firebaseListeners: {}
 };
 
+let database = null;
 let synth = window.speechSynthesis;
+let voicesList = [];
+
+// ==================== RESPONSIBLE GAMING (4 seg) ====================
+function showRGWarning() {
+    const popup = $('responsibleGamingPopup');
+    if (popup) {
+        popup.classList.add('active');
+        setTimeout(() => closeRGWarning(), 4000);
+    }
+}
+function closeRGWarning() {
+    const popup = $('responsibleGamingPopup');
+    if (popup) popup.classList.remove('active');
+}
 
 // ==================== CLOCK ====================
 function startClock() {
-    function updateClock() {
+    App.timers.clock = setInterval(() => {
         const now = new Date();
-        const pad = n => String(n).padStart(2,'0');
-        const dateEl = $('currentDate');
-        const timeEl = $('currentTime');
-        if (dateEl) dateEl.textContent = `${pad(now.getDate())}/${pad(now.getMonth()+1)}/${now.getFullYear()}`;
-        if (timeEl) timeEl.textContent = `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
+        const date = now.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
+        const time = now.toLocaleTimeString('es-ES');
+        if ($('currentDate')) $('currentDate').textContent = date;
+        if ($('currentTime')) $('currentTime').textContent = time;
+    }, 1000);
+}
+
+// ==================== VOICE ENGINE (mejorado, sin trabas) ====================
+function loadVoices() {
+    voicesList = synth ? synth.getVoices() : [];
+}
+
+function getBestSpanishVoice() {
+    if (!voicesList.length) loadVoices();
+    const prefs = ['es-AR','es-MX','es-ES','es'];
+    for (const lang of prefs) {
+        const v = voicesList.find(v => v.lang.startsWith(lang));
+        if (v) return v;
     }
-    updateClock();
-    if (App.timers.clock) clearInterval(App.timers.clock);
-    App.timers.clock = setInterval(updateClock, 1000);
+    return voicesList.find(v => v.lang.startsWith('es')) || voicesList[0] || null;
 }
 
-// ==================== VOICE ====================
-function speak(text, priority = false) {
-    if (!App.settings.voice || !synth) return;
+function speak(text, force = false) {
+    if (!synth) return;
+    if (!App.settings.voice && !force) return;
+    if (App.isAdmin && App.adminMuted && !force) return;
     try {
-        if (priority) { synth.cancel(); App.speechQueue = []; App.isSpeaking = false; }
-        App.speechQueue.push(text);
-        processSpeechQueue();
+        synth.cancel();
+        const utter = new SpeechSynthesisUtterance(text);
+        const voice = getBestSpanishVoice();
+        if (voice) utter.voice = voice;
+        utter.lang = 'es-AR';
+        utter.rate = 0.9;
+        utter.pitch = 1.0;
+        utter.volume = 1.0;
+        utter.onerror = () => {};
+        synth.speak(utter);
     } catch(e) {}
 }
 
-function processSpeechQueue() {
-    if (App.isSpeaking || App.speechQueue.length === 0) return;
-    App.isSpeaking = true;
-    const text = App.speechQueue.shift();
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = 'es-AR';
-    utterance.rate = 0.9;
-    try {
-        const voices = synth.getVoices();
-        const v = voices.find(v => v.lang.startsWith('es') && !v.name.includes('Google'));
-        if (v) utterance.voice = v;
-    } catch(e) {}
-    const watchdog = setTimeout(() => { App.isSpeaking = false; processSpeechQueue(); }, 5000);
-    utterance.onend = () => { clearTimeout(watchdog); App.isSpeaking = false; setTimeout(processSpeechQueue, 100); };
-    utterance.onerror = () => { clearTimeout(watchdog); App.isSpeaking = false; setTimeout(processSpeechQueue, 100); };
-    synth.speak(utterance);
+// ==================== ADMIN MUTE ====================
+function toggleAdminMute() {
+    App.adminMuted = !App.adminMuted;
+    const btn = $('adminMuteBtn');
+    if (btn) {
+        btn.classList.toggle('muted', App.adminMuted);
+        btn.textContent = App.adminMuted ? '🔇 Voz OFF' : '🔊 Voz ON';
+    }
+    if (App.adminMuted && synth) synth.cancel();
+    showToast(App.adminMuted ? '🔇 Voz del Admin desactivada' : '🔊 Voz del Admin activada', 'info');
 }
 
-// ==================== LOGIN ====================
+// ==================== LAYOUT MODE ====================
+function toggleLayoutMode() {
+    App.layoutModeActive = !App.layoutModeActive;
+    const bar = $('layoutModeBar');
+    const gameScreen = $('gameScreen');
+    if (bar) bar.classList.toggle('active', App.layoutModeActive);
+    if (gameScreen) gameScreen.classList.toggle('layout-mode-active', App.layoutModeActive);
+    if (App.layoutModeActive) {
+        enableDragDrop();
+        showToast('✏️ Modo Layout activado — arrastra los bloques', 'info');
+    } else {
+        disableDragDrop();
+        showToast('Modo Layout desactivado', 'info');
+    }
+}
+
+let dragSrc = null;
+function enableDragDrop() {
+    document.querySelectorAll('[data-drag="true"]').forEach(el => {
+        el.setAttribute('draggable', 'true');
+        el.classList.add('draggable-elem');
+        el.addEventListener('dragstart', onDragStart);
+        el.addEventListener('dragover', onDragOver);
+        el.addEventListener('drop', onDrop);
+        el.addEventListener('dragend', onDragEnd);
+    });
+}
+function disableDragDrop() {
+    document.querySelectorAll('[data-drag="true"]').forEach(el => {
+        el.setAttribute('draggable', 'false');
+        el.classList.remove('dragging');
+        el.removeEventListener('dragstart', onDragStart);
+        el.removeEventListener('dragover', onDragOver);
+        el.removeEventListener('drop', onDrop);
+        el.removeEventListener('dragend', onDragEnd);
+    });
+}
+function onDragStart(e) { dragSrc = this; this.classList.add('dragging'); }
+function onDragOver(e) { e.preventDefault(); }
+function onDrop(e) {
+    e.preventDefault();
+    if (!dragSrc || dragSrc === this) return;
+    const parent = this.parentNode;
+    const allItems = Array.from(parent.children).filter(c => c.hasAttribute && c.hasAttribute('data-drag'));
+    const srcIdx = allItems.indexOf(dragSrc);
+    const tgtIdx = allItems.indexOf(this);
+    if (srcIdx < 0 || tgtIdx < 0) return;
+    if (srcIdx < tgtIdx) parent.insertBefore(dragSrc, this.nextSibling);
+    else parent.insertBefore(dragSrc, this);
+}
+function onDragEnd(e) { this.classList.remove('dragging'); dragSrc = null; }
+
+// ==================== MANUAL CALL MODE ====================
+function toggleManualCall() {
+    App.manualCallMode = !App.manualCallMode;
+    $('manualCallToggle')?.classList.toggle('active', App.manualCallMode);
+    const section = $('manualCallSection');
+    if (section) section.classList.toggle('active', App.manualCallMode);
+    showToast(App.manualCallMode ? '🎤 Canto Manual activado' : 'Canto Manual desactivado', 'info');
+    if (App.manualCallMode && App.timers.game) {
+        clearInterval(App.timers.game);
+        App.timers.game = null;
+    }
+}
+
+async function callManualNumber() {
+    const input = $('manualNumberInput');
+    const num = parseInt(input?.value);
+    if (!num || num < 1 || num > 90) { showToast('Ingresa un número entre 1 y 90', 'error'); return; }
+    if (App.calledNumbers.includes(num)) { showToast(`El ${num} ya fue cantado`, 'error'); return; }
+    await callNumber(num);
+    if (input) input.value = '';
+}
+
+// ==================== NEAR WIN NOTIFICATION ====================
+let nearWinShown = false;
+function checkNearWin() {
+    if (nearWinShown || !App.myCards.length) return;
+    for (const card of App.myCards) {
+        for (let i = 0; i < 5; i++) {
+            const rowCount = card.marked[i].filter((m, j) => m || card.numbers[i][j] === 'FREE').length;
+            if (rowCount === 4) {
+                showNearWin('¡Casi tienes línea! Te falta 1 número en la fila.');
+                return;
+            }
+        }
+        for (let col = 0; col < 5; col++) {
+            const colCount = card.marked.filter((r, ri) => r[col] || card.numbers[ri][col] === 'FREE').length;
+            if (colCount === 4) {
+                showNearWin('¡Casi tienes línea! Te falta 1 número en la columna.');
+                return;
+            }
+        }
+    }
+}
+function showNearWin(msg) {
+    const notif = $('nearWinNotification');
+    const txt = $('nearWinText');
+    if (notif && !nearWinShown) {
+        nearWinShown = true;
+        if (txt) txt.textContent = msg;
+        notif.classList.add('active');
+        speak('¡Estás a un número! ¡Casi!');
+        setTimeout(() => closeNearWin(), 8000);
+    }
+}
+function closeNearWin() {
+    const notif = $('nearWinNotification');
+    if (notif) notif.classList.remove('active');
+}
+
+// ==================== FIREBASE INIT ====================
+function initFirebase() {
+    try {
+        firebase.initializeApp(firebaseConfig);
+        database = firebase.database();
+        const connRef = database.ref('.info/connected');
+        connRef.on('value', (snap) => {
+            const online = snap.val();
+            const dot = $('connDot');
+            const text = $('connText');
+            if (dot) dot.className = 'conn-dot' + (online ? '' : ' offline');
+            if (text) text.textContent = online ? 'Conectado' : 'Sin conexión';
+        });
+    } catch(e) {
+        showToast('Error Firebase: ' + e.message, 'error');
+    }
+}
+
+// ==================== AUTH ====================
 function setLoginMode(mode) {
-    document.querySelectorAll('.toggle-option').forEach(el => el.classList.remove('active'));
-    $(`mode-${mode}`)?.classList.add('active');
-    const adminSection = $('adminCodeSection');
-    if (adminSection) adminSection.classList.toggle('hidden', mode !== 'admin');
+    const isAdmin = mode === 'admin';
+    $('mode-normal')?.classList.toggle('active', !isAdmin);
+    $('mode-admin')?.classList.toggle('active', isAdmin);
+    $('adminCodeSection')?.classList.toggle('hidden', !isAdmin);
+    const loginText = $('loginText');
+    if (loginText) loginText.textContent = isAdmin ? '👑 Entrar como Admin' : '🚀 Entrar al BINGO PRO';
 }
 
 async function login() {
-    const name = $('playerName')?.value?.trim();
-    const adminCode = $('vipCode')?.value?.trim() || '';
+    const nameInput = $('playerName');
+    const name = nameInput?.value?.trim();
     if (!name || name.length < 2) { showToast('Ingresa tu nombre (mínimo 2 caracteres)', 'error'); return; }
-    if (!firebaseInitialized) { showToast('Conectando con el servidor...', 'info'); return; }
-    const loginBtn = $('loginBtn');
-    if (loginBtn) loginBtn.disabled = true;
-    const isAdmin = (adminCode === CONFIG.ADMIN_CODE);
-    try {
-        if (isAdmin) { await loginAsAdmin(name); } else { await loginAsNormal(name); }
-    } catch (error) {
-        showToast('Error al ingresar. Intenta de nuevo.', 'error');
-        if (loginBtn) loginBtn.disabled = false;
-    }
-}
 
-async function loginAsAdmin(name) {
-    App.user = { id: 'admin-' + generateId(), name, coins: Infinity, isAdmin: true, infiniteCoins: true };
-    App.isAdmin = true;
-    $('loginScreen')?.classList.remove('active');
-    $('adminScreen')?.classList.add('active');
-    initAdminPanel();
-    setupFirebaseListeners();
-    updateConnectionStatus('online');
-    if (database) await database.ref(`admins/${App.user.id}`).set({ ...App.user, coins: 0, online: true, lastSeen: Date.now() });
-    speak('Modo administrador activado', true);
-    showToast('✅ Bienvenido Administrador', 'success');
-}
+    const adminSection = $('adminCodeSection');
+    const isAdminMode = adminSection && !adminSection.classList.contains('hidden');
 
-async function loginAsNormal(name) {
-    if (database) {
-        const snap = await database.ref('players').once('value');
-        const playersData = snap.val() || {};
-        const now = Date.now();
-        const onlineCount = Object.values(playersData).filter(p => p.online && p.lastActive && (now - p.lastActive < CONFIG.PLAYER_TIMEOUT_MS)).length;
-        if (onlineCount >= CONFIG.MAX_PLAYERS) {
-            showToast('🚫 Sala llena (máximo 100 jugadores). Intenta más tarde.', 'error', 6000);
-            speak('La sala está llena. Intenta más tarde.');
-            const loginBtn = $('loginBtn');
-            if (loginBtn) loginBtn.disabled = false;
-            return;
-        }
+    if (isAdminMode) {
+        const code = $('vipCode')?.value;
+        if (code !== CONFIG.ADMIN_CODE) { showToast('Código incorrecto', 'error'); return; }
+        App.isAdmin = true;
     }
-    App.user = { id: generateId(), name, coins: CONFIG.INITIAL_COINS, isAdmin: false };
-    App.isAdmin = false;
+
+    const btn = $('loginBtn');
+    if (btn) btn.disabled = true;
+
+    App.user = { id: generateId(), name, coins: CONFIG.INITIAL_COINS, online: true, lastActive: Date.now() };
+
     if (database) {
-        await database.ref(`players/${App.user.id}`).set({
-            ...App.user, online: true, lastSeen: Date.now(),
-            joinTime: Date.now(), lastActive: Date.now()
-        });
+        const path = App.isAdmin ? `admins/${App.user.id}` : `players/${App.user.id}`;
+        await database.ref(path).set(App.user);
     }
+
     $('loginScreen')?.classList.remove('active');
-    $('gameScreen')?.classList.add('active');
-    initPlayerPanel();
+    if (App.isAdmin) {
+        $('adminScreen')?.classList.add('active');
+        initAdminPanel();
+    } else {
+        $('gameScreen')?.classList.add('active');
+        initPlayerPanel();
+        // Mostrar aviso Juego Responsable por 4 segundos
+        setTimeout(showRGWarning, 800);
+        // Saludo de bienvenida
+        showToast(`¡Bienvenido al Bingo, ${name}!`, 'success', 4000);
+        setTimeout(() => speak(`¡Bienvenido al Bingo, ${name}!`), 1000);
+    }
+
     setupFirebaseListeners();
     startHeartbeat();
-    // onSnapshot de monedas - actualización instantánea
-    setupCoinsListener();
-    updateConnectionStatus('online');
-    if (database) {
-        await database.ref('chat').push({ text: `🎉 ¡Bienvenido ${name}!`, author: 'Sistema', isSystem: true, timestamp: Date.now() });
-    }
-    const warning = $('responsibleGamingWarning');
-    if (warning) {
-        warning.style.display = 'block';
-        setTimeout(function() {
-            warning.style.transition = 'opacity 1s ease';
-            warning.style.opacity = '0';
-            setTimeout(function() { warning.style.display = 'none'; warning.style.opacity = ''; warning.style.transition = ''; }, 1000);
-        }, 3000);
-    }
-    updateRecipientSelect();
-    showToast(`🎉 Bienvenido ${name}!`, 'success');
+    if (btn) btn.disabled = false;
 }
 
-// ==================== FIX MONEDAS: onSnapshot en tiempo real ====================
-function setupCoinsListener() {
-    if (!App.user || !database || App.isAdmin) return;
-    const coinsRef = database.ref(`players/${App.user.id}/coins`);
-    coinsRef.on('value', (snap) => {
-        const newCoins = snap.val();
-        if (newCoins !== null && newCoins !== undefined && newCoins !== App.user.coins) {
-            const prev = App.user.coins;
-            App.user.coins = newCoins;
-            updateCoinsDisplay();
-            // Animación de flash cuando cambia el saldo
-            const el = $('playerCoins');
-            if (el) {
-                el.classList.remove('coins-flash');
-                void el.offsetWidth;
-                el.classList.add('coins-flash');
-            }
-            if (newCoins > prev) showToast(`💰 Recibiste ${(newCoins-prev).toLocaleString('es-ES')} fichas!`, 'success');
-        }
-    });
-    App.firebaseListeners.coinsSnapshot = { off: () => coinsRef.off('value') };
-}
-
-async function logout() {
+function logout() {
     if (App.user && database) {
         const path = App.isAdmin ? `admins/${App.user.id}` : `players/${App.user.id}`;
-        try { await database.ref(path).update({ online: false, lastSeen: Date.now() }); } catch(e) {}
+        database.ref(path).update({ online: false, lastSeen: Date.now() });
     }
-    if (App.timers.heartbeat) clearInterval(App.timers.heartbeat);
-    Object.values(App.firebaseListeners).forEach(listener => {
-        if (listener && typeof listener.off === 'function') listener.off();
-    });
+    Object.values(App.firebaseListeners).forEach(l => { try { l.off(); } catch(e){} });
     App.firebaseListeners = {};
-    location.reload();
+    if (App.timers.game) clearInterval(App.timers.game);
+    if (App.timers.heartbeat) clearInterval(App.timers.heartbeat);
+    App.user = null;
+    App.isAdmin = false;
+    App.myCards = [];
+    App.calledNumbers = [];
+    App.players.clear();
+    App.hasLine = false;
+    App.hasBingo = false;
+    App.gameState = { active:false, paused:false, currentNumber:null, lineWinners:[], bingoWinner:null, claimedLines:0, bingoClaimed:false, speed:3000, prize:{amount:0, baseAmount:0, cap:10000, textPrize:'', customPrize:''}, linePrizesEnabled:true, manualPrizes:{line:200, bingo:800} };
+    $('adminScreen')?.classList.remove('active');
+    $('gameScreen')?.classList.remove('active');
+    $('loginScreen')?.classList.add('active');
+    const li = $('loginText');
+    if (li) li.textContent = '🚀 Entrar al BINGO PRO';
+    const btn = $('loginBtn');
+    if (btn) btn.disabled = false;
 }
 
-// ==================== HEARTBEAT ====================
 function startHeartbeat() {
-    if (App.timers.heartbeat) clearInterval(App.timers.heartbeat);
     App.timers.heartbeat = setInterval(() => {
-        if (App.user && database && !App.isAdmin) {
-            database.ref(`players/${App.user.id}/lastActive`).set(Date.now()).catch(() => {});
+        if (App.user && database) {
+            const path = App.isAdmin ? `admins/${App.user.id}` : `players/${App.user.id}`;
+            database.ref(path).update({ online: true, lastActive: Date.now() }).catch(()=>{});
         }
     }, 30000);
 }
 
-// ==================== CONNECTION STATUS ====================
-function updateConnectionStatus(status) {
-    const dot = $('connDot');
-    const text = $('connText');
-    if (!dot || !text) return;
-    dot.className = 'conn-dot';
-    if (status === 'online') { text.textContent = 'En Vivo'; }
-    else if (status === 'connecting') { dot.classList.add('connecting'); text.textContent = 'Conectando...'; }
-    else { dot.classList.add('offline'); text.textContent = 'Desconectado'; }
+// ==================== ADMIN PANEL ====================
+function initAdminPanel() {
+    generateManualNumbers();
+    updateAdminDisplay();
+    updatePrizeDisplay();
+    if ($('btnStart')) $('btnStart').disabled = false;
+    if ($('btnPause')) $('btnPause').disabled = true;
+    if ($('btnResume')) $('btnResume').disabled = true;
 }
 
-// ==================== RECIPIENT SELECT ====================
+function toggleAdminCard(cardId) {
+    const card = $(cardId);
+    if (card) card.classList.toggle('minimized');
+    const btn = card?.querySelector('.minimize-btn');
+    if (btn) btn.textContent = card.classList.contains('minimized') ? '+' : '−';
+}
+
+function generateManualNumbers() {
+    const container = $('manualNumbers');
+    if (!container) return;
+    container.innerHTML = '';
+    for (let i = 1; i <= 90; i++) {
+        const btn = document.createElement('button');
+        btn.className = 'number-btn';
+        btn.id = `num-${i}`;
+        btn.textContent = i;
+        btn.onclick = () => callNumber(i);
+        container.appendChild(btn);
+    }
+}
+
+function updateAdminDisplay() {
+    const el = $('adminCurrentNumber');
+    if (el) el.textContent = App.gameState.currentNumber || '--';
+    if ($('statsNumbers')) $('statsNumbers').textContent = App.stats.numbersCalled;
+    if ($('statsCards')) $('statsCards').textContent = App.stats.cardsSold;
+    updateAdminPlayerList();
+    updateWinnerDisplays();
+    updatePersistentWinnersDisplay();
+    updatePublicWinnersPanel();
+}
+
+function updateAdminPlayerList() {
+    const container = $('adminPlayersList');
+    if (!container) return;
+    const players = Array.from(App.players.values());
+    if (!players.length) { container.innerHTML = '<div class="text-center" style="padding:30px;color:var(--text-dim)">No hay jugadores</div>'; return; }
+    container.innerHTML = players.map(p => `
+        <div class="player-item">
+            <div class="player-name-admin">
+                <span style="color:${p.online?'var(--success)':'var(--text-dim)'};font-size:0.7rem">●</span>
+                ${escapeHtml(p.name)}
+                <span style="font-size:0.75rem;color:var(--text-dim)">${p.cards||0} cartones</span>
+                <span style="font-size:0.75rem;color:var(--gold)">🪙${(p.coins||0).toLocaleString('es-ES')}</span>
+            </div>
+            <div style="display:flex;gap:6px;flex-wrap:wrap">
+                <button class="winner-btn" onclick="setQuickWinner('${escapeHtml(p.name)}','line')">📏 Línea</button>
+                <button class="winner-btn" onclick="setQuickWinner('${escapeHtml(p.name)}','bingo')">🎱 Bingo</button>
+            </div>
+        </div>`).join('');
+
+    const targetSel = $('targetPlayer');
+    const lineSel = $('lineWinnerSelect');
+    const bingoSel = $('bingoWinnerSelect');
+    const opts = ['<option value="">Seleccionar jugador...</option>', ...players.map(p => `<option value="${escapeHtml(p.name)}">${escapeHtml(p.name)}</option>`)].join('');
+    if (targetSel) targetSel.innerHTML = opts;
+    const opts2 = ['<option value="">Seleccionar jugador para Línea...</option>', ...players.map(p => `<option value="${escapeHtml(p.name)}">${escapeHtml(p.name)}</option>`)].join('');
+    if (lineSel) lineSel.innerHTML = opts2;
+    const opts3 = ['<option value="">Seleccionar jugador para Bingo...</option>', ...players.map(p => `<option value="${escapeHtml(p.name)}">${escapeHtml(p.name)}</option>`)].join('');
+    if (bingoSel) bingoSel.innerHTML = opts3;
+}
+
+function setQuickWinner(playerName, type) {
+    const sel = type === 'line' ? $('lineWinnerSelect') : $('bingoWinnerSelect');
+    if (sel) sel.value = playerName;
+}
+
+function updateWinnerDisplays() {
+    const lineDisp = $('lineWinnersDisplay');
+    const bingoDisp = $('bingoWinnerDisplay');
+    if (lineDisp) {
+        const winners = App.gameState.lineWinners || [];
+        lineDisp.innerHTML = winners.length ? winners.map(w =>
+            `<div style="background:rgba(0,200,83,0.15);padding:8px 12px;border-radius:8px;margin-bottom:6px;border:1px solid rgba(0,200,83,0.3)">
+                <span style="color:var(--success);font-weight:800">📏 ${escapeHtml(w.player)}</span>
+                <span style="color:var(--text-dim);font-size:0.82rem"> · Cartón: ${w.cardId}</span>
+                <span style="color:var(--gold)"> · ${w.prize}</span>
+            </div>`).join('') : '<div style="color:var(--text-dim);font-size:0.85rem">Sin ganadores de línea</div>';
+    }
+    if (bingoDisp) {
+        const bw = App.gameState.bingoWinner;
+        bingoDisp.innerHTML = bw ?
+            `<div style="background:rgba(255,215,0,0.15);padding:8px 12px;border-radius:8px;border:1px solid var(--border-gold)">
+                <span style="color:var(--gold);font-weight:800">🎱 ${escapeHtml(bw.player)}</span>
+                <span style="color:var(--text-dim);font-size:0.82rem"> · Cartón: ${bw.cardId}</span>
+                <span style="color:var(--gold)"> · ${bw.prize}</span>
+            </div>` : '<div style="color:var(--text-dim);font-size:0.85rem">Sin ganador de bingo</div>';
+    }
+}
+
+function updatePersistentWinnersDisplay() {
+    const container = $('persistentWinnersList');
+    if (!container) return;
+    if (!App.persistentWinners.length) {
+        container.innerHTML = '<div class="text-center" style="padding:20px;color:var(--text-dim)">No hay ganadores registrados</div>';
+        return;
+    }
+    container.innerHTML = App.persistentWinners.slice(-20).reverse().map(w => {
+        const time = w.timestamp ? new Date(w.timestamp).toLocaleTimeString('es-ES', {hour:'2-digit',minute:'2-digit'}) : '';
+        const icon = w.type === 'bingo' ? '🎱' : '📏';
+        return `<div class="coin-request-item">
+            <div class="info">
+                <div class="name">${icon} ${escapeHtml(w.player)} — Cartón: <b>${w.cardId}</b></div>
+                <div class="time">${time} · ${w.prize}</div>
+            </div>
+        </div>`;
+    }).join('');
+}
+
+function updateAdminWinnerCardDisplay(winner) {
+    const el = $('adminWinnerCardDisplay');
+    if (!el) return;
+    if (!winner) {
+        el.innerHTML = '<div style="color:var(--text-dim);text-align:center">No hay ganador registrado</div>';
+        return;
+    }
+    el.innerHTML = `
+        <div style="color:var(--gold);font-weight:900;font-size:1.1rem;margin-bottom:8px">
+            ${winner.type==='bingo'?'🎱 BINGO':'📏 LÍNEA'}
+        </div>
+        <div style="font-size:1.2rem;font-weight:800">${escapeHtml(winner.player)}</div>
+        <div style="color:var(--electric);margin-top:6px">Cartón: <b>${winner.cardId}</b></div>
+        <div style="color:var(--gold);margin-top:4px">${winner.prize}</div>`;
+}
+
+function updatePublicWinnersPanel() {
+    const panel = $('publicWinnersPanel');
+    const lineDisp = $('publicLineWinnersDisplay');
+    const bingoDisp = $('publicBingoWinnerDisplay');
+    const lineBadge = $('publicLineBadge');
+    const hasWinners = (App.gameState.lineWinners?.length > 0) || !!App.gameState.bingoWinner;
+    if (panel) panel.style.display = hasWinners ? 'block' : 'none';
+    if (lineBadge) lineBadge.textContent = `${App.gameState.claimedLines||0}/3`;
+    if (lineDisp) {
+        const winners = App.gameState.lineWinners || [];
+        lineDisp.innerHTML = winners.length ? winners.map(w =>
+            `<div style="padding:6px 0;font-size:0.9rem">🏅 <b>${escapeHtml(w.player)}</b> · Cartón: ${w.cardId}</div>`).join('') :
+            '<div style="color:var(--text-dim);font-size:0.85rem;padding:4px 0">— Ningún ganador aún —</div>';
+    }
+    if (bingoDisp) {
+        const bw = App.gameState.bingoWinner;
+        bingoDisp.innerHTML = bw ?
+            `<div style="padding:6px 0;font-size:0.9rem;color:var(--gold)">👑 <b>${escapeHtml(bw.player)}</b> · Cartón: ${bw.cardId}</div>` :
+            '<div style="color:var(--text-dim);font-size:0.85rem;padding:4px 0">— Ningún ganador aún —</div>';
+    }
+}
+
+async function clearWinnerCard() {
+    if (database) await database.ref('gameState/bingoWinner').remove();
+    App.gameState.bingoWinner = null;
+    updateAdminWinnerCardDisplay();
+    showToast('Cartón ganador borrado', 'success');
+}
+
+async function clearAllPersistentWinners() {
+    if (!confirm('¿Borrar TODO el historial de ganadores?')) return;
+    if (database) await database.ref('persistentWinners').remove();
+    App.persistentWinners = [];
+    updatePersistentWinnersDisplay();
+    showToast('🗑 Historial de ganadores borrado', 'success');
+}
+
+function sendGlobalAnnouncement() {
+    const input = $('globalAnnouncementText');
+    const text = input?.value?.trim();
+    if (!text) return;
+    if (database) database.ref('announcements').push({ text, type:'announcement', timestamp: Date.now() });
+    if (input) input.value = '';
+    showToast('Anuncio enviado', 'success');
+}
+
+function showGlobalAnnouncement(text) {
+    const el = $('globalAnnouncement');
+    const p = $('announcementText');
+    if (el && p) {
+        p.textContent = text;
+        el.classList.add('active');
+        setTimeout(() => closeGlobalAnnouncement(), 8000);
+    }
+}
+
+function closeGlobalAnnouncement() {
+    const el = $('globalAnnouncement');
+    if (el) el.classList.remove('active');
+}
+
+async function clearAllChats() {
+    if (database) await database.ref('chat').remove();
+    App.chat = [];
+    App.processedMessages.clear();
+    renderChat();
+    showToast('Chat borrado', 'success');
+}
+
 function updateRecipientSelect() {
-    const select = $('chatRecipient');
-    if (!select || App.isAdmin) return;
-    let options = '<option value="all">👥 Todos</option><option value="admin">👑 Administrador</option>';
-    App.players.forEach((player, id) => {
-        if (id !== App.user?.id) {
-            options += `<option value="${player.name}">👤 ${escapeHtml(player.name)}</option>`;
+    const sel = $('chatRecipient');
+    if (!sel) return;
+}
+
+// ==================== PRIZE MODES ====================
+function selectPrizeMode(mode, el) {
+    App.prizeMode = mode;
+    document.querySelectorAll('.prize-mode-option').forEach(o => o.classList.remove('active'));
+    if (el) el.classList.add('active');
+    const radio = el?.querySelector('input[type="radio"]');
+    if (radio) radio.checked = true;
+    if (database) database.ref('prizeConfig/mode').set(mode).catch(()=>{});
+}
+
+async function setLinePrizeManual() {
+    const val = parseInt($('linePrizeManual')?.value) || 0;
+    if (val < 0) { showToast('Ingresa un monto válido', 'error'); return; }
+    App.gameState.manualPrizes.line = val;
+    if (database) await database.ref('gameState/manualPrizes/line').set(val);
+    showToast(`Premio línea: ${formatMoney(val)}`, 'success');
+    updatePrizeDisplay();
+}
+
+async function setBingoPrizeManual() {
+    const val = parseInt($('bingoPrizeManual')?.value) || 0;
+    if (val < 0) { showToast('Ingresa un monto válido', 'error'); return; }
+    App.gameState.manualPrizes.bingo = val;
+    if (database) await database.ref('gameState/manualPrizes/bingo').set(val);
+    showToast(`Premio bingo: ${formatMoney(val)}`, 'success');
+    updatePrizeDisplay();
+}
+
+async function setManualPrize() {
+    const input = $('manualPrizeAmount');
+    const amount = input ? parseInt(input.value) : 0;
+    if (!amount || amount < 100) { showToast('Ingresa un monto válido (mínimo $100)', 'error'); return; }
+    const linePrize = Math.floor(amount * 0.2);
+    const bingoPrize = amount - linePrize;
+    App.gameState.prize.baseAmount = amount;
+    App.gameState.prize.amount = amount;
+    App.gameState.manualPrizes.line = linePrize;
+    App.gameState.manualPrizes.bingo = bingoPrize;
+    if (database) {
+        await database.ref('gameState/prize').update({ amount, baseAmount: amount });
+        await database.ref('gameState/manualPrizes').set({ line: linePrize, bingo: bingoPrize });
+    }
+    if (input) input.value = '';
+    showToast(`Pozo: ${formatMoney(amount)}`, 'success');
+    updatePrizeDisplay();
+}
+
+async function toggleLinePrizes() {
+    App.gameState.linePrizesEnabled = !App.gameState.linePrizesEnabled;
+    $('linePrizeToggle')?.classList.toggle('active', App.gameState.linePrizesEnabled);
+    if (database) await database.ref('gameState/linePrizesEnabled').set(App.gameState.linePrizesEnabled);
+    updatePrizeDisplay();
+    showToast(App.gameState.linePrizesEnabled ? 'Premios de línea activados' : 'Premios de línea desactivados', 'info');
+}
+
+async function setTextPrize() {
+    const input = $('textPrizeAmount');
+    const text = input?.value?.trim();
+    if (!text) { showToast('Ingresa un texto válido', 'error'); return; }
+    App.gameState.prize.textPrize = text;
+    if (database) await database.ref('prizeConfig/textPrize').set(text);
+    if (input) input.value = '';
+    showToast(`Premio texto: ${text}`, 'success');
+    updatePrizeDisplay();
+}
+
+async function setPrizeCap() {
+    const input = $('prizeCapAmount');
+    const cap = input ? parseInt(input.value) : 0;
+    if (!cap || cap < 1000) { showToast('Ingresa un tope válido (mínimo $1000)', 'error'); return; }
+    App.gameState.prize.cap = cap;
+    if (database) await database.ref('prizeConfig/cap').set(cap);
+    showToast(`Tope: ${formatMoney(cap)}`, 'success');
+}
+
+async function setCustomPrize() {
+    const input = $('customPrizeText');
+    const text = input?.value?.trim();
+    if (!text) { showToast('Ingresa un premio', 'error'); return; }
+    App.gameState.prize.customPrize = text;
+    if (database) await database.ref('prizeConfig/customPrize').set(text);
+    if (input) input.value = '';
+    showToast(`Premio personalizado: ${text}`, 'success');
+    updatePrizeDisplay();
+}
+
+function updateProgressivePrize() {
+    if (!App.gameState.active || App.gameState.paused) return;
+    let newAmount = App.gameState.prize.baseAmount;
+    if (App.prizeMode === 'incremental') {
+        newAmount = App.gameState.prize.baseAmount + (App.calledNumbers.length * CONFIG.INCREMENTAL_AMOUNT);
+    } else if (App.prizeMode === 'progressive') {
+        newAmount = App.gameState.prize.baseAmount + (App.calledNumbers.length * CONFIG.PROGRESSIVE_AMOUNT);
+    }
+    if (newAmount > App.gameState.prize.cap) newAmount = App.gameState.prize.cap;
+    if (newAmount !== App.gameState.prize.amount) {
+        App.gameState.prize.amount = newAmount;
+        if (database) database.ref('gameState/prize/amount').set(newAmount);
+        updatePrizeDisplay();
+    }
+}
+
+function livePreviewPrize() {
+    const lineVal = parseInt($('linePrizeManual')?.value) || 0;
+    const bingoVal = parseInt($('bingoPrizeManual')?.value) || 0;
+    const total = lineVal + bingoVal;
+    const perWinner = Math.floor(lineVal / CONFIG.MAX_LINE_WINNERS);
+    if ($('previewTotalPrize')) $('previewTotalPrize').textContent = formatMoney(total);
+    if ($('previewLineAmount')) $('previewLineAmount').textContent = formatMoney(lineVal);
+    if ($('previewLinePerWinner')) $('previewLinePerWinner').textContent = formatMoney(perWinner);
+    if ($('previewBingoAmount')) $('previewBingoAmount').textContent = formatMoney(bingoVal);
+}
+
+function updatePrizeDisplay() {
+    const linePrizeAmount = App.gameState.manualPrizes?.line ?? 200;
+    const bingoPrizeAmount = App.gameState.manualPrizes?.bingo ?? 800;
+    const totalPrize = linePrizeAmount + bingoPrizeAmount;
+    const claimedLines = App.gameState.claimedLines || 0;
+    const linePrizePerWinner = App.gameState.linePrizesEnabled ? Math.floor(linePrizeAmount / CONFIG.MAX_LINE_WINNERS) : 0;
+    const remaining = totalPrize - (claimedLines * linePrizePerWinner) - (App.gameState.bingoClaimed ? bingoPrizeAmount : 0);
+    if ($('prizeAmount')) $('prizeAmount').textContent = formatMoney(totalPrize);
+    if ($('adminPrizeAmount')) $('adminPrizeAmount').textContent = formatMoney(totalPrize);
+    if ($('linePrize')) $('linePrize').textContent = App.gameState.linePrizesEnabled ? formatMoney(linePrizeAmount) : 'DESACTIVADO';
+    if ($('adminLinePrize')) $('adminLinePrize').textContent = App.gameState.linePrizesEnabled ? formatMoney(linePrizeAmount) : 'DESACTIVADO';
+    if ($('bingoPrize')) $('bingoPrize').textContent = formatMoney(bingoPrizeAmount);
+    if ($('adminBingoPrize')) $('adminBingoPrize').textContent = formatMoney(bingoPrizeAmount);
+    if ($('remainingPrize')) $('remainingPrize').textContent = formatMoney(Math.max(0, remaining));
+    if ($('adminLinesClaimed')) $('adminLinesClaimed').textContent = `${claimedLines}/${CONFIG.MAX_LINE_WINNERS}`;
+    if ($('adminBingoClaimed')) $('adminBingoClaimed').textContent = App.gameState.bingoClaimed ? 'Sí' : 'No';
+    if ($('previewTotalPrize')) $('previewTotalPrize').textContent = formatMoney(totalPrize);
+    if ($('previewLineAmount')) $('previewLineAmount').textContent = formatMoney(linePrizeAmount);
+    if ($('previewLinePerWinner')) $('previewLinePerWinner').textContent = formatMoney(linePrizePerWinner);
+    if ($('previewBingoAmount')) $('previewBingoAmount').textContent = formatMoney(bingoPrizeAmount);
+    if ($('linePrizeManual') && document.activeElement !== $('linePrizeManual')) $('linePrizeManual').value = linePrizeAmount;
+    if ($('bingoPrizeManual') && document.activeElement !== $('bingoPrizeManual')) $('bingoPrizeManual').value = bingoPrizeAmount;
+    const hasPrizeText = App.gameState.prize.customPrize || App.gameState.prize.textPrize;
+    const prizeTextStr = hasPrizeText ? `🎁 Premio Especial: ${App.gameState.prize.textPrize || App.gameState.prize.customPrize}` : '';
+    const cpDisplay = $('customPrizeDisplay');
+    const adminCpDisplay = $('adminCustomPrizeDisplay');
+    if (cpDisplay) { cpDisplay.textContent = prizeTextStr; cpDisplay.style.display = hasPrizeText ? 'block' : 'none'; }
+    if (adminCpDisplay) { adminCpDisplay.textContent = prizeTextStr; adminCpDisplay.style.display = hasPrizeText ? 'block' : 'none'; }
+}
+
+// ==================== COIN REQUESTS ====================
+function requestCoins() {
+    if (!App.user || !database) return;
+    database.ref('coinRequests').push({ player: App.user.name, playerId: App.user.id, timestamp: Date.now() });
+    showToast('💰 Solicitud enviada al administrador', 'info');
+    speak('Solicitud de fichas enviada.');
+}
+
+function updateCoinRequestsDisplay() {
+    const container = $('coinRequestsList');
+    if (!container) return;
+    const recent = App.coinRequests?.filter(r => r.timestamp > Date.now() - 300000) || [];
+    if (!recent.length) {
+        container.innerHTML = '<div class="text-center" style="padding:20px;color:var(--text-dim)">No hay solicitudes recientes</div>';
+        return;
+    }
+    container.innerHTML = recent.map(r => {
+        const time = new Date(r.timestamp).toLocaleTimeString('es-ES', {hour:'2-digit',minute:'2-digit'});
+        return `<div class="coin-request-item">
+            <div class="info"><div class="name">💰 ${escapeHtml(r.player)}</div><div class="time">${time}</div></div>
+            <button class="give-coins-btn" onclick="quickGiveCoins('${escapeHtml(r.player)}')">Dar 1000</button>
+        </div>`;
+    }).join('');
+}
+
+function quickGiveCoins(playerName) {
+    const targetSelect = $('targetPlayer');
+    const coinAmount = $('coinAmount');
+    if (targetSelect) targetSelect.value = playerName;
+    if (coinAmount) coinAmount.value = 1000;
+    giveCoins();
+}
+
+async function giveCoins() {
+    const targetSelect = $('targetPlayer');
+    const amountInput = $('coinAmount');
+    const targetName = targetSelect?.value;
+    const amount = amountInput ? (parseInt(amountInput.value) || 0) : 0;
+    if (!targetName) { showToast('Selecciona un jugador', 'error'); return; }
+    if (amount <= 0) { showToast('Ingresa una cantidad válida', 'error'); return; }
+    const player = Array.from(App.players.values()).find(p => p.name === targetName);
+    if (!player) { showToast('Jugador no encontrado', 'error'); return; }
+    const newAmount = (player.coins || 0) + amount;
+    try {
+        if (database) {
+            await database.ref(`players/${player.id}/coins`).set(newAmount);
+            showToast(`💰 ${formatMoney(amount)} enviados a ${targetName}`, 'success');
         }
-    });
-    select.innerHTML = options;
+    } catch(e) {
+        showToast('Error al enviar monedas', 'error');
+    }
 }
 
 // ==================== FIREBASE LISTENERS ====================
 function setupFirebaseListeners() {
     if (!database) return;
-    Object.values(App.firebaseListeners).forEach(l => { if (l && typeof l.off === 'function') l.off(); });
-    App.firebaseListeners = {};
 
-    let playersTimeout = null;
-    const playersRef = database.ref('players');
-    const playersHandler = playersRef.on('value', (snapshot) => {
-        try {
-            const players = snapshot.val() || {};
-            if (playersTimeout) clearTimeout(playersTimeout);
-            playersTimeout = setTimeout(() => {
-                App.players.clear();
-                const now = Date.now();
-                Object.entries(players).forEach(([id, player]) => {
-                    if (player.online && player.lastActive && (now - player.lastActive < CONFIG.PLAYER_TIMEOUT_MS)) {
-                        App.players.set(id, player);
-                    }
-                });
-                updatePlayerCount();
-                if (App.isAdmin) { updateAdminDisplay(); updateCoinRequestsDisplay(); }
-                if (!App.isAdmin && App.user) {
-                    // Monedas manejadas por setupCoinsListener (onSnapshot dedicado)
-                    updateRecipientSelect();
-                }
-                playersTimeout = null;
-            }, 300);
-        } catch(e) {}
-    });
-    App.firebaseListeners.players = { off: () => playersRef.off('value', playersHandler) };
-
+    // Game state
     const gsRef = database.ref('gameState');
     const gsHandler = gsRef.on('value', (snapshot) => {
         try {
-            const state = snapshot.val();
-            if (!state) return;
-            const wasActive = App.gameState.active;
-            App.gameState = { ...App.gameState, ...state };
-            if (state.manualPrizes) App.gameState.manualPrizes = state.manualPrizes;
+            const gs = snapshot.val();
+            if (!gs) return;
+            const wasPaused = App.gameState.paused;
+            App.gameState = { ...App.gameState, ...gs };
+            if (gs.manualPrizes) App.gameState.manualPrizes = gs.manualPrizes;
             updateGameDisplay();
+            updatePrizeDisplay();
+            updateClaimButtons();
             updateGameActiveIndicator();
             updateGamePausedIndicator();
-            App.initialLoadDone = true;
-            if (wasActive && !state.active && !state.paused) { handleGameReset(); }
+            if (App.isAdmin) updateAdminDisplay();
+            if (!wasPaused && gs.paused) {
+                showToast('⏸ Juego pausado', 'info');
+            }
         } catch(e) {}
     });
     App.firebaseListeners.gameState = { off: () => gsRef.off('value', gsHandler) };
 
-    let numsTimeout = null;
-    const numsRef = database.ref('calledNumbers');
-    const numsHandler = numsRef.on('value', (snapshot) => {
+    // Numbers
+    const numRef = database.ref('calledNumbers');
+    const numHandler = numRef.on('child_added', (snapshot) => {
         try {
-            const numbers = snapshot.val();
-            if (numsTimeout) clearTimeout(numsTimeout);
-            numsTimeout = setTimeout(() => {
-                if (numbers) {
-                    const numbersArray = Object.values(numbers).map(Number);
-                    const newNumbers = numbersArray.filter(n => !App.calledNumbers.includes(n));
-                    App.calledNumbers = numbersArray;
-                    App.stats.numbersCalled = numbersArray.length;
-                    updateGameDisplay();
-                    newNumbers.forEach(num => { if (App.settings.voice) speak(`Número ${num}`, false); });
-                    if (!App.isAdmin) {
-                        checkPlayerWinStatus();
-                        if (App.settings.autoMark) autoMarkNumbers();
-                        if (App.settings.autoClaim) checkAutoClaim();
-                    }
-                    if (App.isAdmin && App.gameState.active && !App.gameState.paused) {
-                        updateProgressivePrize();
-                    }
-                } else {
-                    App.calledNumbers = [];
-                    App.stats.numbersCalled = 0;
-                    updateGameDisplay();
-                }
-                numsTimeout = null;
-            }, 200);
+            const num = snapshot.val();
+            if (num && !App.calledNumbers.includes(num)) {
+                App.calledNumbers.push(num);
+                App.gameState.currentNumber = num;
+                App.stats.numbersCalled = App.calledNumbers.length;
+                document.querySelectorAll('.number-btn.recent').forEach(b => b.classList.remove('recent'));
+                const btn = $(`num-${num}`);
+                if (btn) btn.classList.add('called', 'recent');
+                updateGameDisplay();
+                if (App.isAdmin) updateAdminDisplay();
+                if (!App.isAdmin && App.settings.voice) speak(`Número ${num}`, false);
+                if (App.settings.autoMark) autoMarkNumbers();
+                checkPlayerWinStatus();
+                checkNearWin();
+                updateProgressivePrize();
+                updateBuyCardStatus();
+            }
         } catch(e) {}
     });
-    App.firebaseListeners.calledNumbers = { off: () => numsRef.off('value', numsHandler) };
+    App.firebaseListeners.numbers = { off: () => numRef.off('child_added', numHandler) };
 
-    const chatRef = database.ref('chat').limitToLast(100);
+    // Players
+    const plRef = database.ref('players');
+    const plHandler = plRef.on('value', (snapshot) => {
+        try {
+            const players = snapshot.val() || {};
+            App.players.clear();
+            Object.entries(players).forEach(([id, player]) => {
+                if (player.online) App.players.set(id, { ...player, id });
+                if (App.user && id === App.user.id) {
+                    const newCoins = player.coins;
+                    if (newCoins !== App.user.coins) {
+                        const gained = newCoins - App.user.coins;
+                        App.user.coins = newCoins;
+                        updateCoinsDisplay();
+                        if (gained > 0) {
+                            showToast(`💰 Recibiste ${formatMoney(gained)} fichas!`, 'success', 4000);
+                            const el = $('playerCoins');
+                            if (el) { el.classList.add('coins-flash'); setTimeout(() => el.classList.remove('coins-flash'), 600); }
+                        }
+                    }
+                }
+            });
+            updatePlayerCount();
+            if (App.isAdmin) updateAdminDisplay();
+        } catch(e) {}
+    });
+    App.firebaseListeners.players = { off: () => plRef.off('value', plHandler) };
+
+    // Winners (CRÍTICO: pausa automática y cartel)
+    const wRef = database.ref('winners');
+    const wHandler = wRef.on('value', (snapshot) => {
+        try {
+            const winners = snapshot.val();
+            if (!winners) return;
+            if (winners.bingo && !App.gameState.bingoWinner) {
+                App.gameState.bingoWinner = winners.bingo;
+                App.gameState.bingoClaimed = true;
+                App.gameState.paused = true;
+                showWinnerToAll(winners.bingo);
+                if (!App.isAdmin) speak(`¡Bingo! Ganó ${winners.bingo.player}, cartón ${winners.bingo.cardId}`, true);
+                updateGamePausedIndicator();
+            }
+            if (winners.line) {
+                const lineKeys = Object.keys(winners.line);
+                const newWinners = lineKeys.map(k => winners.line[k]).filter(w =>
+                    !App.gameState.lineWinners?.some(lw => lw.timestamp === w.timestamp));
+                newWinners.forEach(w => {
+                    if (!App.gameState.lineWinners) App.gameState.lineWinners = [];
+                    App.gameState.lineWinners.push(w);
+                    App.gameState.claimedLines = App.gameState.lineWinners.length;
+                    App.gameState.paused = true;
+                    showWinnerToAll(w);
+                    if (!App.isAdmin) speak(`¡Línea! Ganó ${w.player}, cartón ${w.cardId}`, true);
+                    updateGamePausedIndicator();
+                });
+            }
+            updateWinnerDisplays();
+            updatePublicWinnersPanel();
+            updateClaimButtons();
+        } catch(e) {}
+    });
+    App.firebaseListeners.winners = { off: () => wRef.off('value', wHandler) };
+
+    // Persistent winners
+    const pwRef = database.ref('persistentWinners');
+    const pwHandler = pwRef.on('value', (snapshot) => {
+        try {
+            const pw = snapshot.val() || {};
+            App.persistentWinners = Object.values(pw).sort((a,b) => (a.timestamp||0) - (b.timestamp||0));
+            if (App.isAdmin) updatePersistentWinnersDisplay();
+        } catch(e) {}
+    });
+    App.firebaseListeners.persistentWinners = { off: () => pwRef.off('value', pwHandler) };
+
+    // Chat
+    const chatRef = database.ref('chat').limitToLast(50);
     const chatHandler = chatRef.on('child_added', (snapshot) => {
         try {
             const msg = snapshot.val();
-            const msgKey = snapshot.key;
-            if (!msg || App.processedMessages.has(msgKey)) return;
-            App.processedMessages.add(msgKey);
-            if (App.processedMessages.size > 300) {
-                const it = App.processedMessages.values();
-                App.processedMessages.delete(it.next().value);
-            }
-            if (msg.private && msg.recipient) {
-                if (App.isAdmin || (App.user && (msg.recipient === App.user.name || msg.author === App.user.name))) {
-                    addChatMessage(msg.text, msg.author, msg.isAdmin, false, true, msg.recipient);
+            const key = snapshot.key;
+            if (msg && !App.processedMessages.has(key)) {
+                App.processedMessages.add(key);
+                const isAdmin = msg.isAdmin || msg.author === 'Admin';
+                App.chat.push({ ...msg, isAdmin, key });
+                if (App.chat.length > 80) App.chat.shift();
+                renderChat();
+                if (App.isAdmin && !isAdmin) {
+                    const badge = $('adminChatBadge');
+                    if (badge) { badge.style.display = 'inline'; badge.textContent = `${(parseInt(badge.textContent)||0)+1} nuevos`; }
+                    updateAdminChatViewer(msg);
                 }
-            } else {
-                addChatMessage(msg.text, msg.author, msg.isAdmin, msg.isSystem);
-            }
-            if (App.isAdmin && !msg.isAdmin && !msg.isSystem) {
-                showAdminNotification('Nuevo mensaje de chat');
             }
         } catch(e) {}
     });
     App.firebaseListeners.chat = { off: () => chatRef.off('child_added', chatHandler) };
 
-    const annoRef = database.ref('announcements').limitToLast(1);
-    const annoHandler = annoRef.on('child_added', (snapshot) => {
+    // Announcements
+    const annRef = database.ref('announcements').limitToLast(1);
+    const annHandler = annRef.on('child_added', (snapshot) => {
         try {
             const ann = snapshot.val();
-            if (ann && ann.timestamp > Date.now() - 30000) {
-                showGlobalAnnouncement(ann.text, ann.type || 'info');
+            if (ann && ann.timestamp > Date.now() - 10000) {
+                showGlobalAnnouncement(ann.text);
+                if (App.isAdmin) showAdminNotification(ann.text);
             }
         } catch(e) {}
     });
-    App.firebaseListeners.announcements = { off: () => annoRef.off('child_added', annoHandler) };
+    App.firebaseListeners.announcements = { off: () => annRef.off('child_added', annHandler) };
 
-    const lcwRef = database.ref('lineClaimWindow');
-    const lcwHandler = lcwRef.on('value', (snapshot) => {
-        try {
-            const data = snapshot.val();
-            if (data && data.openAt) {
-                App.lineClaimWindowOpenAt = data.openAt;
-                const remaining = 3500 - (Date.now() - data.openAt);
-                if (remaining > 0) {
-                    if (App.timers.lineClaimWindow) clearTimeout(App.timers.lineClaimWindow);
-                    App.timers.lineClaimWindow = setTimeout(async () => {
-                        App.lineClaimWindowOpenAt = 0;
-                        if (database) await database.ref('gameState/paused').set(true);
-                        updateClaimButtons();
-                    }, remaining);
-                } else {
-                    App.lineClaimWindowOpenAt = 0;
-                    updateClaimButtons();
-                }
-            } else {
-                App.lineClaimWindowOpenAt = 0;
-                if (App.timers.lineClaimWindow) clearTimeout(App.timers.lineClaimWindow);
-                updateClaimButtons();
-            }
-        } catch(e) {}
-    });
-    App.firebaseListeners.lineClaimWindow = { off: () => lcwRef.off('value', lcwHandler) };
-
-    const lineRef = database.ref('winners/line');
-    const lineHandler = lineRef.on('value', (snapshot) => {
-        try {
-            const winners = snapshot.val() || {};
-            const prevCount = App.gameState.lineWinners ? App.gameState.lineWinners.length : 0;
-            App.gameState.lineWinners = Object.values(winners);
-            App.gameState.claimedLines = App.gameState.lineWinners.length;
-            if (App.initialLoadDone && App.gameState.lineWinners.length > prevCount) {
-                const newestWinner = App.gameState.lineWinners[App.gameState.lineWinners.length - 1];
-                showWinnerToAll(newestWinner);
-                speak('¡Línea! Ganó ' + newestWinner.player + ', cartón ' + newestWinner.cardId, true);
-                if (database) database.ref('voiceAnnouncements').push({ text: '¡Línea! Ganó ' + newestWinner.player + ', cartón ' + newestWinner.cardId, timestamp: Date.now() });
-            }
-            updatePublicWinnersPanel();
-            updateClaimButtons();
-            if (App.isAdmin) { updateWinnerDisplays(); updateAdminWinnerCardDisplay(); }
-        } catch(e) {}
-    });
-    App.firebaseListeners.lineWinners = { off: () => lineRef.off('value', lineHandler) };
-
-    const bingoRef = database.ref('winners/bingo');
-    const bingoHandler = bingoRef.on('value', (snapshot) => {
-        try {
-            const winner = snapshot.val();
-            const hadBingo = !!App.gameState.bingoWinner;
-            App.gameState.bingoWinner = winner;
-            App.gameState.bingoClaimed = !!winner;
-            if (App.initialLoadDone && winner && !hadBingo) {
-                showWinnerToAll(winner);
-                speak('¡Bingo! Ganó ' + winner.player + ', cartón ' + winner.cardId, true);
-            }
-            updatePublicWinnersPanel();
-            updateClaimButtons();
-            if (App.isAdmin) { updateWinnerDisplays(); updateAdminWinnerCardDisplay(); }
-        } catch(e) {}
-    });
-    App.firebaseListeners.bingoWinner = { off: () => bingoRef.off('value', bingoHandler) };
-
-    const persRef = database.ref('persistentWinners');
-    const persHandler = persRef.on('value', (snapshot) => {
-        try {
-            const winners = snapshot.val() || {};
-            App.persistentWinners = Object.values(winners);
-            if (App.isAdmin) updatePersistentWinnersDisplay();
-        } catch(e) {}
-    });
-    App.firebaseListeners.persistentWinners = { off: () => persRef.off('value', persHandler) };
-
-    if (App.isAdmin) {
-        const crRef = database.ref('coinRequests');
-        const crHandler = crRef.on('value', (snapshot) => {
-            try {
-                const requests = snapshot.val() || {};
-                const newRequests = Object.entries(requests).filter(([, data]) => data.timestamp > App.lastNotificationCheck);
-                App.coinRequests = Object.entries(requests).map(([key, data]) => ({ key, ...data }));
-                updateCoinRequestsDisplay();
-                if (newRequests.length > 0) showAdminNotification(`${newRequests.length} solicitud(es) de monedas`);
-                App.lastNotificationCheck = Date.now();
-            } catch(e) {}
-        });
-        App.firebaseListeners.coinRequests = { off: () => crRef.off('value', crHandler) };
-    }
-
-    const pcRef = database.ref('prizeConfig');
-    const pcHandler = pcRef.on('value', (snapshot) => {
-        try {
-            const config = snapshot.val();
-            if (config) {
-                App.prizeMode = config.mode || 'fixed';
-                App.gameState.prize.baseAmount = config.baseAmount || 1000;
-                App.gameState.prize.cap = config.cap || CONFIG.DEFAULT_PRIZE_CAP;
-                App.gameState.prize.customPrize = config.customPrize || '';
-                App.gameState.prize.textPrize = config.textPrize || '';
-                App.gameState.linePrizesEnabled = config.linePrizesEnabled !== false;
-                if (config.manualPrizes) App.gameState.manualPrizes = config.manualPrizes;
-                updatePrizeModeUI();
-                updatePrizeDisplay();
-                updateManualPrizePreview();
-                const lineInput = $('linePrizeManual');
-                const bingoInput = $('bingoPrizeManual');
-                if (lineInput) lineInput.value = App.gameState.manualPrizes?.line ?? 200;
-                if (bingoInput) bingoInput.value = App.gameState.manualPrizes?.bingo ?? 800;
-            }
-        } catch(e) {}
-    });
-    App.firebaseListeners.prizeConfig = { off: () => pcRef.off('value', pcHandler) };
-
+    // Voice announcements (only players)
     if (!App.isAdmin) {
         const vaRef = database.ref('voiceAnnouncements').limitToLast(1);
         const vaHandler = vaRef.on('child_added', (snapshot) => {
@@ -2009,6 +2558,7 @@ function setupFirebaseListeners() {
         App.firebaseListeners.voiceAnn = { off: () => vaRef.off('child_added', vaHandler) };
     }
 
+    // Game reset
     const grRef = database.ref('gameReset');
     const grHandler = grRef.on('value', (snapshot) => {
         try {
@@ -2018,7 +2568,21 @@ function setupFirebaseListeners() {
     });
     App.firebaseListeners.gameReset = { off: () => grRef.off('value', grHandler) };
 
-    // FIX MONEDAS: listener de velocidad en tiempo real para todos
+    // Coin requests (admin only)
+    if (App.isAdmin) {
+        const crRef = database.ref('coinRequests').limitToLast(20);
+        const crHandler = crRef.on('value', (snapshot) => {
+            try {
+                const reqs = snapshot.val() || {};
+                App.coinRequests = Object.values(reqs).sort((a,b) => b.timestamp - a.timestamp);
+                updateCoinRequestsDisplay();
+                showAdminNotification('Nueva solicitud de fichas');
+            } catch(e) {}
+        });
+        App.firebaseListeners.coinRequests = { off: () => crRef.off('value', crHandler) };
+    }
+
+    // Speed sync
     const speedRef = database.ref('gameState/speed');
     const speedHandler = speedRef.on('value', (snap) => {
         try {
@@ -2050,12 +2614,24 @@ function showAdminNotification(text) {
     }
 }
 
+function updateAdminChatViewer(msg) {
+    const viewer = $('adminChatViewer');
+    if (!viewer) return;
+    const oldMsg = viewer.querySelector('[data-placeholder]');
+    if (oldMsg) oldMsg.remove();
+    const div = document.createElement('div');
+    div.style.cssText = 'padding:8px;border-bottom:1px solid rgba(255,255,255,0.05);margin-bottom:4px';
+    div.innerHTML = `<b style="color:var(--gold)">${escapeHtml(msg.author||'?')}</b>: ${escapeHtml(msg.text||'')}`;
+    viewer.insertBefore(div, viewer.firstChild);
+}
+
 // ==================== GAME RESET ====================
 function handleGameReset() {
     App.myCards = [];
     App.hasLine = false;
     App.hasBingo = false;
     App.calledNumbers = [];
+    nearWinShown = false;
     renderCards();
     updateClaimButtons();
     showToast('🔄 Juego reiniciado - Compra nuevos cartones', 'info');
@@ -2164,7 +2740,6 @@ function updateBuyCardStatus() {
     const countEl = $('myCardCount');
     const btn = $('buyCardBtn');
     const qtySelect = $('cardQtySelect');
-    // BLOQUEO CRÍTICO: se bloquea si ya se sorteó al menos una bolilla
     const ballsDrawn = App.calledNumbers.length > 0;
     const remaining = CONFIG.MAX_CARDS - App.myCards.length;
     if (countEl) countEl.textContent = `${App.myCards.length}/${CONFIG.MAX_CARDS}`;
@@ -2209,7 +2784,6 @@ function buyCards() {
     if (!App.isAdmin && App.user) {
         App.user.coins -= totalCost;
         updateCoinsDisplay();
-        // updateDoc en Firebase (FIX CRÍTICO: usa set/update)
         if (database) database.ref(`players/${App.user.id}/coins`).set(App.user.coins).catch(() => {});
     }
     const bought = [];
@@ -2270,7 +2844,9 @@ function renderCards() {
     container.innerHTML = App.myCards.map((card, idx) => {
         const styleClass = `card-${card.style}`;
         const isWinner = App.gameState.lineWinners?.some(w => w.cardId === card.id) || App.gameState.bingoWinner?.cardId === card.id;
+        const innerWrap = card.style === 'gold' ? 'card-gold-inner' : '';
         return `<div class="${styleClass}${isWinner?' winner':''}">
+            ${innerWrap ? `<div class="${innerWrap}">` : ''}
             <div class="card-header">
                 <span class="card-title">Cartón #${idx+1} <small style="font-size:0.75rem;opacity:0.6">ID:${card.id}</small></span>
             </div>
@@ -2285,6 +2861,7 @@ function renderCards() {
                 else if (isError) cls += ' error';
                 return `<div class="${cls}" onclick="markNumber(${idx},${row},${col},'${num}')" ${isFree?'title="FREE"':''}>${isFree?'FREE':num}</div>`;
             }).join('')}</div>
+            ${innerWrap ? '</div>' : ''}
         </div>`;
     }).join('');
 }
@@ -2306,6 +2883,26 @@ function markNumber(cardIdx, row, col, num) {
     if (card.marked[row][col]) checkPlayerWinStatus();
 }
 
+function autoMarkNumbers() {
+    let changed = false;
+    for (const card of App.myCards) {
+        for (let r = 0; r < 5; r++) {
+            for (let c = 0; c < 5; c++) {
+                const num = card.numbers[r][c];
+                if (num !== 'FREE' && App.calledNumbers.includes(num) && !card.marked[r][c]) {
+                    card.marked[r][c] = true;
+                    changed = true;
+                }
+            }
+        }
+    }
+    if (changed) {
+        renderCards();
+        checkPlayerWinStatus();
+        checkNearWin();
+    }
+}
+
 // ==================== WIN CHECK ====================
 function checkPlayerWinStatus() {
     App.hasLine = false;
@@ -2322,6 +2919,7 @@ function checkPlayerWinStatus() {
         if (card.marked.every((r, ri) => r.every((m, ci) => m || card.numbers[ri][ci]==='FREE'))) App.hasBingo = true;
     }
     updateClaimButtons();
+    checkAutoClaim();
 }
 
 function updateClaimButtons() {
@@ -2336,7 +2934,7 @@ function updateClaimButtons() {
     bingoBtn.classList.toggle('pulse', canBingo);
 }
 
-// ==================== CLAIM PRIZES ====================
+// ==================== CLAIM PRIZES (infalible) ====================
 async function claimLine() {
     if (!App.hasLine || App.gameState.claimedLines >= CONFIG.MAX_LINE_WINNERS || !App.gameState.linePrizesEnabled) return;
     const now = Date.now();
@@ -2348,6 +2946,11 @@ async function claimLine() {
         for (let i = 0; i < 5; i++) {
             if (card.marked[i].every((m,j) => m || card.numbers[i][j]==='FREE')) { winningCard = card; break; }
         }
+        if (!winningCard) {
+            for (let c = 0; c < 5; c++) {
+                if (card.marked.every((r,ri) => r[c] || card.numbers[ri][c]==='FREE')) { winningCard = card; break; }
+            }
+        }
         if (winningCard) break;
     }
     if (!winningCard) return;
@@ -2358,6 +2961,7 @@ async function claimLine() {
     if (database) {
         if (!windowOpen && App.gameState.claimedLines === 0) {
             await database.ref('lineClaimWindow').set({ openAt: now });
+            App.lineClaimWindowOpenAt = now;
         }
         await database.ref('gameState/paused').set(true);
         await database.ref(`winners/line/${now}`).set(winnerData);
@@ -2400,7 +3004,7 @@ async function claimBingo() {
     if (claimBingoBtn) claimBingoBtn.disabled = true;
 }
 
-// ==================== SHOW WINNER ====================
+// ==================== SHOW WINNER (con nombre+ID en cartel) ====================
 function showWinnerToAll(winner) {
     if (!winner) return;
     showWinnerModal(winner);
@@ -2415,7 +3019,7 @@ function showWinnerModal(winner) {
     if ($('winnerTitle')) $('winnerTitle').textContent = title;
     if ($('winnerName')) $('winnerName').textContent = winner.player;
     if ($('winnerPrize')) $('winnerPrize').textContent = `Premio: ${winner.prize}`;
-    if ($('winnerCardDisplay')) $('winnerCardDisplay').textContent = `🎫 Cartón: ${winner.cardId}`;
+    if ($('winnerCardDisplay')) $('winnerCardDisplay').textContent = `🎫 Cartón ID: ${winner.cardId}`;
     const linePrize = App.gameState.manualPrizes?.line ?? 200;
     const bingoPrize = App.gameState.manualPrizes?.bingo ?? 800;
     const totalPrize = linePrize + bingoPrize;
@@ -2479,7 +3083,9 @@ async function clearCurrentWinners() {
     speak('El administrador borró los ganadores. Sigan jugando.', true);
     if (App.gameState.active) {
         if (App.timers.game) clearInterval(App.timers.game);
-        App.timers.game = setInterval(() => { if (!App.gameState.paused) generateRandomNumber(); }, App.gameState.speed);
+        if (!App.manualCallMode) {
+            App.timers.game = setInterval(() => { if (!App.gameState.paused) generateRandomNumber(); }, App.gameState.speed);
+        }
     }
 }
 
@@ -2488,7 +3094,7 @@ function showWinnerBanner(winner) {
     if (!banner || !winner) return;
     if ($('winnerBannerTitle')) $('winnerBannerTitle').textContent = winner.type==='line' ? '📏 ¡LÍNEA!' : '🎱 ¡BINGO!';
     if ($('winnerBannerDetails')) $('winnerBannerDetails').textContent = winner.player;
-    if ($('winnerBannerCard')) $('winnerBannerCard').textContent = `Cartón: ${winner.cardId}`;
+    if ($('winnerBannerCard')) $('winnerBannerCard').textContent = `🎫 Cartón ID: ${winner.cardId}`;
     if ($('winnerBannerPrize')) $('winnerBannerPrize').textContent = `Premio: ${winner.prize}`;
     const linePrize = App.gameState.manualPrizes?.line ?? 200;
     const bingoPrize = App.gameState.manualPrizes?.bingo ?? 800;
@@ -2518,619 +3124,63 @@ function toggleVoice() {
     $('voiceToggle')?.classList.toggle('active', App.settings.voice);
     savePlayerSettings();
     showToast(App.settings.voice ? 'Voz activada' : 'Voz desactivada', 'info');
-}
-
-function autoMarkNumbers() {
-    let changed = false;
-    App.myCards.forEach(card => {
-        card.numbers.forEach((row, ri) => {
-            row.forEach((num, ci) => {
-                if (num !== 'FREE' && App.calledNumbers.includes(num) && !card.marked[ri][ci]) {
-                    card.marked[ri][ci] = true;
-                    changed = true;
-                }
-            });
-        });
-    });
-    if (changed) renderCards();
-    checkPlayerWinStatus();
-}
-
-// ==================== REQUEST COINS ====================
-function requestCoins() {
-    if (!App.user || !database) return;
-    database.ref('coinRequests').push({ player: App.user.name, playerId: App.user.id, timestamp: Date.now() });
-    showToast('💰 Solicitud enviada al administrador');
+    if (!App.settings.voice && synth) synth.cancel();
 }
 
 // ==================== CHAT ====================
-function addChatMessage(text, author, isAdmin=false, isSystem=false, isPrivate=false, recipient=null) {
-    const msg = { id: generateId(), text, author, isAdmin, isSystem, isPrivate, recipient,
-        time: new Date().toLocaleTimeString('es-ES', { hour:'2-digit', minute:'2-digit' }), timestamp: Date.now() };
-    App.chat.push(msg);
-    if (App.chat.length > 100) App.chat.shift();
-    renderChat();
-    if (App.isAdmin && !isAdmin && !isSystem) renderAdminChatViewer(msg);
-}
-
-let adminChatMessages = [];
-let adminChatUnread = 0;
-
-function renderAdminChatViewer(newMsg) {
-    if (newMsg) {
-        adminChatMessages.push(newMsg);
-        if (adminChatMessages.length > 100) adminChatMessages.shift();
-        adminChatUnread++;
-    }
-    const container = $('adminChatViewer');
-    const badge = $('adminChatBadge');
-    if (!container) return;
-    if (adminChatMessages.length === 0) {
-        container.innerHTML = '<div style="color:var(--text-dim);text-align:center;padding:15px">No hay mensajes de jugadores</div>';
-    } else {
-        container.innerHTML = adminChatMessages.map(m => {
-            const toAdmin = m.recipient === 'admin' || m.isPrivate;
-            return `<div style="margin-bottom:8px;padding:9px 12px;border-radius:10px;background:${toAdmin?'rgba(255,215,0,0.1)':'rgba(108,92,231,0.12)'};border-left:3px solid ${toAdmin?'var(--gold)':'rgba(108,92,231,0.6)'}">
-                <div style="display:flex;justify-content:space-between;margin-bottom:3px;font-size:0.77rem;color:var(--text-dim)">
-                    <span style="font-weight:800;color:var(--text-main)">${toAdmin?'🔒 ':''}${escapeHtml(m.author)}</span>
-                    <span>${m.time}</span>
-                </div>
-                <div style="font-size:0.87rem;color:var(--text-main)">${escapeHtml(m.text)}</div>
-            </div>`;
-        }).join('');
-        container.scrollTop = container.scrollHeight;
-    }
-    if (badge) {
-        if (adminChatUnread > 0) {
-            badge.style.display = 'inline-block';
-            badge.textContent = adminChatUnread + ' nuevo' + (adminChatUnread > 1 ? 's' : '');
-        } else { badge.style.display = 'none'; }
-    }
-}
-
 function renderChat() {
     const container = $('chatMessages');
     if (!container) return;
-    if (App.chat.length === 0) {
-        container.innerHTML = '<div style="text-align:center;padding:20px;color:var(--text-dim)">No hay mensajes</div>';
-        return;
-    }
-    container.innerHTML = App.chat.map(m => {
-        let cls = 'message';
-        if (m.isSystem) cls += ' system';
-        else if (m.isAdmin) cls += ' admin admin-message';
-        else cls += ' player';
-        if (m.isPrivate) cls += ' private';
-        let authorDisplay = m.author;
-        if (m.isPrivate) authorDisplay = `🔒 ${m.author} → ${m.recipient==='admin'?'Admin':m.recipient}`;
-        return `<div class="${cls}">
-            <div class="message-header"><span class="message-author">${m.isAdmin?'👑 ':''}${escapeHtml(authorDisplay)}</span><span class="message-time">${m.time}</span></div>
-            <div class="message-text">${escapeHtml(m.text)}</div>
+    const recent = App.chat.slice(-30);
+    if (!recent.length) { container.innerHTML = '<div style="color:var(--text-dim);text-align:center;padding:20px;font-size:0.85rem">No hay mensajes aún</div>'; return; }
+    container.innerHTML = recent.map(msg => {
+        const cls = msg.isAdmin ? 'admin' : msg.isSystem ? 'system' : msg.isPrivate ? 'private' : 'player';
+        const time = msg.timestamp ? new Date(msg.timestamp).toLocaleTimeString('es-ES', {hour:'2-digit',minute:'2-digit'}) : '';
+        return `<div class="message ${cls}">
+            <div class="message-header">
+                <span class="message-author">${msg.isAdmin?'👑 ':''}<b>${escapeHtml(msg.author||'?')}</b></span>
+                <span class="message-time">${time}</span>
+            </div>
+            <div class="message-text">${escapeHtml(msg.text||'')}</div>
         </div>`;
     }).join('');
     container.scrollTop = container.scrollHeight;
 }
 
+function addChatMessage(text, author, isAdmin, isSystem) {
+    const msg = { text, author, isAdmin, isSystem, timestamp: Date.now() };
+    App.chat.push(msg);
+    renderChat();
+}
+
 async function sendMessage() {
     const input = $('chatInput');
-    const recipientSelect = $('chatRecipient');
     const text = input?.value?.trim();
-    const recipient = recipientSelect?.value || 'all';
     if (!text || !App.user) return;
-    const isPrivate = recipient !== 'all';
-    addChatMessage(text, 'Tú', App.isAdmin, false, isPrivate, isPrivate ? recipient : null);
+    const recipient = $('chatRecipient')?.value || 'all';
+    const isPrivate = recipient === 'admin';
+    const msgData = {
+        text: isPrivate ? `[Privado→Admin] ${text}` : text,
+        author: App.user.name,
+        isAdmin: false,
+        isPrivate,
+        timestamp: Date.now()
+    };
+    if (database) await database.ref('chat').push(msgData);
     if (input) input.value = '';
-    if (database) {
-        await database.ref('chat').push({ text, author: App.isAdmin ? 'Admin' : App.user.name, isAdmin: App.isAdmin, isSystem: false,
-            private: isPrivate, recipient: isPrivate ? recipient : null, timestamp: Date.now() });
-    }
-    if (!App.isAdmin && database) {
-        database.ref(`players/${App.user.id}/lastActive`).set(Date.now()).catch(() => {});
-    }
 }
 
-async function clearAllChats() {
-    if (database) await database.ref('chat').remove();
-    App.chat = [];
-    App.processedMessages.clear();
-    renderChat();
-    showToast('Chat limpiado');
-}
-
-// ==================== GLOBAL ANNOUNCEMENT ====================
-async function sendGlobalAnnouncement() {
-    const input = $('globalAnnouncementText');
+async function sendAdminMessage() {
+    const input = $('adminMessage');
     const text = input?.value?.trim();
-    if (!text) { showToast('Escribe un mensaje', 'error'); return; }
-    if (database) await database.ref('announcements').push({ text, type:'global', timestamp: Date.now(), author: 'Admin' });
+    if (!text) return;
+    addChatMessage(text, 'Tú', true, false);
     if (input) input.value = '';
-    showToast('Anuncio enviado a todos', 'success');
-}
-
-function showGlobalAnnouncement(text, type='info') {
-    const ann = $('globalAnnouncement');
-    const title = $('announcementTitle');
-    const annText = $('announcementText');
-    if (ann && title && annText) {
-        title.textContent = type==='welcome' ? '🎉 BIENVENIDA' : '📢 ANUNCIO';
-        annText.textContent = text;
-        ann.classList.add('active');
-        setTimeout(() => ann.classList.remove('active'), 8000);
-    }
-}
-
-function closeGlobalAnnouncement() {
-    $('globalAnnouncement')?.classList.remove('active');
-}
-
-// ==================== COUNTDOWN ====================
-async function startCountdown(seconds = 5) {
-    const overlay = $('countdownOverlay');
-    const numEl = $('countdownNumber');
-    if (!overlay || !numEl) return;
-    overlay.classList.add('active');
-    for (let i = seconds; i >= 0; i--) {
-        numEl.textContent = i;
-        if (i > 0) {
-            speak(i.toString(), true);
-            await new Promise(r => setTimeout(r, 1000));
-        }
-    }
-    overlay.classList.remove('active');
-}
-
-// ==================== ADMIN PANEL ====================
-function initAdminPanel() {
-    const grid = $('manualNumbers');
-    if (grid) {
-        grid.innerHTML = '';
-        for (let i = 1; i <= 90; i++) {
-            const btn = document.createElement('button');
-            btn.className = 'number-btn';
-            btn.textContent = i;
-            btn.id = `num-${i}`;
-            btn.onclick = () => callNumber(i);
-            grid.appendChild(btn);
-        }
-    }
-    updatePrizeDisplay();
-    updateWinnerDisplays();
-    updateCoinRequestsDisplay();
-    updatePersistentWinnersDisplay();
-    updatePrizeModeUI();
-    updateAdminWinnerCardDisplay();
-    updateManualPrizePreview();
-    const lineInput = $('linePrizeManual');
-    const bingoInput = $('bingoPrizeManual');
-    if (lineInput) lineInput.value = App.gameState.manualPrizes?.line ?? 200;
-    if (bingoInput) bingoInput.value = App.gameState.manualPrizes?.bingo ?? 800;
-}
-
-function toggleAdminCard(cardId) {
-    $(cardId)?.classList.toggle('minimized');
-    if (cardId === 'adminCard8' && !$(cardId)?.classList.contains('minimized')) {
-        adminChatUnread = 0;
-        renderAdminChatViewer(null);
-    }
-}
-
-function updateAdminDisplay() {
-    const list = $('adminPlayersList');
-    if (!list) return;
-    if (App.players.size === 0) {
-        list.innerHTML = '<div class="text-center" style="padding:30px;color:var(--text-dim)">No hay jugadores conectados</div>';
-    } else {
-        list.innerHTML = Array.from(App.players.values()).map(p => {
-            const hasLine = App.gameState.lineWinners?.some(w => w.player === p.name);
-            const hasBingo = App.gameState.bingoWinner?.player === p.name;
-            const joinTime = p.joinTime || Date.now();
-            const timeInGame = Math.floor((Date.now() - joinTime) / 60000);
-            return `<div class="player-item">
-                <div class="player-name-admin">
-                    <span style="color:var(--success)">●</span> ${escapeHtml(p.name)}
-                    ${hasLine?'<span style="color:var(--success);font-size:0.7rem;background:rgba(0,200,83,0.15);padding:1px 6px;border-radius:8px">✓ Línea</span>':''}
-                    ${hasBingo?'<span style="color:var(--gold);font-size:0.7rem;background:rgba(255,215,0,0.15);padding:1px 6px;border-radius:8px">✓ Bingo</span>':''}
-                    <div style="font-size:0.7rem;color:var(--text-dim)">⏱ ${timeInGame} min</div>
-                </div>
-                <div style="display:flex;align-items:center;gap:8px">
-                    <span style="color:var(--gold)">${(p.coins||0).toLocaleString('es-ES')} 🪙</span>
-                    <button class="winner-btn" onclick="preselectWinner('${escapeHtml(p.name)}')">🏆</button>
-                </div>
-            </div>`;
-        }).join('');
-    }
-    if ($('statsNumbers')) $('statsNumbers').textContent = App.stats.numbersCalled;
-    if ($('statsCards')) $('statsCards').textContent = App.stats.cardsSold;
-    updateWinnerSelects();
-}
-
-function updateWinnerSelects() {
-    const opts = '<option value="">Seleccionar jugador...</option>' + Array.from(App.players.values()).map(p => `<option value="${escapeHtml(p.name)}">${escapeHtml(p.name)}</option>`).join('');
-    const lineSelect = $('lineWinnerSelect');
-    const bingoSelect = $('bingoWinnerSelect');
-    const targetSelect = $('targetPlayer');
-    if (lineSelect) lineSelect.innerHTML = opts;
-    if (bingoSelect) bingoSelect.innerHTML = opts;
-    if (targetSelect) targetSelect.innerHTML = opts;
-}
-
-function preselectWinner(playerName) {
-    const lineSelect = $('lineWinnerSelect');
-    const bingoSelect = $('bingoWinnerSelect');
-    if (lineSelect) lineSelect.value = playerName;
-    if (bingoSelect) bingoSelect.value = playerName;
-    showToast(`${playerName} preseleccionado`, 'info');
-}
-
-// ==================== PUBLIC WINNERS PANEL ====================
-function updatePublicWinnersPanel() {
-    const panel = $('publicWinnersPanel');
-    const lineDisplay = $('publicLineWinnersDisplay');
-    const bingoDisplay = $('publicBingoWinnerDisplay');
-    const lineBadge = $('publicLineBadge');
-    const hasAny = (App.gameState.lineWinners?.length > 0) || App.gameState.bingoWinner;
-    if (panel) panel.style.display = hasAny ? 'block' : 'none';
-    if (lineDisplay) {
-        if (!App.gameState.lineWinners?.length) {
-            lineDisplay.innerHTML = '<div style="color:var(--text-dim);font-size:0.85rem;padding:4px 0">— Ningún ganador aún —</div>';
-        } else {
-            lineDisplay.innerHTML = App.gameState.lineWinners.map((w, i) =>
-                `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:rgba(0,200,83,0.12);border-radius:10px;margin-bottom:6px;font-size:0.88rem;border:1px solid rgba(0,200,83,0.2)">
-                    <span><strong style="color:var(--success)">${i+1}.</strong> <strong style="color:var(--text-main)">${escapeHtml(w.player)}</strong></span>
-                    <span style="background:rgba(0,0,0,0.4);padding:2px 10px;border-radius:10px;font-size:0.78rem;color:var(--gold)">🎫 ${w.cardId}</span>
-                </div>`
-            ).join('');
-        }
-    }
-    if (lineBadge) lineBadge.textContent = `${App.gameState.lineWinners?.length || 0}/3`;
-    if (bingoDisplay) {
-        if (!App.gameState.bingoWinner) {
-            bingoDisplay.innerHTML = '<div style="color:var(--text-dim);font-size:0.85rem;padding:4px 0">— Ningún ganador aún —</div>';
-        } else {
-            const w = App.gameState.bingoWinner;
-            bingoDisplay.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:rgba(255,215,0,0.1);border-radius:10px;font-size:0.88rem;border:1px solid rgba(255,215,0,0.2)">
-                <span>🏆 <strong style="color:var(--text-main)">${escapeHtml(w.player)}</strong></span>
-                <span style="background:rgba(0,0,0,0.4);padding:2px 10px;border-radius:10px;font-size:0.78rem;color:var(--gold)">🎫 ${w.cardId}</span>
-            </div>`;
-        }
-    }
-}
-
-function updateWinnerDisplays() {
-    const lineDisplay = $('lineWinnersDisplay');
-    if (lineDisplay) {
-        if (!App.gameState.lineWinners?.length) {
-            lineDisplay.innerHTML = '<div style="color:var(--text-dim);padding:8px">No hay ganadores de línea</div>';
-        } else {
-            lineDisplay.innerHTML = App.gameState.lineWinners.map((w, i) =>
-                `<div style="display:flex;justify-content:space-between;padding:8px;background:rgba(0,200,83,0.12);border-radius:8px;margin-bottom:8px;border:1px solid rgba(0,200,83,0.2)">
-                    <span style="color:var(--text-main)"><strong>${i+1}.</strong> ${escapeHtml(w.player)} (Cartón: ${w.cardId})</span>
-                    <span style="color:var(--gold)">${w.prize}</span>
-                </div>`
-            ).join('');
-        }
-    }
-    const bingoDisplay = $('bingoWinnerDisplay');
-    if (bingoDisplay) {
-        if (!App.gameState.bingoWinner) {
-            bingoDisplay.innerHTML = '<div style="color:var(--text-dim);padding:8px">No hay ganador de bingo</div>';
-        } else {
-            bingoDisplay.innerHTML = `<div style="display:flex;justify-content:space-between;padding:8px;background:rgba(255,215,0,0.1);border-radius:8px;border:1px solid rgba(255,215,0,0.2)">
-                <span style="color:var(--text-main)"><strong>🏆</strong> ${escapeHtml(App.gameState.bingoWinner.player)} (Cartón: ${App.gameState.bingoWinner.cardId})</span>
-                <span style="color:var(--gold)">${App.gameState.bingoWinner.prize}</span>
-            </div>`;
-        }
-    }
-    updatePrizeDisplay();
-    updatePublicWinnersPanel();
-}
-
-function updateAdminWinnerCardDisplay(winner = null) {
-    const container = $('adminWinnerCardDisplay');
-    if (!container) return;
-    const lines = App.gameState.lineWinners || [];
-    const bingo = App.gameState.bingoWinner;
-    if (!lines.length && !bingo) {
-        container.innerHTML = '<div style="color:var(--text-dim);text-align:center">No hay ganador registrado</div>';
-        return;
-    }
-    let html = '';
-    if (lines.length) {
-        html += '<div style="margin-bottom:10px">';
-        html += '<div style="font-weight:800;color:var(--success);font-size:0.83rem;margin-bottom:6px">📏 GANADORES DE LÍNEA</div>';
-        lines.forEach((w, i) => {
-            html += `<div style="display:flex;justify-content:space-between;background:rgba(0,200,83,0.12);padding:8px 12px;border-radius:8px;margin-bottom:5px;font-size:0.88rem;border:1px solid rgba(0,200,83,0.2)">
-                <span style="color:var(--text-main)"><strong>${i+1}. ${escapeHtml(w.player)}</strong></span>
-                <span style="color:var(--gold);font-weight:800">🎫 ${w.cardId} | ${w.prize}</span>
-            </div>`;
-        });
-        html += '</div>';
-    }
-    if (bingo) {
-        html += `<div style="background:rgba(255,215,0,0.1);padding:10px 12px;border-radius:8px;border:1px solid rgba(255,215,0,0.3)">
-            <div style="font-weight:800;color:var(--gold);font-size:0.83rem;margin-bottom:4px">🎱 GANADOR DE BINGO</div>
-            <div style="display:flex;justify-content:space-between;font-size:0.92rem">
-                <strong style="color:var(--text-main)">${escapeHtml(bingo.player)}</strong>
-                <span style="color:var(--gold);font-weight:800">🎫 ${bingo.cardId} | ${bingo.prize}</span>
-            </div>
-        </div>`;
-    }
-    container.innerHTML = html;
-}
-
-function clearWinnerCard() {
-    const container = $('adminWinnerCardDisplay');
-    if (container) container.innerHTML = '<div style="color:var(--text-dim);text-align:center">No hay ganador registrado</div>';
-    showToast('Cartón ganador borrado', 'info');
-}
-
-// ==================== PERSISTENT WINNERS ====================
-function updatePersistentWinnersDisplay() {
-    const container = $('persistentWinnersList');
-    if (!container) return;
-    if (!App.persistentWinners?.length) {
-        container.innerHTML = '<div class="text-center" style="padding:20px;color:var(--text-dim)">No hay ganadores registrados</div>';
-        return;
-    }
-    container.innerHTML = App.persistentWinners.map(w => {
-        const time = w.timestamp ? new Date(w.timestamp).toLocaleTimeString('es-ES', {hour:'2-digit',minute:'2-digit'}) : '--';
-        return `<div class="coin-request-item">
-            <div class="info">
-                <div class="name">${w.type==='line'?'📏':'🎱'} ${escapeHtml(w.player)}</div>
-                <div class="time">${time}</div>
-            </div>
-            <div style="color:var(--gold)">${w.prize}</div>
-            <button class="winner-btn" onclick="deletePersistentWinner('${w.key||w.timestamp}')" style="margin-left:8px">🗑</button>
-        </div>`;
-    }).join('');
-}
-
-async function deletePersistentWinner(key) {
-    if (database) await database.ref(`persistentWinners/${key}`).remove();
-    showToast('Ganador eliminado', 'info');
-}
-
-async function clearAllPersistentWinners() {
-    if (database) await database.ref('persistentWinners').remove();
-    App.persistentWinners = [];
-    updatePersistentWinnersDisplay();
-    showToast('Todos los ganadores eliminados', 'success');
-}
-
-// ==================== MANUAL PRIZES ====================
-function setLinePrizeManual() {
-    const input = $('linePrizeManual');
-    if (!input) return;
-    const amount = parseInt(input.value);
-    if (isNaN(amount) || amount < 0) { showToast('Ingresa un monto válido', 'error'); return; }
-    if (!App.gameState.manualPrizes) App.gameState.manualPrizes = {};
-    App.gameState.manualPrizes.line = amount;
-    const bingoAmount = App.gameState.manualPrizes.bingo ?? 800;
     if (database) {
-        database.ref('prizeConfig/manualPrizes/line').set(amount);
-        database.ref('gameState/prize/amount').set(amount + bingoAmount);
-        database.ref('gameState/manualPrizes/line').set(amount);
+        await database.ref('chat').push({ text:`📢 ${text}`, author:'Admin', isAdmin:true, timestamp: Date.now() });
     }
-    updateManualPrizePreview();
-    updatePrizeDisplay();
-    showToast(`Premio línea: ${formatMoney(amount)}`, 'success');
-}
-
-function setBingoPrizeManual() {
-    const input = $('bingoPrizeManual');
-    if (!input) return;
-    const amount = parseInt(input.value);
-    if (isNaN(amount) || amount < 0) { showToast('Ingresa un monto válido', 'error'); return; }
-    if (!App.gameState.manualPrizes) App.gameState.manualPrizes = {};
-    App.gameState.manualPrizes.bingo = amount;
-    const lineAmount = App.gameState.manualPrizes.line ?? 200;
-    if (database) {
-        database.ref('prizeConfig/manualPrizes/bingo').set(amount);
-        database.ref('gameState/prize/amount').set(lineAmount + amount);
-        database.ref('gameState/manualPrizes/bingo').set(amount);
-    }
-    updateManualPrizePreview();
-    updatePrizeDisplay();
-    showToast(`Premio bingo: ${formatMoney(amount)}`, 'success');
-}
-
-function updateManualPrizePreview() {
-    const lineAmount = App.gameState.manualPrizes?.line ?? 200;
-    const bingoAmount = App.gameState.manualPrizes?.bingo ?? 800;
-    const total = lineAmount + bingoAmount;
-    if ($('previewTotalPrize')) $('previewTotalPrize').textContent = formatMoney(total);
-    if ($('previewLineAmount')) $('previewLineAmount').textContent = formatMoney(lineAmount);
-    if ($('previewBingoAmount')) $('previewBingoAmount').textContent = formatMoney(bingoAmount);
-}
-
-// ==================== PRIZE CONFIG ====================
-function selectPrizeMode(mode, el) {
-    App.prizeMode = mode;
-    document.querySelectorAll('.prize-mode-option').forEach(o => o.classList.remove('active'));
-    if (el) el.classList.add('active');
-    const radio = $(`mode-${mode}`);
-    if (radio) radio.checked = true;
-    if (database) database.ref('prizeConfig/mode').set(mode);
-    showToast(`Modo de pozo: ${mode}`, 'info');
-}
-
-function updatePrizeModeUI() {
-    document.querySelectorAll('.prize-mode-option').forEach(el => el.classList.remove('active'));
-    const activeOption = document.querySelector(`.prize-mode-option[onclick*="'${App.prizeMode}'"]`);
-    if (activeOption) activeOption.classList.add('active');
-    const radio = $(`mode-${App.prizeMode}`);
-    if (radio) radio.checked = true;
-    $('linePrizeToggle')?.classList.toggle('active', !!App.gameState.linePrizesEnabled);
-}
-
-function toggleLinePrizes() {
-    App.gameState.linePrizesEnabled = !App.gameState.linePrizesEnabled;
-    $('linePrizeToggle')?.classList.toggle('active', App.gameState.linePrizesEnabled);
-    if (database) database.ref('prizeConfig/linePrizesEnabled').set(App.gameState.linePrizesEnabled);
-    showToast(App.gameState.linePrizesEnabled ? 'Premios de línea activados' : 'Premios de línea desactivados', 'info');
-}
-
-async function setManualPrize() {
-    const input = $('manualPrizeAmount');
-    const amount = input ? parseInt(input.value) : 0;
-    if (!amount || amount < 100) { showToast('Ingresa un monto válido (mínimo $100)', 'error'); return; }
-    const lineAmount = Math.floor(amount * 0.2);
-    const bingoAmount = amount - lineAmount;
-    if (!App.gameState.manualPrizes) App.gameState.manualPrizes = {};
-    App.gameState.manualPrizes.line = lineAmount;
-    App.gameState.manualPrizes.bingo = bingoAmount;
-    if ($('linePrizeManual')) $('linePrizeManual').value = lineAmount;
-    if ($('bingoPrizeManual')) $('bingoPrizeManual').value = bingoAmount;
-    App.gameState.prize.baseAmount = amount;
-    App.gameState.prize.amount = amount;
-    if (database) {
-        await database.ref('prizeConfig/manualPrizes/line').set(lineAmount);
-        await database.ref('prizeConfig/manualPrizes/bingo').set(bingoAmount);
-        await database.ref('prizeConfig/baseAmount').set(amount);
-        await database.ref('gameState/prize/amount').set(amount);
-        await database.ref('gameState/prize/baseAmount').set(amount);
-        await database.ref('gameState/manualPrizes').set({ line: lineAmount, bingo: bingoAmount });
-    }
-    if (input) input.value = '';
-    updatePrizeDisplay();
-    updateManualPrizePreview();
-    showToast(`Pozo: ${formatMoney(amount)} (Línea: ${formatMoney(lineAmount)}, Bingo: ${formatMoney(bingoAmount)})`, 'success');
-}
-
-async function setTextPrize() {
-    const input = $('textPrizeAmount');
-    const text = input?.value?.trim();
-    if (!text) { showToast('Ingresa un texto válido', 'error'); return; }
-    App.gameState.prize.textPrize = text;
-    if (database) await database.ref('prizeConfig/textPrize').set(text);
-    if (input) input.value = '';
-    showToast(`Premio texto: ${text}`, 'success');
-    updatePrizeDisplay();
-}
-
-async function setPrizeCap() {
-    const input = $('prizeCapAmount');
-    const cap = input ? parseInt(input.value) : 0;
-    if (!cap || cap < 1000) { showToast('Ingresa un tope válido (mínimo $1000)', 'error'); return; }
-    App.gameState.prize.cap = cap;
-    if (database) await database.ref('prizeConfig/cap').set(cap);
-    showToast(`Tope: ${formatMoney(cap)}`, 'success');
-}
-
-async function setCustomPrize() {
-    const input = $('customPrizeText');
-    const text = input?.value?.trim();
-    if (!text) { showToast('Ingresa un premio', 'error'); return; }
-    App.gameState.prize.customPrize = text;
-    if (database) await database.ref('prizeConfig/customPrize').set(text);
-    if (input) input.value = '';
-    showToast(`Premio personalizado: ${text}`, 'success');
-    updatePrizeDisplay();
-}
-
-function updateProgressivePrize() {
-    if (!App.gameState.active || App.gameState.paused) return;
-    let newAmount = App.gameState.prize.baseAmount;
-    if (App.prizeMode === 'incremental') {
-        newAmount = App.gameState.prize.baseAmount + (App.calledNumbers.length * CONFIG.INCREMENTAL_AMOUNT);
-    } else if (App.prizeMode === 'progressive') {
-        newAmount = App.gameState.prize.baseAmount + (App.calledNumbers.length * CONFIG.PROGRESSIVE_AMOUNT);
-    }
-    if (newAmount > App.gameState.prize.cap) newAmount = App.gameState.prize.cap;
-    if (newAmount !== App.gameState.prize.amount) {
-        App.gameState.prize.amount = newAmount;
-        if (database) database.ref('gameState/prize/amount').set(newAmount);
-        updatePrizeDisplay();
-    }
-}
-
-function livePreviewPrize() {
-    const lineVal = parseInt($('linePrizeManual')?.value) || 0;
-    const bingoVal = parseInt($('bingoPrizeManual')?.value) || 0;
-    const total = lineVal + bingoVal;
-    const perWinner = Math.floor(lineVal / CONFIG.MAX_LINE_WINNERS);
-    if ($('previewTotalPrize')) $('previewTotalPrize').textContent = formatMoney(total);
-    if ($('previewLineAmount')) $('previewLineAmount').textContent = formatMoney(lineVal);
-    if ($('previewLinePerWinner')) $('previewLinePerWinner').textContent = formatMoney(perWinner);
-    if ($('previewBingoAmount')) $('previewBingoAmount').textContent = formatMoney(bingoVal);
-}
-
-function updatePrizeDisplay() {
-    const linePrizeAmount = App.gameState.manualPrizes?.line ?? 200;
-    const bingoPrizeAmount = App.gameState.manualPrizes?.bingo ?? 800;
-    const totalPrize = linePrizeAmount + bingoPrizeAmount;
-    const claimedLines = App.gameState.claimedLines || 0;
-    const linePrizePerWinner = App.gameState.linePrizesEnabled ? Math.floor(linePrizeAmount / CONFIG.MAX_LINE_WINNERS) : 0;
-    const remaining = totalPrize - (claimedLines * linePrizePerWinner) - (App.gameState.bingoClaimed ? bingoPrizeAmount : 0);
-    if ($('prizeAmount')) $('prizeAmount').textContent = formatMoney(totalPrize);
-    if ($('adminPrizeAmount')) $('adminPrizeAmount').textContent = formatMoney(totalPrize);
-    if ($('linePrize')) $('linePrize').textContent = App.gameState.linePrizesEnabled ? formatMoney(linePrizeAmount) : 'DESACTIVADO';
-    if ($('adminLinePrize')) $('adminLinePrize').textContent = App.gameState.linePrizesEnabled ? formatMoney(linePrizeAmount) : 'DESACTIVADO';
-    if ($('bingoPrize')) $('bingoPrize').textContent = formatMoney(bingoPrizeAmount);
-    if ($('adminBingoPrize')) $('adminBingoPrize').textContent = formatMoney(bingoPrizeAmount);
-    if ($('remainingPrize')) $('remainingPrize').textContent = formatMoney(Math.max(0, remaining));
-    if ($('adminLinesClaimed')) $('adminLinesClaimed').textContent = `${claimedLines}/${CONFIG.MAX_LINE_WINNERS}`;
-    if ($('adminBingoClaimed')) $('adminBingoClaimed').textContent = App.gameState.bingoClaimed ? 'Sí' : 'No';
-    if ($('previewTotalPrize')) $('previewTotalPrize').textContent = formatMoney(totalPrize);
-    if ($('previewLineAmount')) $('previewLineAmount').textContent = formatMoney(linePrizeAmount);
-    if ($('previewLinePerWinner')) $('previewLinePerWinner').textContent = formatMoney(linePrizePerWinner);
-    if ($('previewBingoAmount')) $('previewBingoAmount').textContent = formatMoney(bingoPrizeAmount);
-    if ($('linePrizeManual') && document.activeElement !== $('linePrizeManual')) $('linePrizeManual').value = linePrizeAmount;
-    if ($('bingoPrizeManual') && document.activeElement !== $('bingoPrizeManual')) $('bingoPrizeManual').value = bingoPrizeAmount;
-    const hasPrizeText = App.gameState.prize.customPrize || App.gameState.prize.textPrize;
-    const prizeTextStr = hasPrizeText ? `🎁 Premio Especial: ${App.gameState.prize.textPrize || App.gameState.prize.customPrize}` : '';
-    const cpDisplay = $('customPrizeDisplay');
-    const adminCpDisplay = $('adminCustomPrizeDisplay');
-    if (cpDisplay) { cpDisplay.textContent = prizeTextStr; cpDisplay.style.display = hasPrizeText ? 'block' : 'none'; }
-    if (adminCpDisplay) { adminCpDisplay.textContent = prizeTextStr; adminCpDisplay.style.display = hasPrizeText ? 'block' : 'none'; }
-}
-
-// ==================== COIN REQUESTS ====================
-function updateCoinRequestsDisplay() {
-    const container = $('coinRequestsList');
-    if (!container) return;
-    const recent = App.coinRequests?.filter(r => r.timestamp > Date.now() - 300000) || [];
-    if (!recent.length) {
-        container.innerHTML = '<div class="text-center" style="padding:20px;color:var(--text-dim)">No hay solicitudes recientes</div>';
-        return;
-    }
-    container.innerHTML = recent.map(r => {
-        const time = new Date(r.timestamp).toLocaleTimeString('es-ES', {hour:'2-digit',minute:'2-digit'});
-        return `<div class="coin-request-item">
-            <div class="info"><div class="name">💰 ${escapeHtml(r.player)}</div><div class="time">${time}</div></div>
-            <button class="give-coins-btn" onclick="quickGiveCoins('${escapeHtml(r.player)}')">Dar 1000</button>
-        </div>`;
-    }).join('');
-}
-
-function quickGiveCoins(playerName) {
-    const targetSelect = $('targetPlayer');
-    const coinAmount = $('coinAmount');
-    if (targetSelect) targetSelect.value = playerName;
-    if (coinAmount) coinAmount.value = 1000;
-    giveCoins();
-}
-
-// ==================== FIX MONEDAS CRÍTICO: giveCoins usa set en Firebase ====================
-async function giveCoins() {
-    const targetSelect = $('targetPlayer');
-    const amountInput = $('coinAmount');
-    const targetName = targetSelect?.value;
-    const amount = amountInput ? (parseInt(amountInput.value) || 0) : 0;
-    if (!targetName) { showToast('Selecciona un jugador', 'error'); return; }
-    if (amount <= 0) { showToast('Ingresa una cantidad válida', 'error'); return; }
-    const player = Array.from(App.players.values()).find(p => p.name === targetName);
-    if (!player) { showToast('Jugador no encontrado', 'error'); return; }
-    const newAmount = (player.coins || 0) + amount;
-    try {
-        if (database) {
-            // FIX CRÍTICO: usa set() para que el onSnapshot del jugador lo detecte instantáneamente
-            await database.ref(`players/${player.id}/coins`).set(newAmount);
-            showToast(`💰 ${formatMoney(amount)} enviados a ${targetName}`, 'success');
-        }
-    } catch(e) {
-        showToast('Error al enviar monedas', 'error');
-    }
+    if (!App.adminMuted) speak(`Mensaje del admin: ${text}`);
+    showToast('Mensaje enviado');
 }
 
 // ==================== FORCE WINNERS ====================
@@ -3151,7 +3201,7 @@ async function forceLineWinner() {
         await database.ref('gameState/paused').set(true);
     }
     showWinnerToAll(winnerData);
-    speak(`¡Línea! Ganó ${player}, cartón ${cardId}, premio ${formatMoney(prizeAmount)}`, true);
+    if (!App.adminMuted) speak(`¡Línea! Ganó ${player}, cartón ${cardId}, premio ${formatMoney(prizeAmount)}`, true);
     if (database) database.ref('voiceAnnouncements').push({ text: `¡Hay línea! Ganó ${player}, cartón ${cardId}`, timestamp: Date.now() });
     if (playerSelect) playerSelect.value = '';
     if (cardInput) cardInput.value = '';
@@ -3174,7 +3224,7 @@ async function forceBingoWinner() {
         await database.ref('gameState/paused').set(true);
     }
     showWinnerToAll(winnerData);
-    speak(`¡Bingo! Ganó ${player}, cartón ${cardId}, premio ${formatMoney(bingoPrizeAmount)}`, true);
+    if (!App.adminMuted) speak(`¡Bingo! Ganó ${player}, cartón ${cardId}, premio ${formatMoney(bingoPrizeAmount)}`, true);
     if (database) database.ref('voiceAnnouncements').push({ text: `¡Bingo! Ganó ${player}, cartón ${cardId}`, timestamp: Date.now() });
     if (playerSelect) playerSelect.value = '';
     if (cardInput) cardInput.value = '';
@@ -3191,22 +3241,20 @@ async function confirmWinner() {
     closeWinnerModal();
     showToast('✅ Juego continuado', 'success');
     updateWinnerDisplays();
-    speak('Juego continuado', true);
-    if (App.gameState.active) {
+    if (!App.adminMuted) speak('Juego continuado', true);
+    if (App.gameState.active && !App.manualCallMode) {
         if (App.timers.game) clearInterval(App.timers.game);
         App.timers.game = setInterval(() => { if (!App.gameState.paused) generateRandomNumber(); }, App.gameState.speed);
     }
 }
 
-// ==================== SPEED CONTROL (MEJORADO + FIREBASE SYNC) ====================
+// ==================== SPEED CONTROL ====================
 function updateSpeedDisplay(val) {
     const speedVal = $('speedValue');
-    if (speedVal) speedVal.textContent = val + (val==1 ? ' seg' : ' seg');
-    // Highlight active quick button
+    if (speedVal) speedVal.textContent = val + ' seg';
     document.querySelectorAll('.speed-quick-btn').forEach(btn => {
         btn.classList.toggle('active', parseInt(btn.textContent) === parseInt(val));
     });
-    // Update slider gradient
     const slider = $('speedControl');
     if (slider) {
         const pct = ((val - 3) / (10 - 3)) * 100;
@@ -3218,12 +3266,8 @@ function updateSpeed(val) {
     const secs = parseInt(val);
     App.gameState.speed = secs * 1000;
     updateSpeedDisplay(secs);
-    // Guardar en Firebase para que se sincronice en tiempo real
-    if (database) {
-        database.ref('gameState/speed').set(App.gameState.speed).catch(() => {});
-    }
-    // Si el juego está corriendo, reiniciar el interval con la nueva velocidad
-    if (App.gameState.active && !App.gameState.paused && App.timers.game) {
+    if (database) database.ref('gameState/speed').set(App.gameState.speed).catch(() => {});
+    if (App.gameState.active && !App.gameState.paused && App.timers.game && !App.manualCallMode) {
         clearInterval(App.timers.game);
         App.timers.game = setInterval(() => { if (!App.gameState.paused) generateRandomNumber(); }, App.gameState.speed);
     }
@@ -3236,6 +3280,29 @@ function setSpeedQuick(secs) {
 }
 
 // ==================== GAME CONTROL ====================
+async function startCountdown(secs) {
+    return new Promise(resolve => {
+        const overlay = $('countdownOverlay');
+        const num = $('countdownNumber');
+        if (!overlay || !num) { resolve(); return; }
+        overlay.classList.add('active');
+        let count = secs;
+        num.textContent = count;
+        if (!App.adminMuted) speak(`El juego comienza en ${count}`);
+        const iv = setInterval(() => {
+            count--;
+            if (count <= 0) {
+                clearInterval(iv);
+                overlay.classList.remove('active');
+                resolve();
+            } else {
+                num.textContent = count;
+                if (!App.adminMuted) speak(String(count));
+            }
+        }, 1000);
+    });
+}
+
 async function startGame() {
     if (App.timers.game) { clearInterval(App.timers.game); App.timers.game = null; }
     await startCountdown(5);
@@ -3249,13 +3316,16 @@ async function startGame() {
     App.gameState.claimedLines = 0;
     App.gameState.bingoClaimed = false;
     App.gameState.paused = false;
+    nearWinShown = false;
     if (database) await database.ref('gameState').update({ active: true, paused: false, startedAt: Date.now(), speed: App.gameState.speed });
-    App.timers.game = setInterval(() => { if (!App.gameState.paused) generateRandomNumber(); }, App.gameState.speed);
+    if (!App.manualCallMode) {
+        App.timers.game = setInterval(() => { if (!App.gameState.paused) generateRandomNumber(); }, App.gameState.speed);
+    }
     if ($('btnStart')) $('btnStart').disabled = true;
     if ($('btnPause')) $('btnPause').disabled = false;
     if ($('btnResume')) $('btnResume').disabled = true;
     showToast('🎮 Juego iniciado');
-    speak('¡El juego ha comenzado!');
+    if (!App.adminMuted) speak('¡El juego ha comenzado!');
     if (database) database.ref('voiceAnnouncements').push({ text: '¡El juego ha comenzado!', timestamp: Date.now() });
     updatePublicWinnersPanel();
 }
@@ -3269,7 +3339,7 @@ async function pauseGame() {
     showToast('⏸ Juego pausado', 'info');
     if (database) {
         await database.ref('gameState/paused').set(true);
-        database.ref('voiceAnnouncements').push({ text: 'El juego ha sido pausado', timestamp: Date.now() });
+        if (!App.adminMuted) database.ref('voiceAnnouncements').push({ text: 'El juego ha sido pausado', timestamp: Date.now() });
     }
 }
 
@@ -3281,10 +3351,12 @@ async function resumeGame() {
     showToast('▶ Juego reanudado', 'success');
     if (database) {
         await database.ref('gameState/paused').set(false);
-        database.ref('voiceAnnouncements').push({ text: '¡El juego ha sido reanudado!', timestamp: Date.now() });
+        if (!App.adminMuted) database.ref('voiceAnnouncements').push({ text: '¡El juego ha sido reanudado!', timestamp: Date.now() });
     }
-    if (App.timers.game) clearInterval(App.timers.game);
-    App.timers.game = setInterval(() => { if (!App.gameState.paused) generateRandomNumber(); }, App.gameState.speed);
+    if (!App.manualCallMode) {
+        if (App.timers.game) clearInterval(App.timers.game);
+        App.timers.game = setInterval(() => { if (!App.gameState.paused) generateRandomNumber(); }, App.gameState.speed);
+    }
 }
 
 async function resetGame() {
@@ -3325,6 +3397,7 @@ async function resetGame() {
     App.persistentWinners = [];
     App.stats.numbersCalled = 0;
     App.stats.cardsSold = 0;
+    nearWinShown = false;
     document.querySelectorAll('.number-btn').forEach(btn => btn.classList.remove('called', 'recent'));
     renderCards();
     updateClaimButtons();
@@ -3338,7 +3411,7 @@ async function resetGame() {
     closeWinnerBanner();
     updatePublicWinnersPanel();
     showToast('🔄 Juego reiniciado completamente');
-    speak('Juego reiniciado. Compra nuevos cartones.', true);
+    if (!App.adminMuted) speak('Juego reiniciado. Compra nuevos cartones.', true);
     if (database) database.ref('voiceAnnouncements').push({ text: 'El juego ha sido reiniciado. Compra nuevos cartones.', timestamp: Date.now() });
 }
 
@@ -3346,6 +3419,7 @@ async function generateRandomNumber() {
     const now = Date.now();
     if (now - App.lastNumberCall < 500) return;
     App.lastNumberCall = now;
+    if (App.gameState.paused) return;
     if (App.calledNumbers.length >= 90) { showToast('Todos los números salieron', 'error'); await pauseGame(); return; }
     const available = [];
     for (let i = 1; i <= 90; i++) { if (!App.calledNumbers.includes(i)) available.push(i); }
@@ -3368,20 +3442,7 @@ async function callNumber(num) {
     if (btn) btn.classList.add('called', 'recent');
     updateGameDisplay();
     updateAdminDisplay();
-    if (App.settings.voice) speak(`Número ${num}`, false);
-}
-
-async function sendAdminMessage() {
-    const input = $('adminMessage');
-    const text = input?.value?.trim();
-    if (!text) return;
-    addChatMessage(text, 'Tú', true, false);
-    if (input) input.value = '';
-    if (database) {
-        await database.ref('chat').push({ text:`📢 ${text}`, author:'Admin', isAdmin:true, timestamp: Date.now() });
-    }
-    speak(`Mensaje del admin: ${text}`);
-    showToast('Mensaje enviado');
+    if (App.isAdmin && !App.adminMuted) speak(`Número ${num}`, false);
 }
 
 // ==================== DISPLAY ====================
@@ -3423,9 +3484,7 @@ async function refreshPlayerList() {
                 updates[`players/${id}/online`] = false;
             }
         });
-        if (Object.keys(updates).length > 0) {
-            await database.ref().update(updates);
-        }
+        if (Object.keys(updates).length > 0) await database.ref().update(updates);
         updatePlayerCount();
         if (App.isAdmin) updateAdminDisplay();
         showToast(`✅ Lista actualizada. ${App.players.size} jugador(es) conectado(s)`, 'success');
@@ -3440,13 +3499,19 @@ window.addEventListener('load', () => {
     startClock();
     App.chat = [];
     if (synth) {
-        synth.getVoices();
-        speechSynthesis.addEventListener('voiceschanged', () => { synth.getVoices(); });
+        loadVoices();
+        if (speechSynthesis.onvoiceschanged !== undefined) {
+            speechSynthesis.addEventListener('voiceschanged', loadVoices);
+        }
     }
-    // Init speed slider display
     updateSpeedDisplay(3);
     document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') { closeWinnerModal(); closeWinnerBanner(); closeGlobalAnnouncement(); }
+        if (e.key === 'Escape') {
+            closeWinnerModal();
+            closeWinnerBanner();
+            closeGlobalAnnouncement();
+            closeNearWin();
+        }
     });
     window.addEventListener('beforeunload', () => {
         if (App.user && database) {
@@ -3454,8 +3519,10 @@ window.addEventListener('load', () => {
             database.ref(path).update({ online: false, lastSeen: Date.now() });
         }
     });
+    // Desbloquear voz en primer toque
     document.addEventListener('click', () => {
         if (synth && synth.paused) synth.resume();
+        loadVoices();
     }, { once: false });
 });
 </script>
