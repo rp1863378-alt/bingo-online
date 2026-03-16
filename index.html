@@ -1738,20 +1738,20 @@ function getBestSpanishVoice() {
 }
 
 function speak(text, force = false) {
-    if (!synth) return;
+    if (!window.speechSynthesis) return;
     if (!App.settings.voice && !force) return;
     if (App.isAdmin && App.adminMuted && !force) return;
     try {
-        synth.cancel();
+        window.speechSynthesis.cancel();
         const utter = new SpeechSynthesisUtterance(text);
         const voice = getBestSpanishVoice();
         if (voice) utter.voice = voice;
         utter.lang = 'es-AR';
-        utter.rate = 0.9;
+        utter.rate = 1.0;
         utter.pitch = 1.0;
         utter.volume = 1.0;
         utter.onerror = () => {};
-        synth.speak(utter);
+        window.speechSynthesis.speak(utter);
     } catch(e) {}
 }
 
@@ -3006,22 +3006,13 @@ async function claimLine() {
     if (App._claimingLine) return;
     App._claimingLine = true;
     try {
-    // BLOQUEO FIREBASE: lineaYaGanada — solo se canta una línea por partida
+    // BLOQUEO LOCAL: lineaYaGanada se activa solo cuando el Admin confirma al ganador
     if (App.gameState.lineaYaGanada) {
-        showToast('⚠️ La línea ya fue cantada en esta partida', 'info');
+        showToast('⚠️ La línea ya fue confirmada en esta partida', 'info');
         App._claimingLine = false;
         return;
     }
     if (!database) { App._claimingLine = false; return; }
-    const lockResult = await database.ref('gameState/lineaYaGanada').transaction((current) => {
-        if (current === true) return; // ya está bloqueado — abortar transacción
-        return true;               // reservar el bloqueo atómicamente
-    });
-    if (!lockResult.committed) {
-        showToast('⚠️ La línea ya fue cantada en esta partida', 'info');
-        App._claimingLine = false;
-        return;
-    }
     const now = Date.now();
     let winningCard = null;
     for (const card of App.myCards) {
@@ -3040,6 +3031,8 @@ async function claimLine() {
     const prizeAmount = Math.floor(linePrizeAmount / CONFIG.MAX_LINE_WINNERS);
     const winnerData = { player: App.user.name, cardId: winningCard.id, type: 'line',
         prize: formatMoney(prizeAmount), prizeValue: prizeAmount, timestamp: now };
+    const windowOpenAt2 = App.lineClaimWindowOpenAt || 0;
+    const windowOpen = windowOpenAt2 > 0 && (Date.now() - windowOpenAt2) < 3500;
     if (database) {
         if (!windowOpen && App.gameState.claimedLines === 0) {
             await database.ref('lineClaimWindow').set({ openAt: now });
@@ -3317,6 +3310,8 @@ async function forceBingoWinner() {
 async function confirmWinner() {
     if (database) {
         await database.ref('gameState/paused').set(false);
+        // BLOQUEO: activar lineaYaGanada solo cuando el admin confirma el ganador
+        await database.ref('gameState/lineaYaGanada').set(true);
         database.ref('voiceAnnouncements').push({ text: 'El administrador ha confirmado al ganador. El juego continúa.', timestamp: Date.now() });
     }
     App.gameState.paused = false;
@@ -3392,6 +3387,7 @@ async function startGame() {
         await database.ref('winners').remove();
         await database.ref('potentialWinners').remove();
         await database.ref('gameState/paused').set(false);
+        await database.ref('gameState/lineaYaGanada').set(false);
     }
     App.gameState.lineWinners = [];
     App.gameState.bingoWinner = null;
