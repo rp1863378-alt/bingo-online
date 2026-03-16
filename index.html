@@ -424,11 +424,11 @@ body::before{
 }
 .card-classic .card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;padding-bottom:12px;border-bottom:3px solid rgba(108,92,231,0.3)}
 .card-classic .card-title{font-weight:900;color:#2d3436;font-size:1.1rem}
-.card-classic .grid{display:grid;grid-template-columns:repeat(5,1fr);gap:7px}
+.card-classic .grid{display:grid;grid-template-columns:repeat(9,1fr);gap:3px}.cell-blank{aspect-ratio:1;background:rgba(255,255,255,0.04);border-radius:8px;pointer-events:none}
 .card-classic .cell{
   aspect-ratio:1;display:flex;align-items:center;justify-content:center;
   background:#e8e8f5;border-radius:10px;font-weight:800;font-size:1.1rem;
-  cursor:pointer;transition:all 0.2s;position:relative;border:2px solid transparent;
+  cursor:pointer;transition:all 0.2s;font-size:0.85rem;position:relative;border:2px solid transparent;
   color:#2d3436;
 }
 .card-classic .cell:hover:not(.marked):not(.free){background:#d0d0e8;transform:scale(1.08);border-color:#6c5ce7}
@@ -1239,6 +1239,10 @@ body::before{
     <button class="style-btn" onclick="selectStyle('gold',this)">👑 Gold VIP</button>
   </div>
 
+  <div id="playerBallDisplay" style="text-align:center;padding:10px 16px;margin:6px 16px 2px;background:linear-gradient(135deg,#1a1a2e,#16213e);border-radius:16px;box-shadow:0 4px 20px rgba(0,0,0,0.5);position:sticky;top:0;z-index:50">
+    <div style="font-size:0.65rem;color:var(--text-dim);font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:2px">Último Número Cantado</div>
+    <div id="playerBigBall" style="font-size:2.8rem;font-weight:900;color:var(--gold);line-height:1.1;text-shadow:0 0 20px rgba(255,215,0,0.5)">--</div>
+  </div>
   <div class="cards-container" id="cardsContainer">
     <div class="text-center" style="padding:60px 20px;color:var(--text-dim)">
       <div style="font-size:4rem;margin-bottom:15px">🎫</div>
@@ -1690,8 +1694,7 @@ const App = {
     settings: { autoMark: false, autoClaim: false, voice: true, cardStyle: 'classic' },
     stats: { numbersCalled: 0, cardsSold: 0 },
     timers: { game: null, clock: null, heartbeat: null },
-    firebaseListeners: {},
-    shownLineTimestamps: new Set()
+    firebaseListeners: {}
 };
 
 let database = null;
@@ -2214,7 +2217,7 @@ async function limpiarSala() {
 }
 
 async function reiniciarSala() {
-    if (!confirm('¿REINICIAR SALA COMPLETA? Esto borrará TODOS los usuarios y mensajes. Esta acción no se puede deshacer.')) return;
+    if (!confirm('¿REINICIAR SALA COMPLETA? Borrará TODOS los usuarios y mensajes.')) return;
     try {
         if (database) {
             await database.ref('chat').remove();
@@ -2225,18 +2228,10 @@ async function reiniciarSala() {
             await database.ref('announcements').remove();
             await database.ref('potentialWinners').remove();
         }
-        App.chat = [];
-        App.processedMessages.clear();
-        App.players.clear();
-        App.coinRequests = [];
-        renderChat();
-        updatePlayerCount();
-        updateAdminPlayerList();
-        updateCoinRequestsDisplay();
-        showToast('🔴 Sala reiniciada: todos los usuarios y mensajes borrados', 'success');
-    } catch(e) {
-        showToast('Error al reiniciar sala', 'error');
-    }
+        App.chat = []; App.processedMessages.clear(); App.players.clear(); App.coinRequests = [];
+        renderChat(); updatePlayerCount(); updateAdminPlayerList(); updateCoinRequestsDisplay();
+        showToast('🔴 Sala reiniciada', 'success');
+    } catch(e) { showToast('Error al reiniciar sala', 'error'); }
 }
 
 function updateRecipientSelect() {
@@ -2535,23 +2530,18 @@ function setupFirebaseListeners() {
             }
             if (winners.line) {
                 const lineKeys = Object.keys(winners.line);
-                // BLOQUEO: mostrar cartel de línea UNA SOLA VEZ por partida
                 if (!App._lineWinnerShownThisGame) {
-                    // Tomar el primer ganador de línea y mostrarlo solo una vez
-                    const firstLineKey = lineKeys[0];
-                    if (firstLineKey) {
-                        const w = winners.line[firstLineKey];
-                        const alreadyShown = App.shownLineTimestamps && App.shownLineTimestamps.has(String(w.timestamp));
-                        if (!alreadyShown) {
+                    const firstKey = lineKeys[0];
+                    if (firstKey) {
+                        const w = winners.line[firstKey];
+                        if (!App.shownLineTimestamps) App.shownLineTimestamps = new Set();
+                        if (!App.shownLineTimestamps.has(String(w.timestamp))) {
                             App._lineWinnerShownThisGame = true;
+                            App.shownLineTimestamps.add(String(w.timestamp));
                             if (!App.gameState.lineWinners) App.gameState.lineWinners = [];
-                            if (!App.gameState.lineWinners.some(lw => lw.timestamp === w.timestamp)) {
-                                App.gameState.lineWinners.push(w);
-                            }
+                            if (!App.gameState.lineWinners.some(lw => lw.timestamp === w.timestamp)) App.gameState.lineWinners.push(w);
                             App.gameState.claimedLines = App.gameState.lineWinners.length;
                             App.gameState.paused = true;
-                            if (!App.shownLineTimestamps) App.shownLineTimestamps = new Set();
-                            App.shownLineTimestamps.add(String(w.timestamp));
                             showWinnerToAll(w);
                             if (!App.isAdmin) speak(`¡Línea! Ganó ${w.player}, cartón ${w.cardId}`, true);
                             updateGamePausedIndicator();
@@ -2781,23 +2771,34 @@ function checkAutoClaim() {
 
 // ==================== CARDS ====================
 function generateCard() {
-    const card = Array.from({length:5}, () => Array(5).fill(0));
-    const ranges = [[1,15],[16,30],[31,45],[46,60],[61,90]];
-    for (let col = 0; col < 5; col++) {
-        const nums = new Set();
-        const [min, max] = ranges[col];
-        while (nums.size < 5) nums.add(Math.floor(Math.random()*(max-min+1))+min);
-        const colNums = Array.from(nums);
-        for (let row = 0; row < 5; row++) {
-            card[row][col] = (col===2 && row===2) ? 'FREE' : colNums[row];
-        }
+    // 3 filas x 9 columnas: 15 números, 12 blancos. Cada fila tiene exactamente 5 números.
+    const ranges = [[1,9],[10,19],[20,29],[30,39],[40,49],[50,59],[60,69],[70,79],[80,90]];
+    const grid = Array.from({length:3}, () => Array(9).fill(null));
+    const colRows = Array.from({length:9}, () => []);
+    // Para cada fila, elegir 5 columnas al azar
+    for (let r = 0; r < 3; r++) {
+        const cols = [0,1,2,3,4,5,6,7,8];
+        for (let k=cols.length-1;k>0;k--){const j=Math.floor(Math.random()*(k+1));[cols[k],cols[j]]=[cols[j],cols[k]];}
+        const chosen = cols.slice(0,5);
+        chosen.forEach(c => colRows[c].push(r));
+    }
+    // Asignar números a cada columna en orden ascendente
+    for (let col=0;col<9;col++) {
+        const rows = colRows[col].sort((a,b)=>a-b);
+        if (rows.length === 0) continue;
+        const [min,max] = ranges[col];
+        const pool = [];
+        for(let n=min;n<=max;n++) pool.push(n);
+        for(let k=pool.length-1;k>0;k--){const j=Math.floor(Math.random()*(k+1));[pool[k],pool[j]]=[pool[j],pool[k]];}
+        const nums = pool.slice(0,rows.length).sort((a,b)=>a-b);
+        rows.forEach((r,i) => { grid[r][col] = nums[i]; });
     }
     return {
         id: generateId().slice(-4).toUpperCase(),
-        numbers: card,
-        marked: Array.from({length:5}, () => Array(5).fill(false)),
+        numbers: grid,
+        marked: Array.from({length:3}, () => Array(9).fill(false)),
         style: App.settings.cardStyle,
-        hasError: Array.from({length:5}, () => Array(5).fill(false))
+        hasError: Array.from({length:3}, () => Array(9).fill(false))
     };
 }
 
@@ -2917,15 +2918,14 @@ function renderCards() {
                 <span class="card-title">Cartón #${idx+1} <small style="font-size:0.75rem;opacity:0.6">ID:${card.id}</small></span>
             </div>
             <div class="grid">${card.numbers.flat().map((num, i) => {
-                const row = Math.floor(i/5), col = i%5;
-                const isFree = num === 'FREE';
+                const row = Math.floor(i/9), col = i%9;
+                if (num === null) return '<div class="cell-blank"></div>';
                 const isMarked = card.marked[row][col];
                 const isError = card.hasError[row][col];
                 let cls = 'cell';
-                if (isFree) cls += ' free';
-                else if (isMarked) cls += ' marked';
+                if (isMarked) cls += ' marked';
                 else if (isError) cls += ' error';
-                return `<div class="${cls}" onclick="markNumber(${idx},${row},${col},'${num}')" ${isFree?'title="FREE"':''}>${isFree?'FREE':num}</div>`;
+                return `<div class="${cls}" onclick="markNumber(${idx},${row},${col},'${num}')">${num}</div>`;
             }).join('')}</div>
             ${innerWrap ? '</div>' : ''}
         </div>`;
@@ -2952,11 +2952,11 @@ function markNumber(cardIdx, row, col, num) {
 function autoMarkNumbers() {
     let changed = false;
     for (const card of App.myCards) {
-        for (let r = 0; r < 5; r++) {
-            for (let c = 0; c < 5; c++) {
-                const num = card.numbers[r][c];
-                if (num !== 'FREE' && App.calledNumbers.includes(num) && !card.marked[r][c]) {
-                    card.marked[r][c] = true;
+        for (let r = 0; r < 3; r++) {
+            for (let col = 0; col < 9; col++) {
+                const num = card.numbers[r][col];
+                if (num !== null && App.calledNumbers.includes(num) && !card.marked[r][col]) {
+                    card.marked[r][col] = true;
                     changed = true;
                 }
             }
@@ -2974,15 +2974,15 @@ function checkPlayerWinStatus() {
     App.hasLine = false;
     App.hasBingo = false;
     for (const card of App.myCards) {
-        for (let i = 0; i < 5; i++) {
-            if (card.marked[i].every((m, j) => m || card.numbers[i][j] === 'FREE')) App.hasLine = true;
+        // LÍNEA: todos los números (no nulos) de una fila están marcados
+        for (let r = 0; r < 3; r++) {
+            const hasNums = card.numbers[r].some(n => n !== null);
+            const allMark = card.numbers[r].every((n, col) => n === null || card.marked[r][col]);
+            if (hasNums && allMark) App.hasLine = true;
         }
-        for (let i = 0; i < 5; i++) {
-            if (card.marked.every((r, j) => r[i] || card.numbers[j][i] === 'FREE')) App.hasLine = true;
-        }
-        if ([0,1,2,3,4].every(i => card.marked[i][i] || card.numbers[i][i]==='FREE')) App.hasLine = true;
-        if ([0,1,2,3,4].every(i => card.marked[i][4-i] || card.numbers[i][4-i]==='FREE')) App.hasLine = true;
-        if (card.marked.every((r, ri) => r.every((m, ci) => m || card.numbers[ri][ci]==='FREE'))) App.hasBingo = true;
+        // BINGO: todos los números del cartón marcados
+        const allBingo = card.numbers.every((row, r) => row.every((n, col) => n === null || card.marked[r][col]));
+        if (allBingo) App.hasBingo = true;
     }
     updateClaimButtons();
     checkAutoClaim();
@@ -3006,23 +3006,21 @@ async function claimLine() {
     if (App._claimingLine) return;
     App._claimingLine = true;
     try {
-    // BLOQUEO LOCAL: lineaYaGanada se activa solo cuando el Admin confirma al ganador
     if (App.gameState.lineaYaGanada) {
         showToast('⚠️ La línea ya fue confirmada en esta partida', 'info');
-        App._claimingLine = false;
-        return;
+        App._claimingLine = false; return;
     }
     if (!database) { App._claimingLine = false; return; }
     const now = Date.now();
+    const windowOpenAt = App.lineClaimWindowOpenAt || 0;
+    const windowOpen = windowOpenAt > 0 && (now - windowOpenAt) < 3500;
+    if (!windowOpen && App.gameState.claimedLines > 0) { showToast('⏰ Tiempo de reclamo cerrado', 'error'); App._claimingLine = false; return; }
     let winningCard = null;
     for (const card of App.myCards) {
-        for (let i = 0; i < 5; i++) {
-            if (card.marked[i].every((m,j) => m || card.numbers[i][j]==='FREE')) { winningCard = card; break; }
-        }
-        if (!winningCard) {
-            for (let c = 0; c < 5; c++) {
-                if (card.marked.every((r,ri) => r[c] || card.numbers[ri][c]==='FREE')) { winningCard = card; break; }
-            }
+        for (let r = 0; r < 3; r++) {
+            const hasNums = card.numbers[r].some(n => n !== null);
+            const allMark = card.numbers[r].every((n, col) => n === null || card.marked[r][col]);
+            if (hasNums && allMark) { winningCard = card; break; }
         }
         if (winningCard) break;
     }
@@ -3031,8 +3029,6 @@ async function claimLine() {
     const prizeAmount = Math.floor(linePrizeAmount / CONFIG.MAX_LINE_WINNERS);
     const winnerData = { player: App.user.name, cardId: winningCard.id, type: 'line',
         prize: formatMoney(prizeAmount), prizeValue: prizeAmount, timestamp: now };
-    const windowOpenAt2 = App.lineClaimWindowOpenAt || 0;
-    const windowOpen = windowOpenAt2 > 0 && (Date.now() - windowOpenAt2) < 3500;
     if (database) {
         if (!windowOpen && App.gameState.claimedLines === 0) {
             await database.ref('lineClaimWindow').set({ openAt: now });
@@ -3057,7 +3053,8 @@ async function claimBingo() {
     if (!App.hasBingo || App.gameState.bingoClaimed) return;
     let winningCard = null;
     for (const card of App.myCards) {
-        if (card.marked.every((r,ri) => r.every((m,ci) => m || card.numbers[ri][ci]==='FREE'))) { winningCard = card; break; }
+        const allBingo = card.numbers.every((row, r) => row.every((n, col) => n === null || card.marked[r][col]));
+        if (allBingo) { winningCard = card; break; }
     }
     if (!winningCard) return;
     const bingoPrizeAmount = App.gameState.manualPrizes?.bingo ?? 800;
@@ -3150,7 +3147,6 @@ async function clearCurrentWinners() {
     App.gameState.bingoClaimed = false;
     App.gameState.paused = false;
     App.lineClaimWindowOpenAt = 0;
-    App.shownLineTimestamps = new Set();
     closeWinnerBanner();
     updateWinnerDisplays();
     updateAdminWinnerCardDisplay();
@@ -3310,7 +3306,6 @@ async function forceBingoWinner() {
 async function confirmWinner() {
     if (database) {
         await database.ref('gameState/paused').set(false);
-        // BLOQUEO: activar lineaYaGanada solo cuando el admin confirma el ganador
         await database.ref('gameState/lineaYaGanada').set(true);
         database.ref('voiceAnnouncements').push({ text: 'El administrador ha confirmado al ganador. El juego continúa.', timestamp: Date.now() });
     }
@@ -3394,6 +3389,8 @@ async function startGame() {
     App.gameState.claimedLines = 0;
     App.gameState.bingoClaimed = false;
     App.gameState.paused = false;
+    App._lineWinnerShownThisGame = false;
+    App.shownLineTimestamps = new Set();
     nearWinShown = false;
     if (database) await database.ref('gameState').update({ active: true, paused: false, startedAt: Date.now(), speed: App.gameState.speed });
     if (!App.manualCallMode) {
@@ -3540,6 +3537,8 @@ function updateGameDisplay() {
         }
     }
     if (adminCurNumEl) adminCurNumEl.textContent = num || '--';
+    const bigBall = $('playerBigBall');
+    if (bigBall) { bigBall.textContent = num || '--'; if(num){bigBall.style.animation='none';void bigBall.offsetWidth;bigBall.style.animation='';} }
     const lastContainer = $('lastNumbers');
     if (lastContainer) {
         const lastFive = App.calledNumbers.slice(-5);
