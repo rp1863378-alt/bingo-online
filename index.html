@@ -2771,27 +2771,39 @@ function checkAutoClaim() {
 
 // ==================== CARDS ====================
 function generateCard() {
-    // 3 filas x 9 columnas: 15 números, 12 blancos. Cada fila tiene exactamente 5 números.
-    const ranges = [[1,9],[10,19],[20,29],[30,39],[40,49],[50,59],[60,69],[70,79],[80,90]];
-    const grid = Array.from({length:3}, () => Array(9).fill(null));
-    const colRows = Array.from({length:9}, () => []);
-    // Para cada fila, elegir 5 columnas al azar
-    for (let r = 0; r < 3; r++) {
-        const cols = [0,1,2,3,4,5,6,7,8];
-        for (let k=cols.length-1;k>0;k--){const j=Math.floor(Math.random()*(k+1));[cols[k],cols[j]]=[cols[j],cols[k]];}
-        const chosen = cols.slice(0,5);
-        chosen.forEach(c => colRows[c].push(r));
+    // 3 filas x 9 columnas | Col 0:1-9 | Col 1:10-19 | Col 2:20-29 | Col 3:30-39
+    // Col 4:40-49 | Col 5:50-59 | Col 6:60-69 | Col 7:70-79 | Col 8:80-90
+    // Cada fila tiene exactamente 5 números y 4 coronas (👑).
+    // Números únicos por columna, ordenados ascendente (menor arriba).
+    const colMin = [1,10,20,30,40,50,60,70,80];
+    const colMax = [9,19,29,39,49,59,69,79,90];
+    const grid = [
+        [null,null,null,null,null,null,null,null,null],
+        [null,null,null,null,null,null,null,null,null],
+        [null,null,null,null,null,null,null,null,null]
+    ];
+    // Para cada fila elegir 5 columnas distintas al azar (algoritmo Fisher-Yates)
+    const colUsed = [[],[],[]];
+    for (let f = 0; f < 3; f++) {
+        const idx = [0,1,2,3,4,5,6,7,8];
+        for (let k = idx.length-1; k > 0; k--) {
+            const j = Math.floor(Math.random()*(k+1));
+            [idx[k],idx[j]] = [idx[j],idx[k]];
+        }
+        idx.slice(0,5).forEach(col => colUsed[col].push(f));
     }
-    // Asignar números a cada columna en orden ascendente
-    for (let col=0;col<9;col++) {
-        const rows = colRows[col].sort((a,b)=>a-b);
-        if (rows.length === 0) continue;
-        const [min,max] = ranges[col];
+    // Asignar números únicos por columna en orden ascendente de arriba a abajo
+    for (let col = 0; col < 9; col++) {
+        const filas = colUsed[col].sort((a,b) => a-b);
+        if (filas.length === 0) continue;
         const pool = [];
-        for(let n=min;n<=max;n++) pool.push(n);
-        for(let k=pool.length-1;k>0;k--){const j=Math.floor(Math.random()*(k+1));[pool[k],pool[j]]=[pool[j],pool[k]];}
-        const nums = pool.slice(0,rows.length).sort((a,b)=>a-b);
-        rows.forEach((r,i) => { grid[r][col] = nums[i]; });
+        for (let n = colMin[col]; n <= colMax[col]; n++) pool.push(n);
+        for (let k = pool.length-1; k > 0; k--) {
+            const j = Math.floor(Math.random()*(k+1));
+            [pool[k],pool[j]] = [pool[j],pool[k]];
+        }
+        const elegidos = pool.slice(0, filas.length).sort((a,b) => a-b);
+        filas.forEach((f,i) => { grid[f][col] = elegidos[i]; });
     }
     return {
         id: generateId().slice(-4).toUpperCase(),
