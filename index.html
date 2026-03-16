@@ -2535,22 +2535,29 @@ function setupFirebaseListeners() {
             }
             if (winners.line) {
                 const lineKeys = Object.keys(winners.line);
-                const newWinners = lineKeys.map(k => winners.line[k]).filter(w => {
-                    const alreadyInList = App.gameState.lineWinners?.some(lw => lw.timestamp === w.timestamp);
-                    const alreadyShown = App.shownLineTimestamps && App.shownLineTimestamps.has(String(w.timestamp));
-                    return !alreadyInList && !alreadyShown;
-                });
-                newWinners.forEach(w => {
-                    if (!App.gameState.lineWinners) App.gameState.lineWinners = [];
-                    App.gameState.lineWinners.push(w);
-                    App.gameState.claimedLines = App.gameState.lineWinners.length;
-                    App.gameState.paused = true;
-                    if (!App.shownLineTimestamps) App.shownLineTimestamps = new Set();
-                    App.shownLineTimestamps.add(String(w.timestamp));
-                    showWinnerToAll(w);
-                    if (!App.isAdmin) speak(`¡Línea! Ganó ${w.player}, cartón ${w.cardId}`, true);
-                    updateGamePausedIndicator();
-                });
+                // BLOQUEO: mostrar cartel de línea UNA SOLA VEZ por partida
+                if (!App._lineWinnerShownThisGame) {
+                    // Tomar el primer ganador de línea y mostrarlo solo una vez
+                    const firstLineKey = lineKeys[0];
+                    if (firstLineKey) {
+                        const w = winners.line[firstLineKey];
+                        const alreadyShown = App.shownLineTimestamps && App.shownLineTimestamps.has(String(w.timestamp));
+                        if (!alreadyShown) {
+                            App._lineWinnerShownThisGame = true;
+                            if (!App.gameState.lineWinners) App.gameState.lineWinners = [];
+                            if (!App.gameState.lineWinners.some(lw => lw.timestamp === w.timestamp)) {
+                                App.gameState.lineWinners.push(w);
+                            }
+                            App.gameState.claimedLines = App.gameState.lineWinners.length;
+                            App.gameState.paused = true;
+                            if (!App.shownLineTimestamps) App.shownLineTimestamps = new Set();
+                            App.shownLineTimestamps.add(String(w.timestamp));
+                            showWinnerToAll(w);
+                            if (!App.isAdmin) speak(`¡Línea! Ganó ${w.player}, cartón ${w.cardId}`, true);
+                            updateGamePausedIndicator();
+                        }
+                    }
+                }
             }
             updateWinnerDisplays();
             updatePublicWinnersPanel();
@@ -2995,14 +3002,27 @@ function updateClaimButtons() {
 
 // ==================== CLAIM PRIZES (infalible) ====================
 async function claimLine() {
-    if (!App.hasLine || App.gameState.claimedLines >= CONFIG.MAX_LINE_WINNERS || !App.gameState.linePrizesEnabled) return;
+    if (!App.hasLine || !App.gameState.linePrizesEnabled) return;
     if (App._claimingLine) return;
     App._claimingLine = true;
     try {
+    // BLOQUEO FIREBASE: lineaYaGanada — solo se canta una línea por partida
+    if (App.gameState.lineaYaGanada) {
+        showToast('⚠️ La línea ya fue cantada en esta partida', 'info');
+        App._claimingLine = false;
+        return;
+    }
+    if (!database) { App._claimingLine = false; return; }
+    const lockResult = await database.ref('gameState/lineaYaGanada').transaction((current) => {
+        if (current === true) return; // ya está bloqueado — abortar transacción
+        return true;               // reservar el bloqueo atómicamente
+    });
+    if (!lockResult.committed) {
+        showToast('⚠️ La línea ya fue cantada en esta partida', 'info');
+        App._claimingLine = false;
+        return;
+    }
     const now = Date.now();
-    const windowOpenAt = App.lineClaimWindowOpenAt || 0;
-    const windowOpen = windowOpenAt > 0 && (now - windowOpenAt) < 3500;
-    if (!windowOpen && App.gameState.claimedLines > 0) { showToast('⏰ Tiempo de reclamo cerrado', 'error'); App._claimingLine = false; return; }
     let winningCard = null;
     for (const card of App.myCards) {
         for (let i = 0; i < 5; i++) {
@@ -3442,6 +3462,7 @@ async function resetGame() {
         await database.ref('gameReset').set({ timestamp: Date.now() });
         await database.ref('lineClaimWindow').remove();
         await database.ref('voiceAnnouncements').remove();
+        await database.ref('gameState/lineaYaGanada').set(false);
         await database.ref('announcements').push({ text: '🔄 El juego ha sido reiniciado por el administrador', type:'reset', timestamp: Date.now() });
     }
     App.myCards = [];
@@ -3469,6 +3490,8 @@ async function resetGame() {
     updatePersistentWinnersDisplay();
     updateAdminWinnerCardDisplay();
     App.lineClaimWindowOpenAt = 0;
+    App._lineWinnerShownThisGame = false;
+    App.shownLineTimestamps = new Set();
     closeWinnerModal();
     closeWinnerBanner();
     updatePublicWinnersPanel();
