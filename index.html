@@ -223,13 +223,20 @@ body::before{
 /* ===== HEADER ===== */
 .header{
   background:rgba(13,16,32,0.95);
-  padding:18px 20px;border-radius:20px;margin-bottom:20px;
-  display:flex;justify-content:space-between;align-items:center;
+  padding:14px 16px;border-radius:20px;margin-bottom:20px;
+  display:flex;flex-direction:column;align-items:center;gap:10px;
   box-shadow:0 0 40px rgba(255,215,0,0.08),var(--shadow-deep);
   backdrop-filter:blur(12px);
   border:1px solid var(--border-gold);
   position:sticky;top:15px;z-index:100;
   animation:slideDown 0.5s ease;
+}
+.header-top-row{
+  width:100%;display:flex;justify-content:space-between;align-items:center;gap:10px;
+}
+.header-number-row{
+  width:100%;display:flex;flex-direction:column;align-items:center;gap:6px;
+  padding:8px 0 4px;
 }
 @keyframes slideDown{from{transform:translateY(-100%);opacity:0}to{transform:translateY(0);opacity:1}}
 .player-info{display:flex;align-items:center;gap:15px}
@@ -255,13 +262,13 @@ body::before{
 /* ===== NUMBER DISPLAY ===== */
 .number-section{text-align:center;flex:1}
 .current-number{
-  width:100px;height:100px;border-radius:50%;
+  width:120px;height:120px;border-radius:50%;
   background:radial-gradient(circle,var(--electric) 0%,var(--electric2) 100%);
   display:flex;align-items:center;justify-content:center;
-  font-size:3rem;font-weight:900;color:#000;
+  font-size:3.5rem;font-weight:900;color:#000;
   margin:0 auto 8px;
-  box-shadow:0 0 40px rgba(0,212,255,0.7),0 0 80px rgba(0,212,255,0.3);
-  position:relative;
+  box-shadow:0 0 50px rgba(0,212,255,0.8),0 0 100px rgba(0,212,255,0.35);
+  position:relative;z-index:1;
   animation:numberPop 0.6s cubic-bezier(0.175,0.885,0.32,1.275);
   border:3px solid rgba(255,255,255,0.3);
 }
@@ -807,13 +814,26 @@ body::before{
   }
 }
 /* ===== CHAT ===== */
+.chat-toggle-btn{
+  width:100%;padding:12px 20px;border:none;border-radius:14px;
+  background:rgba(0,212,255,0.12);color:var(--electric);
+  font-weight:800;font-size:0.9rem;cursor:pointer;transition:all 0.3s;
+  border:1px solid var(--border-electric);margin-top:16px;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  letter-spacing:1px;text-transform:uppercase;
+}
+.chat-toggle-btn:hover{background:rgba(0,212,255,0.2);transform:translateY(-1px)}
 .chat-container{
   background:rgba(13,16,32,0.9);
   border-radius:20px;padding:20px;height:320px;
   display:flex;flex-direction:column;
   border:1px solid var(--border-electric);
-  margin-top:20px;
+  margin-top:8px;
   box-shadow:var(--shadow-electric);
+  transition:all 0.3s ease;
+}
+.chat-container.chat-hidden{
+  display:none;
 }
 .chat-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px;padding-bottom:12px;border-bottom:1px solid rgba(0,212,255,0.2)}
 .chat-title{font-weight:800;font-size:1rem;display:flex;align-items:center;gap:10px;color:var(--electric)}
@@ -1287,9 +1307,8 @@ body::before{
 /* ===== RESPONSIVE ===== */
 @media(max-width:768px){
   .logo{font-size:2.4rem}
-  .header{flex-direction:column;gap:12px;text-align:center}
-  .number-section{order:-1}
-  .current-number{width:85px;height:85px;font-size:2.6rem}
+  .header-top-row{flex-wrap:wrap;gap:8px}
+  .current-number{width:95px;height:95px;font-size:2.8rem}
   .cards-container{grid-template-columns:1fr}
   .admin-grid{grid-template-columns:1fr}
   .toast-container{left:15px;right:15px;bottom:15px;max-width:none}
@@ -1401,24 +1420,28 @@ body::before{
 <div id="gameScreen" class="screen">
   <div class="header draggable-elem" id="drag-header" data-drag="true">
     <div class="drag-handle">☰ mover</div>
-    <div class="player-info">
-      <div class="avatar" id="playerAvatar">?</div>
-      <div class="player-details">
-        <div class="player-name" id="displayName">Jugador</div>
-        <div class="player-status">
-          <span class="online-dot"></span>
-          <span id="playerCount">Online: 0</span>
-        </div>
-      </div>
-    </div>
-    <div class="number-section">
+    <!-- Número cantado grande y centrado -->
+    <div class="header-number-row">
+      <div class="number-label" style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:3px;color:var(--text-dim)">Último Número Cantado</div>
       <div class="current-number" id="currentNumber">--</div>
-      <div class="number-label">Número Actual</div>
       <div class="last-numbers" id="lastNumbers"></div>
     </div>
-    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px">
-      <div class="coins" id="playerCoins">🪙 0</div>
-      <button class="btn btn-danger btn-xs" onclick="logout()" style="width:auto;padding:7px 14px">Salir</button>
+    <!-- Fila superior: jugador + monedas -->
+    <div class="header-top-row">
+      <div class="player-info">
+        <div class="avatar" id="playerAvatar">?</div>
+        <div class="player-details">
+          <div class="player-name" id="displayName">Jugador</div>
+          <div class="player-status">
+            <span class="online-dot"></span>
+            <span id="playerCount">Online: 0</span>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end">
+        <div class="coins" id="playerCoins">🪙 0</div>
+        <button class="btn btn-danger btn-xs" onclick="logout()" style="width:auto;padding:7px 14px">Salir</button>
+      </div>
     </div>
   </div>
 
@@ -1524,7 +1547,8 @@ body::before{
   </div>
 
   <!-- CHAT -->
-  <div class="chat-container" id="chatContainer">
+  <button class="chat-toggle-btn" id="chatToggleBtn" onclick="toggleChat()">💬 Abrir Chat</button>
+  <div class="chat-container chat-hidden" id="chatContainer">
     <div class="chat-header">
       <div class="chat-title">💬 Chat en Vivo</div>
     </div>
@@ -1854,7 +1878,8 @@ body::before{
     <div style="font-size:0.92rem;color:var(--text-dim);margin-bottom:10px;position:relative;z-index:1" id="winnerRemainingDisplay"></div>
     <div style="font-size:0.85rem;background:rgba(255,59,92,0.1);border:1px dashed rgba(255,59,92,0.4);padding:8px 14px;border-radius:10px;margin-bottom:12px;position:relative;z-index:1" id="winnerPausedNote">⏸ Juego pausado — El administrador reanudará pronto</div>
     <div id="winnerAdminControls" style="display:none;flex-direction:column;gap:10px;width:100%;position:relative;z-index:1">
-      <button class="btn btn-success modal-btn" onclick="adminResumeFromWinner()">▶ Confirmar y Reanudar Juego</button>
+      <button class="btn btn-success modal-btn" id="adminResumeBtn" onclick="adminResumeFromWinner()">▶ Confirmar y Reanudar Juego</button>
+      <button class="btn btn-success modal-btn" id="adminBingoResetBtn" onclick="adminConfirmBingoAndReset()" style="display:none">🎱 Confirmar Bingo y Nueva Partida</button>
       <button class="btn btn-danger modal-btn" onclick="adminClearWinner()">🗑 Borrar Ganador y Reanudar</button>
     </div>
     <button class="btn btn-primary modal-btn" id="winnerContinueBtn" onclick="closeWinnerModal()" style="display:none">Continuar</button>
@@ -2017,15 +2042,19 @@ function speak(text, force = false) {
     if (App.isAdmin && App.adminMuted && !force) return;
     try {
         window.speechSynthesis.cancel();
-        const utter = new SpeechSynthesisUtterance(text);
-        const voice = getBestSpanishVoice();
-        if (voice) utter.voice = voice;
-        utter.lang = 'es-AR';
-        utter.rate = 1.0;
-        utter.pitch = 1.0;
-        utter.volume = 1.0;
-        utter.onerror = () => {};
-        window.speechSynthesis.speak(utter);
+        setTimeout(() => {
+            try {
+                const utter = new SpeechSynthesisUtterance(text);
+                const voice = getBestSpanishVoice();
+                if (voice) utter.voice = voice;
+                utter.lang = 'es-AR';
+                utter.rate = 1.0;
+                utter.pitch = 1.0;
+                utter.volume = 1.0;
+                utter.onerror = () => {};
+                window.speechSynthesis.speak(utter);
+            } catch(e) {}
+        }, 50);
     } catch(e) {}
 }
 
@@ -3498,6 +3527,17 @@ function showWinnerModal(winner) {
         if (adminCtrl) adminCtrl.style.display = 'flex';
         if (continueBtn) continueBtn.style.display = 'none';
         if (pausedNote) pausedNote.style.display = 'none';
+        const _bingoResetBtn = document.getElementById('adminBingoResetBtn');
+        const _resumeBtn = document.getElementById('adminResumeBtn');
+        if (_bingoResetBtn && _resumeBtn) {
+            if (winner && winner.type === 'bingo') {
+                _bingoResetBtn.style.display = 'block';
+                _resumeBtn.style.display = 'none';
+            } else {
+                _bingoResetBtn.style.display = 'none';
+                _resumeBtn.style.display = 'block';
+            }
+        }
     } else {
         if (adminCtrl) adminCtrl.style.display = 'none';
         if (continueBtn) continueBtn.style.display = 'block';
@@ -3514,6 +3554,13 @@ function closeWinnerModal() {
 async function adminResumeFromWinner() {
     closeWinnerModal();
     await confirmWinner();
+}
+
+async function adminConfirmBingoAndReset() {
+    closeWinnerModal();
+    closeWinnerBanner();
+    showToast('🎱 Bingo confirmado — reiniciando partida...', 'success');
+    await resetGame();
 }
 
 async function adminClearWinner() {
@@ -3703,7 +3750,10 @@ async function confirmWinner() {
         database.ref('voiceAnnouncements').push({ text: 'El administrador ha confirmado al ganador. El juego continúa.', timestamp: Date.now() });
     }
     App.gameState.paused = false;
+    App.gameState.lineaYaGanada = true;
+    App._lineWinnerShownThisGame = true;
     closeWinnerModal();
+    closeWinnerBanner();
     showToast('✅ Juego continuado', 'success');
     updateWinnerDisplays();
     if (!App.adminMuted) speak('Juego continuado', true);
@@ -3964,6 +4014,16 @@ async function refreshPlayerList() {
     } catch(e) {
         showToast('Error actualizando lista', 'error');
     }
+}
+
+// ==================== CHAT TOGGLE ====================
+let chatOpen = false;
+function toggleChat() {
+    chatOpen = !chatOpen;
+    const container = document.getElementById('chatContainer');
+    const btn = document.getElementById('chatToggleBtn');
+    if (container) container.classList.toggle('chat-hidden', !chatOpen);
+    if (btn) btn.textContent = chatOpen ? '💬 Cerrar Chat' : '💬 Abrir Chat';
 }
 
 // ==================== INIT ====================
