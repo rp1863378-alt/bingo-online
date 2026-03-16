@@ -713,6 +713,12 @@ Bingo: <span id="adminBingoClaimed" style="color:var(--danger)">No</span>
 <button class="btn btn-warning" style="padding:12px 20px;width:auto" onclick="sendGlobalAnnouncement()">📢</button>
 </div>
 <button class="btn btn-danger w-full mt-10" onclick="clearAllChats()">🗑 Borrar Todo el Chat</button>
+<div style="margin-top:20px">
+<div style="font-weight:800;color:var(--secondary);margin-bottom:10px;font-size:0.95rem;display:flex;align-items:center;gap:8px">👁 Mensajes de Jugadores <span id="adminChatBadge" style="background:var(--danger);color:#fff;padding:2px 8px;border-radius:20px;font-size:0.75rem;display:none">0 nuevos</span></div>
+<div id="adminChatViewer" style="max-height:280px;overflow-y:auto;background:rgba(0,0,0,0.2);border-radius:12px;padding:10px">
+<div style="opacity:0.5;text-align:center;padding:15px">No hay mensajes de jugadores</div>
+</div>
+</div>
 </div>
 </div>
 
@@ -747,16 +753,21 @@ Bingo: <span id="adminBingoClaimed" style="color:var(--danger)">No</span>
 </div>
 
 <!-- Winner Modal -->
-<div id="winnerModal" class="modal-overlay" onclick="if(event.target===this)closeWinnerModal()">
+<div id="winnerModal" class="modal-overlay">
 <div class="modal-content">
-<button class="modal-close" onclick="closeWinnerModal()">×</button>
+<button class="modal-close" id="winnerModalCloseBtn" onclick="closeWinnerModal()" style="display:none">×</button>
 <div class="modal-icon">🏆</div>
 <h2 class="modal-title" id="winnerTitle">¡GANADOR!</h2>
 <div class="modal-winner" id="winnerName">Jugador</div>
 <div class="modal-prize" id="winnerPrize">Premio: $0</div>
 <div class="modal-card-id" id="winnerCardDisplay">Cartón: ----</div>
 <div style="font-size:1rem;opacity:0.9;margin-bottom:10px;position:relative;z-index:1" id="winnerRemainingDisplay"></div>
-<button class="btn btn-primary modal-btn" onclick="closeWinnerModal()">Continuar</button>
+<div style="font-size:0.9rem;opacity:0.7;margin-bottom:15px;position:relative;z-index:1;background:rgba(231,76,60,0.3);padding:10px;border-radius:10px;border:1px dashed rgba(231,76,60,0.6)">⏸ El juego está pausado. El administrador reanudará pronto.</div>
+<div id="winnerAdminControls" style="display:none;flex-direction:column;gap:10px;width:100%;margin-top:5px;position:relative;z-index:1">
+<button class="btn btn-success modal-btn" onclick="adminResumeFromWinner()" style="background:linear-gradient(135deg,var(--success),#00d9a5)">▶ Reanudar Juego</button>
+<button class="btn btn-danger modal-btn" onclick="adminClearWinner()" style="background:linear-gradient(135deg,var(--danger),#c0392b)">🗑 Borrar Ganador y Reanudar</button>
+</div>
+<button class="btn btn-primary modal-btn" id="winnerContinueBtn" onclick="closeWinnerModal()" style="display:none">Continuar</button>
 </div>
 </div>
 
@@ -1014,7 +1025,14 @@ async function loginAsNormal(name) {
         await database.ref('chat').push({ text: `🎉 ¡Bienvenido ${name}!`, author: 'Sistema', isSystem: true, timestamp: Date.now() });
     }
     const warning = $('responsibleGamingWarning');
-    if (warning) warning.style.display = 'block';
+    if (warning) {
+        warning.style.display = 'block';
+        setTimeout(function() {
+            warning.style.transition = 'opacity 1s ease';
+            warning.style.opacity = '0';
+            setTimeout(function() { warning.style.display = 'none'; warning.style.opacity = ''; warning.style.transition = ''; }, 1000);
+        }, 3000);
+    }
     updateRecipientSelect();
     showToast(`🎉 Bienvenido ${name}!`, 'success');
 }
@@ -1288,6 +1306,20 @@ function setupFirebaseListeners() {
         } catch(e) {}
     });
     App.firebaseListeners.prizeConfig = { off: () => pcRef.off('value', pcHandler) };
+
+    // Voice announcements listener (admin actions → player voice)
+    if (!App.isAdmin) {
+        const vaRef = database.ref('voiceAnnouncements').limitToLast(1);
+        const vaHandler = vaRef.on('child_added', (snapshot) => {
+            try {
+                const ann = snapshot.val();
+                if (ann && ann.timestamp > Date.now() - 10000) {
+                    speak(ann.text, true);
+                }
+            } catch(e) {}
+        });
+        App.firebaseListeners.voiceAnn = { off: () => vaRef.off('child_added', vaHandler) };
+    }
 
     // Game reset signal
     const grRef = database.ref('gameReset');
@@ -1664,12 +1696,59 @@ function showWinnerModal(winner) {
     const prizeValue = winner.prizeValue || (winner.type === 'line' ? linePrize : bingoPrize);
     const remaining = Math.max(0, totalPrize - prizeValue);
     if ($('winnerRemainingDisplay')) $('winnerRemainingDisplay').textContent = `Restante en pozo: ${formatMoney(remaining)}`;
+    const adminControls = $('winnerAdminControls');
+    const continueBtn = $('winnerContinueBtn');
+    const closeBtn = $('winnerModalCloseBtn');
+    if (App.isAdmin) {
+        if (adminControls) adminControls.style.display = 'flex';
+        if (continueBtn) continueBtn.style.display = 'none';
+        if (closeBtn) closeBtn.style.display = 'none';
+    } else {
+        if (adminControls) adminControls.style.display = 'none';
+        if (continueBtn) continueBtn.style.display = 'block';
+        if (closeBtn) closeBtn.style.display = 'block';
+    }
     modal.classList.add('active');
 }
 
 function closeWinnerModal() {
     const modal = $('winnerModal');
     if (modal) modal.classList.remove('active');
+}
+
+function adminResumeFromWinner() {
+    closeWinnerModal();
+    confirmWinner();
+    speak('El administrador reanuda el juego', true);
+    if (database) {
+        database.ref('announcements').push({ text: '▶ El administrador ha reanudado el juego', type:'info', timestamp: Date.now(), author: 'Admin' });
+    }
+}
+
+function adminClearWinner() {
+    if (database) {
+        database.ref('winners').remove();
+        database.ref('potentialWinners').remove();
+        database.ref('gameState/lineWinners').remove();
+        database.ref('gameState/bingoWinner').remove();
+        database.ref('gameState/paused').set(false);
+        database.ref('announcements').push({ text: '↺ El administrador ha borrado el ganador y reanudado el juego', type:'info', timestamp: Date.now(), author: 'Admin' });
+    }
+    App.gameState.lineWinners = [];
+    App.gameState.bingoWinner = null;
+    App.gameState.claimedLines = 0;
+    App.gameState.bingoClaimed = false;
+    App.gameState.paused = false;
+    closeWinnerModal();
+    closeWinnerBanner();
+    updateWinnerDisplays();
+    updateAdminWinnerCardDisplay();
+    showToast('✅ Ganador borrado y juego reanudado', 'success');
+    speak('El administrador ha borrado el ganador y reanudado el juego', true);
+    if (App.timers.game && App.gameState.active) {
+        clearInterval(App.timers.game);
+        App.timers.game = setInterval(() => { if (!App.gameState.paused) generateRandomNumber(); }, App.gameState.speed);
+    }
 }
 
 function showWinnerBanner(winner) {
@@ -1739,6 +1818,45 @@ function addChatMessage(text, author, isAdmin=false, isSystem=false, isPrivate=f
     App.chat.push(msg);
     if (App.chat.length > 100) App.chat.shift();
     renderChat();
+    if (App.isAdmin && !isAdmin && !isSystem) renderAdminChatViewer(msg);
+}
+
+let adminChatMessages = [];
+let adminChatUnread = 0;
+
+function renderAdminChatViewer(newMsg) {
+    if (newMsg) {
+        adminChatMessages.push(newMsg);
+        if (adminChatMessages.length > 100) adminChatMessages.shift();
+        adminChatUnread++;
+    }
+    const container = $('adminChatViewer');
+    const badge = $('adminChatBadge');
+    if (!container) return;
+    if (adminChatMessages.length === 0) {
+        container.innerHTML = '<div style="opacity:0.5;text-align:center;padding:15px">No hay mensajes de jugadores</div>';
+    } else {
+        container.innerHTML = adminChatMessages.map(m => {
+            const isPriv = m.isPrivate;
+            const toAdmin = m.recipient === 'admin';
+            return `<div style="margin-bottom:10px;padding:10px;border-radius:10px;background:${toAdmin?'rgba(253,203,110,0.25)':'rgba(108,92,231,0.15)'};border-left:3px solid ${toAdmin?'var(--accent)':'var(--primary)'}">
+                <div style="display:flex;justify-content:space-between;margin-bottom:4px;font-size:0.78rem;opacity:0.8">
+                    <span style="font-weight:800">${toAdmin?'🔒 ':''}${escapeHtml(m.author)}${isPriv&&m.recipient?'→ '+escapeHtml(m.recipient):''}</span>
+                    <span>${m.time}</span>
+                </div>
+                <div style="font-size:0.9rem">${escapeHtml(m.text)}</div>
+            </div>`;
+        }).join('');
+        container.scrollTop = container.scrollHeight;
+    }
+    if (badge) {
+        if (adminChatUnread > 0) {
+            badge.style.display = 'inline-block';
+            badge.textContent = adminChatUnread + ' nuevo' + (adminChatUnread > 1 ? 's' : '');
+        } else {
+            badge.style.display = 'none';
+        }
+    }
 }
 
 function renderChat() {
@@ -1862,6 +1980,10 @@ function initAdminPanel() {
 
 function toggleAdminCard(cardId) {
     $(cardId)?.classList.toggle('minimized');
+    if (cardId === 'adminCard8' && !$(cardId).classList.contains('minimized')) {
+        adminChatUnread = 0;
+        renderAdminChatViewer(null);
+    }
 }
 
 function updateAdminDisplay() {
@@ -2254,6 +2376,7 @@ async function forceLineWinner() {
     }
     showWinnerToAll(winnerData);
     speak(`¡Línea! Ganó ${player}, cartón ${cardId}, premio ${formatMoney(prizeAmount)}`, true);
+    if (database) database.ref('voiceAnnouncements').push({ text: `¡Hay línea! Ganó ${player}, cartón ${cardId}`, timestamp: Date.now() });
     if (playerSelect) playerSelect.value = '';
     if (cardInput) cardInput.value = '';
     updateAdminWinnerCardDisplay(winnerData);
@@ -2275,6 +2398,7 @@ async function forceBingoWinner() {
     }
     showWinnerToAll(winnerData);
     speak(`¡Bingo! Ganó ${player}, cartón ${cardId}, premio ${formatMoney(bingoPrizeAmount)}`, true);
+    if (database) database.ref('voiceAnnouncements').push({ text: `¡Bingo! Ganó ${player}, cartón ${cardId}`, timestamp: Date.now() });
     if (playerSelect) playerSelect.value = '';
     if (cardInput) cardInput.value = '';
     updateAdminWinnerCardDisplay(winnerData);
@@ -2286,6 +2410,7 @@ async function confirmWinner() {
     showToast('✅ Juego continuado', 'success');
     updateWinnerDisplays();
     speak('Juego continuado', true);
+    if (database) database.ref('voiceAnnouncements').push({ text: 'El administrador ha confirmado al ganador. El juego continúa.', timestamp: Date.now() });
     if (App.gameState.active && !App.gameState.paused) {
         if (App.timers.game) clearInterval(App.timers.game);
         App.timers.game = setInterval(() => { if (!App.gameState.paused) generateRandomNumber(); }, App.gameState.speed);
@@ -2318,6 +2443,7 @@ async function startGame() {
     if ($('btnResume')) $('btnResume').disabled = true;
     showToast('🎮 Juego iniciado');
     speak('¡El juego ha comenzado!');
+    if (database) database.ref('voiceAnnouncements').push({ text: '¡El juego ha comenzado!', timestamp: Date.now() });
 }
 
 async function pauseGame() {
@@ -2327,7 +2453,10 @@ async function pauseGame() {
     if ($('btnPause')) $('btnPause').disabled = true;
     if ($('btnResume')) $('btnResume').disabled = false;
     showToast('⏸ Juego pausado', 'info');
-    if (database) await database.ref('gameState/paused').set(true);
+    if (database) {
+        await database.ref('gameState/paused').set(true);
+        database.ref('voiceAnnouncements').push({ text: 'El juego ha sido pausado por el administrador', timestamp: Date.now() });
+    }
 }
 
 async function resumeGame() {
@@ -2336,7 +2465,10 @@ async function resumeGame() {
     if ($('btnPause')) $('btnPause').disabled = false;
     if ($('btnResume')) $('btnResume').disabled = true;
     showToast('▶ Juego reanudado', 'success');
-    if (database) await database.ref('gameState/paused').set(false);
+    if (database) {
+        await database.ref('gameState/paused').set(false);
+        database.ref('voiceAnnouncements').push({ text: 'El juego ha sido reanudado', timestamp: Date.now() });
+    }
     if (App.timers.game) clearInterval(App.timers.game);
     App.timers.game = setInterval(() => { if (!App.gameState.paused) generateRandomNumber(); }, App.gameState.speed);
 }
@@ -2360,6 +2492,7 @@ async function resetGame() {
         });
         await database.ref().update(updates);
         await database.ref('gameReset').set({ timestamp: Date.now() });
+        await database.ref('voiceAnnouncements').remove();
         await database.ref('announcements').push({ text: '🔄 El juego ha sido reiniciado por el administrador', type:'reset', timestamp: Date.now() });
     }
     App.myCards = [];
