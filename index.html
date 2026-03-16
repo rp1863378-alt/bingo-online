@@ -1526,6 +1526,7 @@ body::before{
         </div>
         <button class="btn btn-danger w-full mt-10" onclick="clearAllChats()">🗑 Borrar Todo el Chat</button>
         <button class="btn btn-danger w-full mt-10" onclick="limpiarSala()" style="background:linear-gradient(135deg,#6c5ce7,#4834d4)">🧹 Limpiar Sala Completa (borra jugadores + chat)</button>
+        <button class="btn btn-danger w-full mt-10" onclick="reiniciarSala()" style="background:linear-gradient(135deg,#c0392b,#e74c3c)">🔴 REINICIAR SALA (borra todos los usuarios y mensajes)</button>
         <div style="margin-top:20px">
           <div style="font-weight:800;color:var(--electric);margin-bottom:10px;font-size:0.9rem;display:flex;align-items:center;gap:8px">
             👁 Mensajes de Jugadores <span id="adminChatBadge" style="background:var(--danger);color:#fff;padding:2px 8px;border-radius:20px;font-size:0.72rem;display:none">0 nuevos</span>
@@ -1689,7 +1690,8 @@ const App = {
     settings: { autoMark: false, autoClaim: false, voice: true, cardStyle: 'classic' },
     stats: { numbersCalled: 0, cardsSold: 0 },
     timers: { game: null, clock: null, heartbeat: null },
-    firebaseListeners: {}
+    firebaseListeners: {},
+    shownLineTimestamps: new Set()
 };
 
 let database = null;
@@ -2211,6 +2213,32 @@ async function limpiarSala() {
     }
 }
 
+async function reiniciarSala() {
+    if (!confirm('¿REINICIAR SALA COMPLETA? Esto borrará TODOS los usuarios y mensajes. Esta acción no se puede deshacer.')) return;
+    try {
+        if (database) {
+            await database.ref('chat').remove();
+            await database.ref('players').remove();
+            await database.ref('admins').remove();
+            await database.ref('coinRequests').remove();
+            await database.ref('voiceAnnouncements').remove();
+            await database.ref('announcements').remove();
+            await database.ref('potentialWinners').remove();
+        }
+        App.chat = [];
+        App.processedMessages.clear();
+        App.players.clear();
+        App.coinRequests = [];
+        renderChat();
+        updatePlayerCount();
+        updateAdminPlayerList();
+        updateCoinRequestsDisplay();
+        showToast('🔴 Sala reiniciada: todos los usuarios y mensajes borrados', 'success');
+    } catch(e) {
+        showToast('Error al reiniciar sala', 'error');
+    }
+}
+
 function updateRecipientSelect() {
     const sel = $('chatRecipient');
     if (!sel) return;
@@ -2507,13 +2535,18 @@ function setupFirebaseListeners() {
             }
             if (winners.line) {
                 const lineKeys = Object.keys(winners.line);
-                const newWinners = lineKeys.map(k => winners.line[k]).filter(w =>
-                    !App.gameState.lineWinners?.some(lw => lw.timestamp === w.timestamp));
+                const newWinners = lineKeys.map(k => winners.line[k]).filter(w => {
+                    const alreadyInList = App.gameState.lineWinners?.some(lw => lw.timestamp === w.timestamp);
+                    const alreadyShown = App.shownLineTimestamps && App.shownLineTimestamps.has(String(w.timestamp));
+                    return !alreadyInList && !alreadyShown;
+                });
                 newWinners.forEach(w => {
                     if (!App.gameState.lineWinners) App.gameState.lineWinners = [];
                     App.gameState.lineWinners.push(w);
                     App.gameState.claimedLines = App.gameState.lineWinners.length;
                     App.gameState.paused = true;
+                    if (!App.shownLineTimestamps) App.shownLineTimestamps = new Set();
+                    App.shownLineTimestamps.add(String(w.timestamp));
                     showWinnerToAll(w);
                     if (!App.isAdmin) speak(`¡Línea! Ganó ${w.player}, cartón ${w.cardId}`, true);
                     updateGamePausedIndicator();
@@ -2963,10 +2996,13 @@ function updateClaimButtons() {
 // ==================== CLAIM PRIZES (infalible) ====================
 async function claimLine() {
     if (!App.hasLine || App.gameState.claimedLines >= CONFIG.MAX_LINE_WINNERS || !App.gameState.linePrizesEnabled) return;
+    if (App._claimingLine) return;
+    App._claimingLine = true;
+    try {
     const now = Date.now();
     const windowOpenAt = App.lineClaimWindowOpenAt || 0;
     const windowOpen = windowOpenAt > 0 && (now - windowOpenAt) < 3500;
-    if (!windowOpen && App.gameState.claimedLines > 0) { showToast('⏰ Tiempo de reclamo cerrado', 'error'); return; }
+    if (!windowOpen && App.gameState.claimedLines > 0) { showToast('⏰ Tiempo de reclamo cerrado', 'error'); App._claimingLine = false; return; }
     let winningCard = null;
     for (const card of App.myCards) {
         for (let i = 0; i < 5; i++) {
@@ -3001,6 +3037,7 @@ async function claimLine() {
     speak('¡Línea!');
     const claimLineBtn = $('claimLineBtn');
     if (claimLineBtn) claimLineBtn.disabled = true;
+    } catch(e) { showToast('Error al reclamar línea', 'error'); } finally { App._claimingLine = false; }
 }
 
 async function claimBingo() {
@@ -3044,14 +3081,13 @@ function showWinnerModal(winner) {
     const title = winner.type === 'line' ? '📏 ¡HAY LÍNEA!' : '🎱 ¡BINGO!';
     if ($('winnerTitle')) $('winnerTitle').textContent = title;
     if ($('winnerName')) $('winnerName').textContent = winner.player;
-    if ($('winnerPrize')) $('winnerPrize').textContent = `Premio: ${winner.prize}`;
     if ($('winnerCardDisplay')) $('winnerCardDisplay').textContent = `🎫 Cartón ID: ${winner.cardId}`;
     const linePrize = App.gameState.manualPrizes?.line ?? 200;
     const bingoPrize = App.gameState.manualPrizes?.bingo ?? 800;
     const totalPrize = linePrize + bingoPrize;
-    const prizeValue = winner.prizeValue || (winner.type === 'line' ? linePrize : bingoPrize);
-    const remaining = Math.max(0, totalPrize - prizeValue);
-    if ($('winnerRemainingDisplay')) $('winnerRemainingDisplay').textContent = `Restante en pozo: ${formatMoney(remaining)}`;
+    const prizeDisplay = winner.type === 'line' ? formatMoney(linePrize) : formatMoney(bingoPrize);
+    if ($('winnerPrize')) $('winnerPrize').textContent = `Premio: ${prizeDisplay}`;
+    if ($('winnerRemainingDisplay')) $('winnerRemainingDisplay').textContent = `Pozo Total: ${formatMoney(totalPrize)} | Premio Línea: ${formatMoney(linePrize)} | Premio Bingo: ${formatMoney(bingoPrize)}`;
     const adminCtrl = $('winnerAdminControls');
     const continueBtn = $('winnerContinueBtn');
     const pausedNote = $('winnerPausedNote');
@@ -3101,6 +3137,7 @@ async function clearCurrentWinners() {
     App.gameState.bingoClaimed = false;
     App.gameState.paused = false;
     App.lineClaimWindowOpenAt = 0;
+    App.shownLineTimestamps = new Set();
     closeWinnerBanner();
     updateWinnerDisplays();
     updateAdminWinnerCardDisplay();
@@ -3121,13 +3158,12 @@ function showWinnerBanner(winner) {
     if ($('winnerBannerTitle')) $('winnerBannerTitle').textContent = winner.type==='line' ? '📏 ¡LÍNEA!' : '🎱 ¡BINGO!';
     if ($('winnerBannerDetails')) $('winnerBannerDetails').textContent = winner.player;
     if ($('winnerBannerCard')) $('winnerBannerCard').textContent = `🎫 Cartón ID: ${winner.cardId}`;
-    if ($('winnerBannerPrize')) $('winnerBannerPrize').textContent = `Premio: ${winner.prize}`;
-    const linePrize = App.gameState.manualPrizes?.line ?? 200;
-    const bingoPrize = App.gameState.manualPrizes?.bingo ?? 800;
-    const totalPrize = linePrize + bingoPrize;
-    const prizeValue = winner.prizeValue || (winner.type==='line' ? linePrize : bingoPrize);
-    const remaining = Math.max(0, totalPrize - prizeValue);
-    if ($('winnerBannerRemaining')) $('winnerBannerRemaining').textContent = `Restante en pozo: ${formatMoney(remaining)}`;
+    const linePrize2 = App.gameState.manualPrizes?.line ?? 200;
+    const bingoPrize2 = App.gameState.manualPrizes?.bingo ?? 800;
+    const totalPrize2 = linePrize2 + bingoPrize2;
+    const prizeDisplay2 = winner.type==='line' ? formatMoney(linePrize2) : formatMoney(bingoPrize2);
+    if ($('winnerBannerPrize')) $('winnerBannerPrize').textContent = `Premio: ${prizeDisplay2}`;
+    if ($('winnerBannerRemaining')) $('winnerBannerRemaining').textContent = `Pozo Total: ${formatMoney(totalPrize2)} | Premio Línea: ${formatMoney(linePrize2)} | Premio Bingo: ${formatMoney(bingoPrize2)}`;
     banner.classList.remove('hidden');
 }
 
