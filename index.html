@@ -2655,6 +2655,31 @@ function setupFirebaseListeners() {
         } catch(e) {}
     });
     App.firebaseListeners.speedSync = { off: () => speedRef.off('value', speedHandler) };
+
+    // Card data listener — jugadores únicamente
+    // Se dispara cada vez que el jugador compra un cartón y actualiza la pantalla al toque
+    if (!App.isAdmin && App.user) {
+        const cdRef = database.ref(`players/${App.user.id}/cardData`);
+        const cdHandler = cdRef.on('value', (snapshot) => {
+            try {
+                const cardData = snapshot.val();
+                if (Array.isArray(cardData) && cardData.length > 0) {
+                    // Preservar el estado de marcado local antes de reemplazar
+                    const prevMarked = App.myCards.map(c => c.marked);
+                    const prevError  = App.myCards.map(c => c.hasError);
+                    App.myCards = cardData.map((card, i) => ({
+                        ...card,
+                        marked:   (prevMarked[i]  || card.marked  || Array.from({length:3}, () => Array(9).fill(false))),
+                        hasError: (prevError[i]   || card.hasError || Array.from({length:3}, () => Array(9).fill(false)))
+                    }));
+                    renderCards();
+                    checkPlayerWinStatus();
+                    updateBuyCardStatus();
+                }
+            } catch(e) {}
+        });
+        App.firebaseListeners.cardData = { off: () => cdRef.off('value', cdHandler) };
+    }
 }
 
 // ==================== ADMIN NOTIFICATIONS ====================
@@ -2773,8 +2798,8 @@ function checkAutoClaim() {
 function generateCard() {
     // 3 filas x 9 columnas | Col 0:1-9 | Col 1:10-19 | Col 2:20-29 | Col 3:30-39
     // Col 4:40-49 | Col 5:50-59 | Col 6:60-69 | Col 7:70-79 | Col 8:80-90
-    // Cada fila tiene exactamente 5 números y 4 coronas (👑).
-    // Números únicos por columna, ordenados ascendente (menor arriba).
+    // Cada fila tiene EXACTAMENTE 5 números y 4 coronas (👑).
+    // Números únicos por columna, ordenados ascendente (menor arriba, mayor abajo).
     const colMin = [1,10,20,30,40,50,60,70,80];
     const colMax = [9,19,29,39,49,59,69,79,90];
     const grid = [
@@ -2782,35 +2807,63 @@ function generateCard() {
         [null,null,null,null,null,null,null,null,null],
         [null,null,null,null,null,null,null,null,null]
     ];
-    // Para cada fila elegir 5 columnas distintas al azar (algoritmo Fisher-Yates)
-    const colUsed = [[],[],[]];
+
+    // Generar una distribución válida de columnas para las 3 filas.
+    // Restricción: cada fila debe tener exactamente 5 columnas activas de las 9.
+    // Usamos backtracking aleatorio para garantizar que ninguna columna reciba más de 3 filas.
+    let colUsed = [[], [], []];
+    let colCount = new Array(9).fill(0);
+
+    // Asignar las columnas para cada fila de forma que cada fila tenga exactamente 5
     for (let f = 0; f < 3; f++) {
-        const idx = [0,1,2,3,4,5,6,7,8];
-        for (let k = idx.length-1; k > 0; k--) {
-            const j = Math.floor(Math.random()*(k+1));
-            [idx[k],idx[j]] = [idx[j],idx[k]];
+        // Barajar los índices de columna disponibles (las que no superarán el límite de 3 filas)
+        const available = [];
+        for (let c = 0; c < 9; c++) {
+            if (colCount[c] < 3) available.push(c);
         }
-        idx.slice(0,5).forEach(col => colUsed[col].push(f));
+        // Fisher-Yates shuffle
+        for (let k = available.length - 1; k > 0; k--) {
+            const j = Math.floor(Math.random() * (k + 1));
+            [available[k], available[j]] = [available[j], available[k]];
+        }
+        // Tomar exactamente 5 columnas para esta fila
+        const chosen = available.slice(0, 5);
+        chosen.forEach(col => {
+            colUsed[f].push(col);
+            colCount[col]++;
+        });
     }
-    // Asignar números únicos por columna en orden ascendente de arriba a abajo
+
+    // Para cada columna, asignar números únicos a las filas que la usan,
+    // ordenados de menor a mayor (fila 0 recibe el menor, fila 2 el mayor).
     for (let col = 0; col < 9; col++) {
-        const filas = colUsed[col].sort((a,b) => a-b);
+        const filas = [];
+        for (let f = 0; f < 3; f++) {
+            if (colUsed[f].includes(col)) filas.push(f);
+        }
         if (filas.length === 0) continue;
+
         const pool = [];
         for (let n = colMin[col]; n <= colMax[col]; n++) pool.push(n);
-        for (let k = pool.length-1; k > 0; k--) {
-            const j = Math.floor(Math.random()*(k+1));
-            [pool[k],pool[j]] = [pool[j],pool[k]];
+        // Mezclar el pool y seleccionar los números necesarios
+        for (let k = pool.length - 1; k > 0; k--) {
+            const j = Math.floor(Math.random() * (k + 1));
+            [pool[k], pool[j]] = [pool[j], pool[k]];
         }
-        const elegidos = pool.slice(0, filas.length).sort((a,b) => a-b);
-        filas.forEach((f,i) => { grid[f][col] = elegidos[i]; });
+        // Tomar tantos números como filas activas y ordenarlos ascendentemente
+        const elegidos = pool.slice(0, filas.length).sort((a, b) => a - b);
+        // La fila más pequeña recibe el número más pequeño (orden top-down)
+        filas.sort((a, b) => a - b).forEach((f, i) => {
+            grid[f][col] = elegidos[i];
+        });
     }
+
     return {
         id: generateId().slice(-4).toUpperCase(),
         numbers: grid,
-        marked: Array.from({length:3}, () => Array(9).fill(false)),
+        marked: Array.from({length: 3}, () => Array(9).fill(false)),
         style: App.settings.cardStyle,
-        hasError: Array.from({length:3}, () => Array(9).fill(false))
+        hasError: Array.from({length: 3}, () => Array(9).fill(false))
     };
 }
 
@@ -2849,7 +2902,7 @@ function updateBuyCardStatus() {
     }
 }
 
-function buyCards() {
+async function buyCards() {
     const qty = parseInt($('cardQtySelect')?.value) || 1;
     const ballsDrawn = App.calledNumbers.length > 0;
     if (ballsDrawn) { showToast('🚫 Ya se sorteo una bolilla. Solo se compran cartones al inicio.', 'error'); return; }
@@ -2863,7 +2916,9 @@ function buyCards() {
     if (!App.isAdmin && App.user) {
         App.user.coins -= totalCost;
         updateCoinsDisplay();
-        if (database) database.ref(`players/${App.user.id}/coins`).set(App.user.coins).catch(() => {});
+        if (database) {
+            try { await database.ref(`players/${App.user.id}/coins`).set(App.user.coins); } catch(e) {}
+        }
     }
     const bought = [];
     for (let i = 0; i < canBuy; i++) {
@@ -2872,12 +2927,20 @@ function buyCards() {
         bought.push(newCard);
         App.stats.cardsSold++;
     }
+    // Render inmediato para que el cartón aparezca al instante
     renderCards();
     checkPlayerWinStatus();
     updateBuyCardStatus();
     showToast(`🎫 ${canBuy} cartón(es) comprado(s)`, 'success');
     speak(canBuy === 1 ? `Cartón comprado. ID: ${bought[0].id}.` : `${canBuy} cartones comprados.`);
-    if (database && App.user) database.ref(`players/${App.user.id}/cards`).set(App.myCards.length).catch(() => {});
+    // Guardar datos completos del cartón en Firebase y actualizar el contador
+    // El listener de cardData se disparará al toque y re-renderizará la pantalla
+    if (database && App.user) {
+        try {
+            await database.ref(`players/${App.user.id}/cardData`).set(App.myCards);
+            await database.ref(`players/${App.user.id}/cards`).set(App.myCards.length);
+        } catch(e) {}
+    }
 }
 
 function buyCard() { buyCards(); }
