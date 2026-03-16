@@ -2663,19 +2663,24 @@ function setupFirebaseListeners() {
         const cdHandler = cdRef.on('value', (snapshot) => {
             try {
                 const cardData = snapshot.val();
-                if (Array.isArray(cardData) && cardData.length > 0) {
-                    // Preservar el estado de marcado local antes de reemplazar
-                    const prevMarked = App.myCards.map(c => c.marked);
-                    const prevError  = App.myCards.map(c => c.hasError);
-                    App.myCards = cardData.map((card, i) => ({
-                        ...card,
-                        marked:   (prevMarked[i]  || card.marked  || Array.from({length:3}, () => Array(9).fill(false))),
-                        hasError: (prevError[i]   || card.hasError || Array.from({length:3}, () => Array(9).fill(false)))
-                    }));
-                    renderCards();
-                    checkPlayerWinStatus();
-                    updateBuyCardStatus();
-                }
+                if (!Array.isArray(cardData) || cardData.length === 0) return;
+                // Solo agregar cartones nuevos — NUNCA sobreescribir el estado de marcado local
+                const currentIds = new Set(App.myCards.map(c => c.id));
+                const hasNewCards = cardData.some(c => !currentIds.has(c.id));
+                if (!hasNewCards) return;
+                // Agregar sólo los cartones que no existen localmente
+                cardData.forEach(card => {
+                    if (!currentIds.has(card.id)) {
+                        App.myCards.push({
+                            ...card,
+                            marked:   Array.from({length:3}, () => Array(9).fill(false)),
+                            hasError: Array.from({length:3}, () => Array(9).fill(false))
+                        });
+                    }
+                });
+                renderCards();
+                checkPlayerWinStatus();
+                updateBuyCardStatus();
             } catch(e) {}
         });
         App.firebaseListeners.cardData = { off: () => cdRef.off('value', cdHandler) };
@@ -3030,7 +3035,9 @@ function autoMarkNumbers() {
         for (let r = 0; r < 3; r++) {
             for (let col = 0; col < 9; col++) {
                 const num = card.numbers[r][col];
-                if (num !== null && App.calledNumbers.includes(num) && !card.marked[r][col]) {
+                // Solo marcar celdas con número real (no coronas/null)
+                // Solo cambia el color — nunca toca card.numbers
+                if (num !== null && num !== undefined && App.calledNumbers.includes(num) && card.marked[r][col] !== true) {
                     card.marked[r][col] = true;
                     changed = true;
                 }
@@ -3049,15 +3056,32 @@ function checkPlayerWinStatus() {
     App.hasLine = false;
     App.hasBingo = false;
     for (const card of App.myCards) {
-        // LÍNEA: todos los números (no nulos) de una fila están marcados
+        let totalNums   = 0;
+        let totalMarked = 0;
+        // Recorrer las 3 filas horizontales
         for (let r = 0; r < 3; r++) {
-            const hasNums = card.numbers[r].some(n => n !== null);
-            const allMark = card.numbers[r].every((n, col) => n === null || card.marked[r][col]);
-            if (hasNums && allMark) App.hasLine = true;
+            let rowNums   = 0;
+            let rowMarked = 0;
+            for (let col = 0; col < 9; col++) {
+                const num = card.numbers[r][col];
+                if (num !== null && num !== undefined) {
+                    rowNums++;
+                    totalNums++;
+                    if (card.marked[r][col] === true) {
+                        rowMarked++;
+                        totalMarked++;
+                    }
+                }
+            }
+            // LÍNEA HORIZONTAL: los 5 números reales de esta fila están todos marcados
+            if (rowNums > 0 && rowMarked === rowNums) {
+                App.hasLine = true;
+            }
         }
-        // BINGO: todos los números del cartón marcados
-        const allBingo = card.numbers.every((row, r) => row.every((n, col) => n === null || card.marked[r][col]));
-        if (allBingo) App.hasBingo = true;
+        // BINGO TOTAL: los 15 números del cartón (3 filas × 5) están todos marcados
+        if (totalNums > 0 && totalMarked === totalNums) {
+            App.hasBingo = true;
+        }
     }
     updateClaimButtons();
     checkAutoClaim();
@@ -3093,9 +3117,16 @@ async function claimLine() {
     let winningCard = null;
     for (const card of App.myCards) {
         for (let r = 0; r < 3; r++) {
-            const hasNums = card.numbers[r].some(n => n !== null);
-            const allMark = card.numbers[r].every((n, col) => n === null || card.marked[r][col]);
-            if (hasNums && allMark) { winningCard = card; break; }
+            let rowNums = 0, rowMarked = 0;
+            for (let col = 0; col < 9; col++) {
+                const num = card.numbers[r][col];
+                if (num !== null && num !== undefined) {
+                    rowNums++;
+                    if (card.marked[r][col] === true) rowMarked++;
+                }
+            }
+            // LÍNEA HORIZONTAL: los 5 números de esta fila completos y marcados
+            if (rowNums > 0 && rowMarked === rowNums) { winningCard = card; break; }
         }
         if (winningCard) break;
     }
