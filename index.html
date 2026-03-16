@@ -1525,6 +1525,7 @@ body::before{
           <button class="btn btn-warning" style="padding:11px 18px;width:auto" onclick="sendGlobalAnnouncement()">📢</button>
         </div>
         <button class="btn btn-danger w-full mt-10" onclick="clearAllChats()">🗑 Borrar Todo el Chat</button>
+        <button class="btn btn-danger w-full mt-10" onclick="limpiarSala()" style="background:linear-gradient(135deg,#6c5ce7,#4834d4)">🧹 Limpiar Sala Completa (borra jugadores + chat)</button>
         <div style="margin-top:20px">
           <div style="font-weight:800;color:var(--electric);margin-bottom:10px;font-size:0.9rem;display:flex;align-items:center;gap:8px">
             👁 Mensajes de Jugadores <span id="adminChatBadge" style="background:var(--danger);color:#fff;padding:2px 8px;border-radius:20px;font-size:0.72rem;display:none">0 nuevos</span>
@@ -1925,6 +1926,8 @@ async function login() {
     if (database) {
         const path = App.isAdmin ? `admins/${App.user.id}` : `players/${App.user.id}`;
         await database.ref(path).set(App.user);
+        // Presencia real: borrar al desconectarse
+        database.ref(path).onDisconnect().update({ online: false, lastSeen: Date.now() });
     }
 
     $('loginScreen')?.classList.remove('active');
@@ -2183,6 +2186,29 @@ async function clearAllChats() {
     App.processedMessages.clear();
     renderChat();
     showToast('Chat borrado', 'success');
+}
+
+async function limpiarSala() {
+    if (!confirm('¿Borrar TODOS los jugadores y el chat? Esta acción no se puede deshacer.')) return;
+    try {
+        if (database) {
+            await database.ref('chat').remove();
+            await database.ref('players').remove();
+            await database.ref('coinRequests').remove();
+            await database.ref('voiceAnnouncements').remove();
+        }
+        App.chat = [];
+        App.processedMessages.clear();
+        App.players.clear();
+        App.coinRequests = [];
+        renderChat();
+        updatePlayerCount();
+        updateAdminPlayerList();
+        updateCoinRequestsDisplay();
+        showToast('🧹 Sala limpiada: jugadores y chat borrados', 'success');
+    } catch(e) {
+        showToast('Error al limpiar sala', 'error');
+    }
 }
 
 function updateRecipientSelect() {
