@@ -1701,23 +1701,6 @@ body::before{
           </div>
         </div>
 
-        <div id="incrementalConfigSection" style="display:none;background:rgba(255,165,0,0.08);border:1px solid rgba(255,165,0,0.3);border-radius:10px;padding:15px;margin-bottom:15px;">
-          <h4 style="color:var(--gold);margin-bottom:12px;">� CONFIGURAR POZO INCREMENTAL</h4>
-          <div class="percentage-row" style="margin-bottom:10px;">
-            <span class="percentage-label">Desde ($):</span>
-            <input type="number" id="incFromAmount" class="percentage-input" min="0" value="0" step="100" placeholder="Monto inicial">
-          </div>
-          <div class="percentage-row" style="margin-bottom:10px;">
-            <span class="percentage-label">Hasta ($):</span>
-            <input type="number" id="incToAmount" class="percentage-input" min="0" value="10000" step="100" placeholder="Tope m�ximo">
-          </div>
-          <div class="percentage-row" style="margin-bottom:12px;">
-            <span class="percentage-label">Sube por n�mero ($):</span>
-            <input type="number" id="incStepAmount" class="percentage-input" min="1" value="100" step="50" placeholder="Incremento">
-          </div>
-          <button class="btn btn-warning" style="width:100%;padding:11px 18px;" onclick="setIncrementalConfig()"> Establecer</button>
-        </div>
-
         <div class="percentage-config">
           <h4 style="color:var(--gold);margin-bottom:15px;">💰 PREMIOS MANUALES (VALOR FIJO)</h4>
           <div class="percentage-row">
@@ -2016,7 +1999,6 @@ const App = {
     lineClaimWindowOpenAt: 0,
     lastNumberCall: 0,
     prizeMode: 'fixed',
-    incrementalConfig: { from: 0, to: 10000, step: 100 },
     adminMuted: false,
     manualCallMode: false,
     layoutModeActive: false,
@@ -2593,8 +2575,6 @@ function selectPrizeMode(mode, el) {
     const radio = el?.querySelector('input[type="radio"]');
     if (radio) radio.checked = true;
     if (database) database.ref('prizeConfig/mode').set(mode).catch(()=>{});
-    const incSection = $('incrementalConfigSection');
-    if (incSection) incSection.style.display = (mode === 'incremental' || mode === 'progressive') ? 'block' : 'none';
 }
 
 async function setLinePrizeManual() {
@@ -2673,29 +2653,13 @@ async function setCustomPrize() {
     updatePrizeDisplay();
 }
 
-async function setIncrementalConfig() {
-    const from = parseInt($('incFromAmount')?.value) || 0;
-    const to = parseInt($('incToAmount')?.value) || 10000;
-    const step = parseInt($('incStepAmount')?.value) || 100;
-    if (to <= from) { showToast('El tope debe ser mayor al monto inicial', 'error'); return; }
-    if (step < 1) { showToast('El incremento debe ser al menos 1', 'error'); return; }
-    App.incrementalConfig = { from, to, step };
-    App.gameState.prize.baseAmount = from;
-    App.gameState.prize.cap = to;
-    if (database) {
-        await database.ref('prizeConfig/incremental').set({ from, to, step });
-        await database.ref('gameState/prize').update({ baseAmount: from, cap: to });
-    }
-        showToast('Pozo configurado: Desde ' + formatMoney(from) + ', Hasta ' + formatMoney(to) + ', +' + formatMoney(step) + ' por n�mero', 'success');
-    updateProgressivePrize();
-}
-
 function updateProgressivePrize() {
     if (!App.gameState.active || App.gameState.paused) return;
     let newAmount = App.gameState.prize.baseAmount;
-    const incStep = App.incrementalConfig?.step ?? (App.prizeMode === 'progressive' ? CONFIG.PROGRESSIVE_AMOUNT : CONFIG.INCREMENTAL_AMOUNT);
-    if (App.prizeMode === 'incremental' || App.prizeMode === 'progressive') {
-        newAmount = App.gameState.prize.baseAmount + (App.calledNumbers.length * incStep);
+    if (App.prizeMode === 'incremental') {
+        newAmount = App.gameState.prize.baseAmount + (App.calledNumbers.length * CONFIG.INCREMENTAL_AMOUNT);
+    } else if (App.prizeMode === 'progressive') {
+        newAmount = App.gameState.prize.baseAmount + (App.calledNumbers.length * CONFIG.PROGRESSIVE_AMOUNT);
     }
     if (newAmount > App.gameState.prize.cap) newAmount = App.gameState.prize.cap;
     if (newAmount !== App.gameState.prize.amount) {
@@ -2821,13 +2785,6 @@ function setupFirebaseListeners() {
             if (!wasPaused && gs.paused) {
                 showToast('⏸ Juego pausado', 'info');
             }
-            // Cuenta regresiva sincronizada: mostrar a todos cuando el admin inicia
-            if (!App.isAdmin && gs.countdownStartedAt && gs.countdownStartedAt !== App._lastCountdownAt) {
-                App._lastCountdownAt = gs.countdownStartedAt;
-                const elapsed = Math.floor((Date.now() - gs.countdownStartedAt) / 1000);
-                const remaining = (gs.countdownSecs || 10) - elapsed;
-                if (remaining > 0) startCountdown(remaining);
-            }
         } catch(e) {}
     });
     App.firebaseListeners.gameState = { off: () => gsRef.off('value', gsHandler) };
@@ -2885,7 +2842,7 @@ function setupFirebaseListeners() {
     });
     App.firebaseListeners.players = { off: () => plRef.off('value', plHandler) };
 
-    // Coins dedicado: escucha directo en players/ID/coins para reflejar env�os del admin al instante
+    // Coins dedicado: escucha directo en players/ID/coins para reflejar env os del admin al instante
     if (!App.isAdmin && App.user) {
         const coinsRef = database.ref(`players/${App.user.id}/coins`);
         const coinsHandler = coinsRef.on('value', (snap) => {
@@ -2948,6 +2905,20 @@ function setupFirebaseListeners() {
         } catch(e) {}
     });
     App.firebaseListeners.winners = { off: () => wRef.off('value', wHandler) };
+
+    // Cuenta regresiva sincronizada para todos los jugadores
+    const cdRef = database.ref('countdown');
+    const cdHandler = cdRef.on('value', (snap) => {
+        try {
+            if (App.isAdmin) return;
+            const cd = snap.val();
+            if (!cd || !cd.secs || !cd.startedAt) return;
+            const elapsed = Math.floor((Date.now() - cd.startedAt) / 1000);
+            const remaining = cd.secs - elapsed;
+            if (remaining > 0) startCountdown(remaining);
+        } catch(e) {}
+    });
+    App.firebaseListeners.countdown = { off: () => cdRef.off('value', cdHandler) };
 
     // Persistent winners
     const pwRef = database.ref('persistentWinners');
@@ -3930,7 +3901,7 @@ async function startCountdown(secs) {
 async function startGame() {
     if (App.timers.game) { clearInterval(App.timers.game); App.timers.game = null; }
     const countdownSecs = Math.max(3, parseInt($('countdownInput')?.value) || 10);
-    if (database) await database.ref('gameState').update({ countdownSecs: countdownSecs, countdownStartedAt: Date.now() });
+    if (database) await database.ref('countdown').set({ secs: countdownSecs, startedAt: Date.now() });
     await startCountdown(countdownSecs);
     if (database) {
         await database.ref('winners').remove();
